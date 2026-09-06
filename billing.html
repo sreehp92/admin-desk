@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <title>SRI SIDDHAN ESSENTIAL - Cloud Billing & GST Engine</title>
 
-<!-- Native Client-Side PDF Generator for Direct WhatsApp File Sharing -->
+<!-- PDF Generation Engine -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -33,7 +33,7 @@ html, body { width: 100%; min-height: 100vh; background: var(--bg); color: var(-
 
 .app { max-width: 1320px; margin: auto; padding: 18px; }
 
-/* Sticky Header */
+/* Header Bar */
 .top {
   position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; gap: 12px;
   padding: 12px 18px; border: 1px solid rgba(30,58,138,.12); border-radius: 16px;
@@ -89,7 +89,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
 .page-panel.active { display: block; }
 .page-back { margin-bottom: 14px; }
 
-/* DASHBOARD LAYOUT */
+/* Dashboard Layout */
 .dashboard-container { display: flex; flex-direction: column; gap: 16px; }
 .dashboard-quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
 .dash-btn {
@@ -128,8 +128,13 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
 }
 .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
 
+/* Sub-Tab Navigation inside Reports */
+.sub-tab-nav { display: flex; gap: 6px; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 8px; flex-wrap: wrap; }
+.sub-tab-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 6px 12px; border-radius: 8px; font-size: 12px; }
+.sub-tab-btn.active { background: var(--navy-light); color: var(--navy); font-weight: 800; border-color: #bfdbfe; }
+
 /* ============================================================
-   SINGLE-PAGE A4 TAX INVOICE PRINT SPEC (ZERO OVERFLOW ON ALL SIZES)
+   SINGLE-PAGE A4 PRINT SPEC (ZERO OVERFLOW, NO CUT-OFF IN PDF)
    ============================================================ */
 .print-only, .customer-print { display: none; }
 
@@ -142,7 +147,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
   .app { width: 210mm !important; max-width: 210mm !important; height: 297mm !important; margin: 0 !important; padding: 0 !important; }
   .no-print, .top, .page-back, #productsPage, #customersPage, #reportsPage, #dashboardPage { display: none !important; }
   
-  #billingPage { display: block !important; width: 210mm !important; height: 297mm !important; max-height: 297mm !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; }
+  #billingPage { display: block !important; width: 210mm !important; height: 297mm !important; max-height: 297mm !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; page-break-after: avoid !important; }
   
   .invoice-paper {
     width: 210mm !important; height: 297mm !important; max-height: 297mm !important;
@@ -185,7 +190,6 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
   .total-line { font-size: 8px !important; padding: 0.8mm 0 !important; }
   .total-line.grand { font-size: 12px !important; padding-top: 1.5mm !important; border-top: 1.5px solid var(--navy) !important; }
 
-  /* Fully Contained Rigid Tax Table */
   .tax-summary { width: 100% !important; table-layout: fixed !important; margin-bottom: 2.5mm !important; border: 1px solid var(--border) !important; }
   .tax-summary th, .tax-summary td { font-size: 7.2px !important; padding: 1.2mm 0.8mm !important; word-break: break-all !important; }
 
@@ -194,14 +198,12 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
   .footer-note { font-size: 7px !important; text-align: center !important; margin-top: 1.5mm !important; }
 }
 
-/* Mobile View Adjustments */
 @media (max-width: 700px) {
   .app { padding: 10px; }
   .top { flex-direction: column; align-items: stretch; padding: 10px; }
   .cloud-status-group { justify-content: space-between; }
   .grid3 { grid-template-columns: 1fr; }
   
-  /* Mobile Order Hierarchy: Quick Actions -> Stats -> Chart -> Cloud info */
   .dashboard-container { display: flex; flex-direction: column; }
   .dashboard-quick { order: 1; grid-template-columns: repeat(2, 1fr); gap: 8px; }
   .dash-stats-grid { order: 2; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
@@ -215,6 +217,11 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
 <datalist id="productDatalist"></datalist>
 <datalist id="customerDatalist"></datalist>
 
+<!-- Toast Notification for Exit -->
+<div id="toastMsg" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; padding:10px 18px; border-radius:24px; font-size:12px; z-index:99999; opacity:0; pointer-events:none; transition:opacity .25s;">
+  Press back again to exit
+</div>
+
 <div class="app">
   <!-- Header Bar -->
   <div class="top no-print">
@@ -224,27 +231,26 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
     </div>
     <div class="cloud-status-group">
       <span id="cloudStatusBadge" class="sync-pill sync-pending">● Initializing Sync</span>
-      <button class="btn-secondary" onclick="openModal('cloudSettingsModal')">⚙️ Cloud Sync</button>
     </div>
   </div>
 
-  <!-- DASHBOARD PAGE (ORDERED PER INSTRUCTIONS) -->
+  <!-- 1. DASHBOARD PAGE -->
   <div id="dashboardPage" class="page-panel active no-print">
     <div class="dashboard-container">
       
-      <!-- 1. Quick Tabs (Buttons) -->
+      <!-- Quick Actions Grid -->
       <div class="dashboard-quick">
         <button class="dash-btn" onclick="startFreshInvoiceFromDash()"><span>➕</span><span><strong>Create Invoice</strong><small>New GST Tax Bill</small></span></button>
         <button class="dash-btn" onclick="showPage('products')"><span>📦</span><span><strong>Products Master</strong><small>Bulk Upload & Rates</small></span></button>
         <button class="dash-btn" onclick="showPage('customers')"><span>👥</span><span><strong>Customer Ledger</strong><small>Bulk Upload & Directory</small></span></button>
-        <button class="dash-btn" onclick="showPage('reports')"><span>📊</span><span><strong>GST Filing</strong><small>Daily & Monthly GSTR-1</small></span></button>
+        <button class="dash-btn" onclick="showPage('reports')"><span>📊</span><span><strong>GST Filing</strong><small>Daily, Bill-wise, GSTR-1</small></span></button>
         <button class="dash-btn" onclick="openPreviousBills()"><span>🧾</span><span><strong>Previous Bills</strong><small>Browse & Edit Invoices</small></span></button>
-        <button class="dash-btn" onclick="openModal('gstCalcModal')"><span>🧮</span><span><strong>GST Calculator</strong><small>Forward & Reverse Tax</small></span></button>
+        <button class="dash-btn" onclick="openModal('gstCalcModal')"><span>🧮</span><span><strong>Calculators</strong><small>GST & Percentage</small></span></button>
         <button class="dash-btn" onclick="exportAllDataExcel()"><span>📥</span><span><strong>Backup to Excel</strong><small>Download Offline Copy</small></span></button>
         <button class="dash-btn" onclick="pullCloudData(true)"><span>🔄</span><span><strong>Sync Devices</strong><small>Force Cloud Refresh</small></span></button>
       </div>
 
-      <!-- 2. The 4 Total Stats Boxes -->
+      <!-- 4 Stats Boxes -->
       <div class="dash-stats-grid">
         <div class="dash-stat" onclick="showPage('reports')"><div class="k">Today's Sales</div><div class="v" id="dashTodaySales">₹0.00</div></div>
         <div class="dash-stat" onclick="showPage('reports')"><div class="k">This Month Sales</div><div class="v" id="dashMonthSales">₹0.00</div></div>
@@ -252,7 +258,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
         <div class="dash-stat" onclick="showPage('reports')"><div class="k">GST Collected</div><div class="v" id="dashGstCollected">₹0.00</div></div>
       </div>
 
-      <!-- 3. Sales Graph -->
+      <!-- Sales Graph -->
       <div class="dashboard-graph">
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <h3 style="font-size:16px;">Sales Overview</h3>
@@ -261,14 +267,14 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
         <div id="dashboardGraph" class="graph-chart"></div>
       </div>
 
-      <!-- 4. Sync & Cloud Storage Meta Box -->
+      <!-- Cloud Storage Footer (Cloud Sync Button Placed Near Pull Button) -->
       <div class="cloud-footer-box">
         <div>
-          <strong style="font-size:13px; color:var(--navy-dark);">Cloud Storage: GitHub Private Workspace</strong>
+          <strong style="font-size:13px; color:var(--navy-dark);">Cloud Storage: GitHub Private Workspace (workspace-data)</strong>
           <p style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">All products, customers, and invoice records sync automatically across every device.</p>
         </div>
         <div style="display:flex; gap:8px;">
-          <button class="btn-secondary" onclick="openModal('cloudSettingsModal')">Cloud Settings</button>
+          <button class="btn-secondary" onclick="openModal('cloudSettingsModal')">⚙️ Cloud Sync Settings</button>
           <button class="btn-primary" onclick="pullCloudData(true)">Pull from Cloud</button>
         </div>
       </div>
@@ -276,7 +282,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
     </div>
   </div>
 
-  <!-- BILLING SCREEN -->
+  <!-- 2. BILLING SCREEN -->
   <div id="billingPage" class="page-panel">
     <div class="page-back no-print"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     
@@ -359,8 +365,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" class="no-print">
           <button class="btn-secondary" onclick="addItem()">+ Add Line Item</button>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <!-- Real PDF Attachment WhatsApp Share -->
-            <button class="btn-whatsapp" onclick="sharePdfToWhatsApp()">📲 WhatsApp Share (PDF)</button>
+            <button class="btn-whatsapp" onclick="sharePdfToWhatsApp()">📲 WhatsApp Share (Full A4 PDF)</button>
             <button class="btn-primary" onclick="saveInvoice()">💾 Save & Push Cloud</button>
             <button class="btn-gold" onclick="printInvoice()">🖨️ Print Single-Page A4</button>
           </div>
@@ -386,7 +391,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
           </div>
         </div>
 
-        <!-- Fully Contained Tax Breakdown Table -->
+        <!-- Strict Tax Summary Table -->
         <table class="tax-summary print-only">
           <thead>
             <tr>
@@ -410,7 +415,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
     </div>
   </div>
 
-  <!-- PRODUCTS MASTER -->
+  <!-- 3. PRODUCTS MASTER -->
   <div id="productsPage" class="page-panel no-print">
     <div class="page-back"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
@@ -439,7 +444,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
     </div>
   </div>
 
-  <!-- CUSTOMER DIRECTORY -->
+  <!-- 4. CUSTOMER DIRECTORY -->
   <div id="customersPage" class="page-panel no-print">
     <div class="page-back"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
@@ -468,48 +473,36 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
     </div>
   </div>
 
-  <!-- COMPREHENSIVE GST FILING SUITE -->
+  <!-- 5. ADVANCED GST REPORTS (DAILY, BILL-WISE, GSTR-1 OUTWARD FORMULA SUITE) -->
   <div id="reportsPage" class="page-panel no-print">
     <div class="page-back"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
-        <h2 class="section-title" style="margin:0;">GST Filing & Outward Supply Reports</h2>
+        <h2 class="section-title" style="margin:0;">GST Filing & Tax Outward Reports</h2>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="printGstReport()">🖨️ Print Report</button>
-          <button class="btn-secondary" onclick="exportGstReportPdf()">📄 Export PDF</button>
-          <button class="btn-secondary" onclick="exportGstExcel()">📊 Export Excel (.xls)</button>
-          <button class="btn-secondary" onclick="exportGstCsv()">📑 Export CSV</button>
+          <button class="btn-secondary" onclick="printGstReport()">🖨️ Print</button>
+          <button class="btn-secondary" onclick="exportGstReportPdf()">📄 PDF</button>
+          <button class="btn-secondary" onclick="exportGstExcel()">📊 Excel (.xls)</button>
+          <button class="btn-secondary" onclick="exportGstCsv()">📑 CSV</button>
         </div>
       </div>
 
-      <div class="grid3" style="grid-template-columns: 1fr 1.2fr auto; align-items:end; margin-bottom:14px;">
-        <div class="field">
-          <label>Report Frequency</label>
-          <select id="reportFreq" onchange="toggleReportFreqUI()">
-            <option value="monthly" selected>Monthly GSTR-1 Summary</option>
-            <option value="daily">Daily Outward Report</option>
-          </select>
-        </div>
-        <div class="field" id="reportMonthField"><label>Select Month</label><input type="month" id="reportMonth" onchange="renderReports()"></div>
-        <div class="field" id="reportDateField" style="display:none;"><label>Select Date</label><input type="date" id="reportDate" onchange="renderReports()"></div>
-        <button class="btn-primary" onclick="renderReports()">Run Report</button>
+      <!-- Sub-Tabs for Reports -->
+      <div class="sub-tab-nav">
+        <button class="sub-tab-btn active" id="tabBtnDaily" onclick="switchGstTab('daily')">📅 Daily GST Outward Report</button>
+        <button class="sub-tab-btn" id="tabBtnBillwise" onclick="switchGstTab('billwise')">🧾 Bill-Wise Tax Summary</button>
+        <button class="sub-tab-btn" id="tabBtnGstr1" onclick="switchGstTab('gstr1')">📑 GSTR-1 Outward Filing Formula File</button>
       </div>
 
-      <div class="table-wrap">
+      <div class="grid3" style="grid-template-columns: 1fr 1fr auto; align-items:end; margin-bottom:14px;">
+        <div class="field" id="reportDateField"><label>Date Filter</label><input type="date" id="reportDate" onchange="renderReports()"></div>
+        <div class="field" id="reportMonthField" style="display:none;"><label>Month Filter</label><input type="month" id="reportMonth" onchange="renderReports()"></div>
+        <button class="btn-primary" onclick="renderReports()">Refresh Report</button>
+      </div>
+
+      <div class="table-wrap" id="gstReportWrap">
         <table id="gstReportTable">
-          <thead>
-            <tr>
-              <th>Date</th>
-              <th>Invoice No</th>
-              <th>Customer</th>
-              <th>GSTIN</th>
-              <th class="num">Taxable Value</th>
-              <th class="num">CGST</th>
-              <th class="num">SGST</th>
-              <th class="num">Total GST</th>
-              <th class="num">Invoice Value</th>
-            </tr>
-          </thead>
+          <thead id="gstReportThead"></thead>
           <tbody id="reportListBody"></tbody>
         </table>
       </div>
@@ -517,24 +510,43 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
   </div>
 </div>
 
-<!-- ADVANCED GST CALCULATOR (WITH PERCENTAGE COLUMN & REVERSE MODE) -->
+<!-- SEPARATED CALCULATORS MODAL (GST + SEPARATE PERCENTAGE CALCULATOR) -->
 <div id="gstCalcModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('gstCalcModal')">
   <div class="modal">
     <div class="modal-head">
-      <h3 style="margin:0; color:var(--navy);">🧮 GST Quick Calculator</h3>
+      <h3 style="margin:0; color:var(--navy);">🧮 Financial Calculators</h3>
       <button class="btn-secondary" onclick="closeModal('gstCalcModal')">✕</button>
     </div>
-    <div class="grid3" style="grid-template-columns: 1.2fr 1fr 1fr; margin-bottom:12px;">
-      <div class="field"><label>Base Taxable Amount (₹)</label><input type="number" id="calcBase" value="1000" oninput="runGstCalc()"></div>
-      <div class="field"><label>GST Slab %</label><select id="calcPresetRate" onchange="updateCalcRateFromPreset()"><option value="0">0%</option><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option><option value="custom">Custom %</option></select></div>
-      <div class="field"><label>GST % (Editable)</label><input type="number" id="calcRateInput" value="18" min="0" max="100" step="0.1" oninput="runGstCalc()"></div>
+
+    <!-- BOX 1: CLEAN GST CALCULATOR (REMOVED CONFUSING % TAB) -->
+    <div class="card" style="margin-bottom:16px; border:1px solid #bfdbfe; background:var(--navy-light);">
+      <h4 style="font-size:14px; color:var(--navy); margin-bottom:10px;">GST Forward / Reverse Calculator</h4>
+      <div class="grid3" style="grid-template-columns: 1.2fr 1fr; margin-bottom:10px;">
+        <div class="field"><label>Amount (₹)</label><input type="number" id="calcBase" value="1000" oninput="runGstCalc()"></div>
+        <div class="field"><label>GST Rate % (e.g. 5, 12, 18, 28)</label><input type="number" id="calcGstRate" value="18" min="0" step="0.1" oninput="runGstCalc()"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>CGST (Half)</label><input id="calcCgst" readonly></div>
+        <div class="field"><label>SGST (Half)</label><input id="calcSgst" readonly></div>
+        <div class="field"><label>Total GST Tax</label><input id="calcTax" readonly style="font-weight:700; color:var(--navy);"></div>
+        <div class="field" style="grid-column:1/-1;"><label>Grand Total (Gross Payable)</label><input id="calcTotal" readonly style="font-size:15px; font-weight:900; color:var(--navy); background:#fff;"></div>
+      </div>
     </div>
-    <div class="grid3">
-      <div class="field"><label>CGST (Half)</label><input id="calcCgst" readonly></div>
-      <div class="field"><label>SGST (Half)</label><input id="calcSgst" readonly></div>
-      <div class="field"><label>Total GST Tax</label><input id="calcTax" readonly style="font-weight:700; color:var(--navy);"></div>
-      <div class="field" style="grid-column:1/-1;"><label>Grand Total (Gross Payable)</label><input id="calcTotal" readonly style="font-size:16px; font-weight:900; color:var(--navy); background:var(--navy-light);"></div>
+
+    <!-- BOX 2: SEPARATE DEDICATED PERCENTAGE CALCULATOR -->
+    <div class="card" style="margin-bottom:0; border:1px solid #fde68a; background:var(--gold-light);">
+      <h4 style="font-size:14px; color:var(--gold); margin-bottom:10px;">Independent Percentage Calculator</h4>
+      <div class="grid3" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom:10px;">
+        <div class="field"><label>Total Value (₹)</label><input type="number" id="pctTotalInput" value="5000" oninput="runPctCalc()"></div>
+        <div class="field"><label>Percentage %</label><input type="number" id="pctRateInput" value="10" step="0.1" oninput="runPctCalc()"></div>
+        <div class="field"><label>Calculated Percentage</label><input id="pctResult" readonly style="font-weight:800; color:var(--navy-dark); background:#fff;"></div>
+      </div>
+      <div class="grid3">
+        <div class="field"><label>Amount After Discount (-%)</label><input id="pctDiscounted" readonly style="background:#fff;"></div>
+        <div class="field" style="grid-column: span 2;"><label>Amount After Markup (+%)</label><input id="pctMarkedUp" readonly style="background:#fff;"></div>
+      </div>
     </div>
+
   </div>
 </div>
 
@@ -610,6 +622,8 @@ let db = {
   invoices: []
 };
 
+let currentGstTab = 'daily';
+
 function initApp() {
   const deskCfg = localStorage.getItem("CORP_GH_CONFIG");
   if (deskCfg) {
@@ -639,12 +653,64 @@ function initApp() {
   $('reportMonth').value = today().slice(0, 7);
   $('reportDate').value = today();
   runGstCalc();
+  runPctCalc();
+  setupHistoryNavigation();
 
   if (CLOUD_CONFIG.owner && CLOUD_CONFIG.repo && CLOUD_CONFIG.token) {
     pullCloudData(false);
   } else {
     setCloudStatus("Saved Locally", "pending");
   }
+}
+
+/* ============================================================
+   STEP-BY-STEP BACK NAVIGATION & DOUBLE-TAP EXIT
+   ============================================================ */
+let backPressCount = 0;
+let backPressTimer = null;
+
+function setupHistoryNavigation() {
+  window.history.pushState({ page: 'root' }, "", "");
+  window.addEventListener('popstate', function (e) {
+    // 1. Close open modal first
+    const openModalEl = document.querySelector('.modal-backdrop[style*="display: flex"]');
+    if (openModalEl) {
+      openModalEl.style.display = 'none';
+      window.history.pushState({ page: 'root' }, "", "");
+      return;
+    }
+
+    // 2. Navigate back to Dashboard if on another tab
+    const activePanel = document.querySelector('.page-panel.active');
+    if (activePanel && activePanel.id !== 'dashboardPage') {
+      showPage('dashboard', false);
+      window.history.pushState({ page: 'root' }, "", "");
+      return;
+    }
+
+    // 3. On dashboard, require 2 taps to exit
+    backPressCount++;
+    if (backPressCount === 1) {
+      const toast = $('toastMsg');
+      toast.style.opacity = '1';
+      clearTimeout(backPressTimer);
+      backPressTimer = setTimeout(() => {
+        toast.style.opacity = '0';
+        backPressCount = 0;
+      }, 2000);
+      window.history.pushState({ page: 'root' }, "", "");
+    } else {
+      window.history.back(); // Allow browser to exit
+    }
+  });
+}
+
+function showPage(pageId, pushState = true) {
+  document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+  const target = $(pageId === 'billing' ? 'billingPage' : pageId + 'Page');
+  if (target) target.classList.add('active');
+  window.scrollTo(0, 0);
+  if (pushState) window.history.pushState({ page: pageId }, "", "");
 }
 
 function setCloudStatus(text, status) {
@@ -654,14 +720,9 @@ function setCloudStatus(text, status) {
   el.className = "sync-pill " + (status === "ok" ? "sync-ok" : "sync-pending");
 }
 
-/* ============================================================
-   STRICT CANCEL WORKFLOW (PREVENTS ACCIDENTAL NAVIGATION)
-   ============================================================ */
 function startFreshInvoiceFromDash() {
   const proceed = confirm("Start a fresh invoice? Unsaved form entries will be reset.");
-  if (!proceed) {
-    return; // Remains strictly on the dashboard view
-  }
+  if (!proceed) return;
   showPage('billing');
   newInvoice();
 }
@@ -777,13 +838,6 @@ function refreshDatalists() {
   $('customerDatalist').innerHTML = db.customers.map(c => `<option value="${esc(c.name)}"></option>`).join('');
 }
 
-function showPage(pageId) {
-  document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
-  const target = $(pageId === 'billing' ? 'billingPage' : pageId + 'Page');
-  if (target) target.classList.add('active');
-  window.scrollTo(0, 0);
-}
-
 /* ============================================================
    INVOICE ENGINE & TAX CALCULATOR
    ============================================================ */
@@ -872,7 +926,6 @@ function calculate() {
   $('grandTotal').textContent = money(grand);
   $('amountWords').textContent = numberToWords(Math.round(grand));
 
-  // Render Tax Summary inside strictly bound percentage widths
   $('taxSummaryBody').innerHTML = Object.values(taxGroups).map(x => `
     <tr>
       <td>${esc(x.hsn)}</td>
@@ -951,7 +1004,7 @@ function printInvoice() {
 }
 
 /* ============================================================
-   TRUE BINARY PDF FILE SHARE OVER WHATSAPP
+   TRUE FULL A4 SINGLE-PAGE PDF ATTACHMENT FOR WHATSAPP
    ============================================================ */
 async function sharePdfToWhatsApp() {
   calculate();
@@ -960,7 +1013,6 @@ async function sharePdfToWhatsApp() {
   const invNo = $('invoiceNo').value;
   const fileName = `Invoice-${invNo}.pdf`;
 
-  // Professional deal-closing wording with no redundant totals/bill numbers
   const dealClosingMessage = 
 `Dear ${cName},
 
@@ -974,22 +1026,40 @@ Warm regards,
 SRI SIDDHAN ESSENTIAL
 Ganapathy, Coimbatore | +91 96583 99991`;
 
+  // Create isolated single A4 container to prevent white trailing space
   const invoiceElement = $('printableInvoiceArea');
+  const clone = invoiceElement.cloneNode(true);
+  clone.style.width = '210mm';
+  clone.style.minHeight = '297mm';
+  clone.style.maxHeight = '297mm';
+  clone.style.overflow = 'hidden';
+  clone.style.background = '#ffffff';
+
+  // Force show print elements in clone
+  clone.querySelectorAll('.print-only, .customer-print').forEach(el => el.style.display = 'block');
+  clone.querySelectorAll('.customer-form, .no-print').forEach(el => el.style.display = 'none');
+
+  const wrapper = document.createElement('div');
+  wrapper.style.position = 'fixed';
+  wrapper.style.top = '-9999px';
+  wrapper.style.left = '-9999px';
+  wrapper.appendChild(clone);
+  document.body.appendChild(wrapper);
 
   const opt = {
-    margin: [0, 0, 0, 0],
+    margin: 0,
     filename: fileName,
     image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true },
+    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
   };
 
   try {
-    // Generate actual PDF Blob
-    const pdfBlob = await html2pdf().set(opt).from(invoiceElement).outputPdf('blob');
+    const pdfBlob = await html2pdf().set(opt).from(clone).outputPdf('blob');
+    document.body.removeChild(wrapper);
+
     const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
 
-    // Check if device supports Web Share API with files (Android Chrome, iOS Safari)
     if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
       await navigator.share({
         title: `Tax Invoice - ${invNo}`,
@@ -997,7 +1067,6 @@ Ganapathy, Coimbatore | +91 96583 99991`;
         files: [pdfFile]
       });
     } else {
-      // Fallback for Desktop Browsers: Download PDF and open WhatsApp Web with message
       const link = document.createElement('a');
       link.href = URL.createObjectURL(pdfBlob);
       link.download = fileName;
@@ -1008,28 +1077,21 @@ Ganapathy, Coimbatore | +91 96583 99991`;
         ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(dealClosingMessage)}`
         : `https://wa.me/?text=${encodeURIComponent(dealClosingMessage)}`;
 
-      alert("The invoice PDF has been downloaded. Opening WhatsApp to attach and send your bill!");
+      alert("Invoice PDF generated and downloaded. Opening WhatsApp to attach and send!");
       window.open(waUrl, '_blank');
     }
   } catch (err) {
-    alert("Could not generate PDF attachment: " + err.message);
+    if (wrapper.parentNode) document.body.removeChild(wrapper);
+    alert("Could not generate PDF: " + err.message);
   }
 }
 
 /* ============================================================
-   ADVANCED GST CALCULATOR WITH PERCENTAGE INPUT & MODES
+   SEPARATE FINANCIAL CALCULATORS
    ============================================================ */
-function updateCalcRateFromPreset() {
-  const preset = $('calcPresetRate').value;
-  if (preset !== 'custom') {
-    $('calcRateInput').value = preset;
-  }
-  runGstCalc();
-}
-
 function runGstCalc() {
   const base = +$('calcBase').value || 0;
-  const rate = +$('calcRateInput').value || 0;
+  const rate = +$('calcGstRate').value || 0;
   const tax = base * (rate / 100);
   const total = base + tax;
 
@@ -1039,19 +1101,41 @@ function runGstCalc() {
   $('calcTotal').value = money(total);
 }
 
+function runPctCalc() {
+  const val = +$('pctTotalInput').value || 0;
+  const pct = +$('pctRateInput').value || 0;
+  const result = val * (pct / 100);
+
+  $('pctResult').value = money(result);
+  $('pctDiscounted').value = money(val - result);
+  $('pctMarkedUp').value = money(val + result);
+}
+
 /* ============================================================
-   GST REPORTS & EXPORT ENGINE (PDF, EXCEL, CSV, PRINT)
+   GST REPORTS SUITE (DAILY, BILL-WISE, GSTR-1 FORMULA SHEET)
    ============================================================ */
-function toggleReportFreqUI() {
-  const freq = $('reportFreq').value;
-  $('reportMonthField').style.display = freq === 'monthly' ? 'block' : 'none';
-  $('reportDateField').style.display = freq === 'daily' ? 'block' : 'none';
+function switchGstTab(tabName) {
+  currentGstTab = tabName;
+  document.querySelectorAll('.sub-tab-btn').forEach(b => b.classList.remove('active'));
+
+  if (tabName === 'daily') {
+    $('tabBtnDaily').classList.add('active');
+    $('reportDateField').style.display = 'block';
+    $('reportMonthField').style.display = 'none';
+  } else if (tabName === 'billwise') {
+    $('tabBtnBillwise').classList.add('active');
+    $('reportDateField').style.display = 'none';
+    $('reportMonthField').style.display = 'block';
+  } else {
+    $('tabBtnGstr1').classList.add('active');
+    $('reportDateField').style.display = 'none';
+    $('reportMonthField').style.display = 'block';
+  }
   renderReports();
 }
 
 function getFilteredReportInvoices() {
-  const freq = $('reportFreq').value;
-  if (freq === 'daily') {
+  if (currentGstTab === 'daily') {
     const d = $('reportDate').value || today();
     return db.invoices.filter(i => (i.invoiceDate || '') === d);
   } else {
@@ -1061,27 +1145,97 @@ function getFilteredReportInvoices() {
 }
 
 function renderReports() {
-  const filtered = getFilteredReportInvoices();
-  $('reportListBody').innerHTML = filtered.length ? filtered.map(i => `
-    <tr>
-      <td>${esc(i.invoiceDate)}</td>
-      <td><b>${esc(i.invoiceNo)}</b></td>
-      <td>${esc(i.customerName || 'Walk-in')}</td>
-      <td>${esc(i.customerGstin || '-')}</td>
-      <td class="num">${money(i.taxable)}</td>
-      <td class="num">${money(i.gst / 2)}</td>
-      <td class="num">${money(i.gst / 2)}</td>
-      <td class="num">${money(i.gst)}</td>
-      <td class="num"><b>${money(i.grand)}</b></td>
-    </tr>
-  `).join('') : `<tr><td colspan="9" style="text-align:center; padding:20px; color:var(--text-muted);">No invoices for the selected period.</td></tr>`;
+  const thead = $('gstReportThead');
+  const tbody = $('reportListBody');
+  const invoices = getFilteredReportInvoices();
+
+  if (currentGstTab === 'daily') {
+    thead.innerHTML = `
+      <tr>
+        <th>Date</th>
+        <th>Invoice No</th>
+        <th>Customer</th>
+        <th>GSTIN</th>
+        <th class="num">Taxable Value</th>
+        <th class="num">CGST (9%)</th>
+        <th class="num">SGST (9%)</th>
+        <th class="num">Total Tax</th>
+        <th class="num">Invoice Total</th>
+      </tr>`;
+    tbody.innerHTML = invoices.length ? invoices.map(i => `
+      <tr>
+        <td>${esc(i.invoiceDate)}</td>
+        <td><b>${esc(i.invoiceNo)}</b></td>
+        <td>${esc(i.customerName || 'Walk-in')}</td>
+        <td>${esc(i.customerGstin || '-')}</td>
+        <td class="num">${money(i.taxable)}</td>
+        <td class="num">${money(i.gst / 2)}</td>
+        <td class="num">${money(i.gst / 2)}</td>
+        <td class="num">${money(i.gst)}</td>
+        <td class="num"><b>${money(i.grand)}</b></td>
+      </tr>
+    `).join('') : `<tr><td colspan="9" style="text-align:center; padding:20px; color:var(--text-muted);">No outward supply bills for selected date.</td></tr>`;
+  } else if (currentGstTab === 'billwise') {
+    thead.innerHTML = `
+      <tr>
+        <th>Bill Date</th>
+        <th>Invoice No</th>
+        <th>Customer Name</th>
+        <th>GSTIN</th>
+        <th>POS</th>
+        <th class="num">Items</th>
+        <th class="num">Taxable Value</th>
+        <th class="num">Total GST</th>
+        <th class="num">Bill Amount</th>
+      </tr>`;
+    tbody.innerHTML = invoices.length ? invoices.map(i => `
+      <tr>
+        <td>${esc(i.invoiceDate)}</td>
+        <td><b>${esc(i.invoiceNo)}</b></td>
+        <td>${esc(i.customerName || 'Walk-in')}</td>
+        <td>${esc(i.customerGstin || '-')}</td>
+        <td>33 (TN)</td>
+        <td class="num">${i.items ? i.items.length : 1}</td>
+        <td class="num">${money(i.taxable)}</td>
+        <td class="num">${money(i.gst)}</td>
+        <td class="num"><b>${money(i.grand)}</b></td>
+      </tr>
+    `).join('') : `<tr><td colspan="9" style="text-align:center; padding:20px; color:var(--text-muted);">No bills found for this period.</td></tr>`;
+  } else {
+    // GSTR-1 Outward Filing Formula Sheet
+    thead.innerHTML = `
+      <tr>
+        <th>GSTIN / UIN</th>
+        <th>Receiver Name</th>
+        <th>Invoice No</th>
+        <th>Invoice Date</th>
+        <th>Invoice Value</th>
+        <th>Place of Supply</th>
+        <th class="num">Rate (%)</th>
+        <th class="num">Taxable Value</th>
+        <th class="num">Cess Amount</th>
+      </tr>`;
+    tbody.innerHTML = invoices.length ? invoices.map(i => `
+      <tr>
+        <td>${esc(i.customerGstin || 'URP (Unregistered)')}</td>
+        <td>${esc(i.customerName || 'Consumer')}</td>
+        <td><b>${esc(i.invoiceNo)}</b></td>
+        <td>${esc(i.invoiceDate)}</td>
+        <td>${money(i.grand)}</td>
+        <td>33-Tamil Nadu</td>
+        <td class="num">18.00%</td>
+        <td class="num">${money(i.taxable)}</td>
+        <td class="num">₹0.00</td>
+      </tr>
+    `).join('') : `<tr><td colspan="9" style="text-align:center; padding:20px; color:var(--text-muted);">No GSTR-1 outward records found.</td></tr>`;
+  }
 }
 
 function exportGstReportPdf() {
-  const element = $('gstReportTable');
+  const element = $('gstReportWrap');
   const opt = {
     margin: [10, 10, 10, 10],
-    filename: `GST-Report-${$('reportFreq').value}.pdf`,
+    filename: `GST-${currentGstTab}-Report.pdf`,
     image: { type: 'jpeg', quality: 0.98 },
     html2canvas: { scale: 2 },
     jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
@@ -1095,8 +1249,8 @@ function printGstReport() {
 
 function exportGstExcel() {
   const invoices = getFilteredReportInvoices();
-  let html = `<html><head><meta charset="utf-8"></head><body><h2>SRI SIDDHAN ESSENTIAL - GST OUTWARD SUPPLY</h2><table border="1">
-  <tr><th>Date</th><th>Invoice No</th><th>Customer</th><th>GSTIN</th><th>Taxable Val</th><th>CGST</th><th>SGST</th><th>Total GST</th><th>Invoice Value</th></tr>`;
+  let html = `<html><head><meta charset="utf-8"></head><body><h2>SRI SIDDHAN ESSENTIAL - GST OUTWARD SUPPLY (${currentGstTab.toUpperCase()})</h2><table border="1">`;
+  html += `<tr><th>Date</th><th>Invoice No</th><th>Customer</th><th>GSTIN</th><th>Taxable</th><th>CGST</th><th>SGST</th><th>GST</th><th>Total</th></tr>`;
   invoices.forEach(i => {
     html += `<tr><td>${esc(i.invoiceDate)}</td><td>${esc(i.invoiceNo)}</td><td>${esc(i.customerName)}</td><td>${esc(i.customerGstin)}</td><td>${i.taxable}</td><td>${i.gst / 2}</td><td>${i.gst / 2}</td><td>${i.gst}</td><td>${i.grand}</td></tr>`;
   });
@@ -1105,7 +1259,7 @@ function exportGstExcel() {
   const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `GST-Report-${today()}.xls`;
+  a.download = `GST-${currentGstTab}-${today()}.xls`;
   a.click();
 }
 
@@ -1118,7 +1272,7 @@ function exportGstCsv() {
   const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `GST-Report-${today()}.csv`;
+  a.download = `GST-${currentGstTab}-${today()}.csv`;
   a.click();
 }
 
