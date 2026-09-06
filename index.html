@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Command Desk">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#ffffff">
   <title>Command Desk | Enterprise Hub</title>
   <style>
     :root {
@@ -27,314 +32,352 @@
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
-    body { background: var(--bg-body); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
-
-    .mobile-header {
-      display: none; height: 56px; background: #ffffff; border-bottom: 1px solid var(--border);
-      padding: 0 16px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
-    }
-    .burger-btn { font-size: 22px; background: none; border: none; cursor: pointer; padding: 6px; color: var(--text-main); }
-
-    #appLayout { display: flex; width: 100vw; min-height: 100vh; }
     
-    /* Sliding Sidebar */
+    html, body {
+      width: 100%; min-height: 100vh; background: var(--bg-body); color: var(--text-main);
+      overflow-x: hidden; -webkit-font-smoothing: antialiased;
+    }
+
+    /* Freezes background scrolling whenever any modal or drawer is active */
+    body.body-frozen {
+      overflow: hidden !important;
+      touch-action: none !important;
+    }
+
+    /* Universal Top Clearance */
+    #appLayout {
+      display: flex; width: 100%; min-height: 100vh; position: relative;
+    }
+
+    /* Floating Navigation Button (Universal Mobile, iPad & Desktop) */
+    #floatMenuBtn {
+      position: fixed;
+      top: max(14px, env(safe-area-inset-top));
+      left: 14px;
+      z-index: 1200;
+      background: #ffffff;
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-main);
+      box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+      transition: all 0.2s var(--ease-spring);
+    }
+    #floatMenuBtn:active { transform: scale(0.92); }
+
+    /* Universal Backdrop for Sidebar Drawer */
+    #sidebarBackdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(3px);
+      z-index: 1250; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
+    }
+    #sidebarBackdrop.active { opacity: 1; pointer-events: auto; }
+
+    /* Slide-out Sidebar Drawer */
     .sidebar {
-      width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; justify-content: space-between; padding: 22px 16px; flex-shrink: 0; z-index: 200;
-      transition: width 0.35s var(--ease-smooth), padding 0.35s var(--ease-smooth), transform 0.35s var(--ease-smooth);
-      overflow: hidden;
+      position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-w);
+      background: #ffffff; z-index: 1300; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: space-between;
+      padding: max(20px, env(safe-area-inset-top)) 18px max(20px, env(safe-area-inset-bottom)) 18px;
+      transform: translateX(-105%);
+      transition: transform 0.3s var(--ease-smooth);
+      box-shadow: 10px 0 35px rgba(0,0,0,0.12);
+      overflow-y: auto; -webkit-overflow-scrolling: touch;
     }
-    .sidebar.collapsed {
-      width: 0px !important; padding: 0px !important; border-right: none !important;
-    }
+    .sidebar.open { transform: translateX(0); }
 
-    .brand-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-    .brand-title {
-      font-size: 15px; font-weight: 800; letter-spacing: -0.3px; color: var(--text-main);
-      display: flex; align-items: center; gap: 8px; white-space: nowrap;
-    }
+    .brand-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .brand-title { font-size: 15px; font-weight: 800; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
     .badge-dot { width: 9px; height: 9px; background: var(--red-primary); border-radius: 50%; }
-    
-    .btn-toggle-sidebar {
+
+    .btn-close-drawer {
       background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px;
-      padding: 5px 9px; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--text-muted);
+      padding: 6px 12px; font-size: 13px; font-weight: 700; cursor: pointer; color: var(--text-muted);
     }
-    .btn-toggle-sidebar:hover { background: #e2e8f0; color: var(--text-main); }
 
-    /* Floating Toggle Button */
-    #floatExpandBtn {
-      position: fixed; top: 16px; left: 16px; z-index: 300; background: #ffffff;
-      border: 1px solid var(--border); border-radius: 12px; width: 42px; height: 42px;
-      display: flex; align-items: center; justify-content: center; font-size: 18px;
-      cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.08); transition: all 0.2s var(--ease-spring);
-    }
-    #floatExpandBtn:hover { background: #f8fafc; border-color: var(--red-primary); color: var(--red-primary); transform: scale(1.08); }
-
-    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 18px; white-space: nowrap; }
+    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 16px; white-space: nowrap; }
     .sync-ok { background: #dcfce7; color: #15803d; }
     .sync-pending { background: #fef3c7; color: #b45309; }
 
     .nav-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
     .nav-btn {
-      width: 100%; text-align: left; padding: 10px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600;
-      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;
-      white-space: nowrap;
+      width: 100%; text-align: left; padding: 11px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px;
+      transition: all 0.15s; white-space: nowrap;
     }
-    .nav-btn:hover { background: #f1f5f9; color: var(--text-main); transform: translateX(3px); }
+    .nav-btn:hover, .nav-btn:active { background: #f1f5f9; color: var(--text-main); }
     .nav-btn.active { background: var(--red-light); color: var(--red-primary); border-left: 4px solid var(--red-primary); font-weight: 700; }
     .nav-btn-kiosk { background: var(--emerald-light); color: var(--emerald); font-weight: 700; }
-    .nav-btn-kiosk:hover { background: #d1fae5; }
     .lock-indicator { margin-left: auto; font-size: 11px; opacity: 0.7; }
 
-    .content-area { flex-grow: 1; padding: 32px 32px 32px 76px; overflow-y: auto; max-height: 100vh; }
+    /* Main Content Area */
+    .content-area {
+      flex-grow: 1; width: 100%;
+      padding: max(20px, env(safe-area-inset-top)) 20px 40px 72px;
+      overflow-y: auto; max-height: 100vh; -webkit-overflow-scrolling: touch;
+    }
+
+    /* Page Navigation Headers */
+    .page-nav-bar {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
+    }
+    .btn-page-back {
+      background: #ffffff; border: 1px solid var(--border); border-radius: 10px;
+      padding: 7px 12px; font-size: 12.5px; font-weight: 700; color: var(--text-main);
+      cursor: pointer; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+      transition: all 0.15s;
+    }
+    .btn-page-back:active { transform: scale(0.96); }
+
     .tab-pane { display: none; }
-    .tab-pane.active { display: block; animation: slideUpFade 0.35s var(--ease-smooth) forwards; }
+    .tab-pane.active { display: block; animation: slideUpFade 0.28s var(--ease-smooth) forwards; }
     @keyframes slideUpFade { 
-      from { opacity: 0; transform: translateY(12px) scale(0.99); } 
-      to { opacity: 1; transform: translateY(0) scale(1); } 
+      from { opacity: 0; transform: translateY(8px); } 
+      to { opacity: 1; transform: translateY(0); } 
     }
 
-    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; gap: 12px; }
-    .heading-wrapper { display: flex; align-items: center; gap: 8px; }
-    .h1-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
-    .sub-lead-wrapper { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
-    .sub-lead { font-size: 12.5px; color: var(--text-muted); }
-    .icon-pencil-heading { font-size: 14px; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
-    .icon-pencil-heading:hover { color: var(--red-primary); background: #f1f5f9; }
-
-    .drop-target {
-      border: 2px dashed #cbd5e1; border-radius: 18px; background: #ffffff;
-      padding: 24px 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s ease;
+    .view-header {
+      display: flex; justify-content: space-between; align-items: flex-end;
+      margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; gap: 12px;
     }
-    .drop-target:hover, .drop-target.dragover { border-color: var(--indigo-core); background: var(--indigo-light); transform: scale(1.01); }
+    .h1-title { font-size: 21px; font-weight: 800; color: var(--text-main); }
+    .sub-lead { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
+    .icon-pencil-heading { font-size: 13px; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
 
+    /* Form Controls */
     input, select, textarea {
-      width: 100%; background: #ffffff; border: 1px solid var(--border); border-radius: 10px;
-      padding: 10px 12px; font-size: 13.5px; color: var(--text-main); margin-top: 5px; margin-bottom: 12px;
+      width: 100%; background: #ffffff; border: 1.5px solid var(--border); border-radius: 12px;
+      padding: 11px 14px; font-size: 14px; color: var(--text-main); margin-top: 5px; margin-bottom: 12px;
+      -webkit-appearance: none;
     }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08); }
-    
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--border-focus); }
+
     .btn {
-      padding: 9px 16px; border-radius: 10px; border: 1px solid transparent; font-size: 13px; font-weight: 600;
+      padding: 10px 16px; border-radius: 12px; border: 1px solid transparent; font-size: 13px; font-weight: 600;
       cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s;
     }
-    .btn:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(1); }
     .btn-red { background: var(--red-primary); color: #ffffff; }
-    .btn-red:hover:not(:disabled) { background: var(--red-hover); transform: translateY(-1px); }
     .btn-indigo { background: var(--indigo-core); color: #ffffff; }
-    .btn-indigo:hover:not(:disabled) { background: #4338ca; transform: translateY(-1px); }
     .btn-magenta { background: var(--magenta); color: #ffffff; }
     .btn-emerald { background: var(--emerald); color: #ffffff; }
-    .btn-emerald:hover:not(:disabled) { background: #047857; transform: translateY(-1px); }
     .btn-subtle { background: #ffffff; color: var(--text-main); border: 1px solid var(--border); }
-    .btn-subtle:hover { background: #f8fafc; }
     .btn-ghost-danger { background: transparent; color: var(--red-primary); border: none; padding: 4px 6px; font-size: 13px; cursor: pointer; }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    /* Standard Grids */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .dash-card {
       background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
       padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px;
-      transition: all 0.2s ease;
     }
-    .dash-card:hover { border-color: #cbd5e1; transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.03); }
 
     .folder-card {
       background: linear-gradient(145deg, #ffffff 65%, #fff1f2 100%);
-      border: 1px solid #fecdd3;
-      border-left: 5px solid #dc2626;
-      border-radius: 18px;
-      padding: 18px;
-      cursor: pointer;
-      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.04);
-      transition: all 0.25s var(--ease-smooth);
+      border: 1px solid #fecdd3; border-left: 5px solid #dc2626; border-radius: 18px;
+      padding: 18px; cursor: pointer; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.04);
+      transition: all 0.2s;
     }
-    .folder-card:hover {
-      transform: translateY(-3px) scale(1.01);
-      box-shadow: 0 10px 24px rgba(220, 38, 38, 0.12);
-      border-color: #dc2626;
+    .folder-card:hover { transform: translateY(-2px); }
+
+    /* ============================================================
+       RESPONSIVE FRONT CARDS (CLEAN 2x2 MOBILE, 3-4 COL ON TABLET/PC)
+       ============================================================ */
+    .kiosk-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
     }
 
-    /* COMPACT, CUTE & CURVY FRONT CARDS (26px CURVED EDGES) */
-    .kiosk-grid {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; margin-top: 14px;
-    }
     .kiosk-card {
       position: relative;
       background: #ffffff;
-      border-radius: 26px; /* Cute Curved Pill Edges */
-      padding: 20px 18px;
+      border-radius: 20px;
+      padding: 16px 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 195px; /* Compact Smaller Footprint */
+      min-height: 180px;
       cursor: pointer;
-      border: 1px solid #f1f5f9;
-      box-shadow: 0 6px 20px -4px rgba(15, 23, 42, 0.04);
-      transition: all 0.3s var(--ease-spring);
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
+      transition: all 0.25s var(--ease-spring);
       overflow: hidden;
+      word-break: break-word;
+      overflow-wrap: anywhere;
     }
     .kiosk-card::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
-      border-radius: 26px 26px 0 0;
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
+      border-radius: 20px 20px 0 0;
     }
-    .kiosk-card:hover {
-      transform: translateY(-5px) scale(1.02);
-      box-shadow: 0 16px 28px -6px rgba(15, 23, 42, 0.1);
-    }
+    .kiosk-card:active { transform: scale(0.97); }
 
-    .kiosk-emerald::before { background: linear-gradient(90deg, #10b981, #059669); }
+    .kiosk-emerald::before { background: #059669; }
     .kiosk-emerald .card-badge { background: #ecfdf5; color: #059669; }
     .kiosk-emerald .kiosk-btn { background: #059669; color: #ffffff; }
 
-    .kiosk-crimson::before { background: linear-gradient(90deg, #f43f5e, #dc2626); }
+    .kiosk-crimson::before { background: #dc2626; }
     .kiosk-crimson .card-badge { background: #fff1f2; color: #dc2626; }
     .kiosk-crimson .kiosk-btn { background: #dc2626; color: #ffffff; }
 
-    .kiosk-indigo::before { background: linear-gradient(90deg, #6366f1, #4f46e5); }
+    .kiosk-indigo::before { background: #4f46e5; }
     .kiosk-indigo .card-badge { background: #eef2ff; color: #4f46e5; }
     .kiosk-indigo .kiosk-btn { background: #4f46e5; color: #ffffff; }
 
-    .kiosk-magenta::before { background: linear-gradient(90deg, #d946ef, #c026d3); }
+    .kiosk-magenta::before { background: #c026d3; }
     .kiosk-magenta .card-badge { background: #fdf4ff; color: #c026d3; }
     .kiosk-magenta .kiosk-btn { background: #c026d3; color: #ffffff; }
 
-    .kiosk-slate::before { background: linear-gradient(90deg, #475569, #0f172a); }
+    .kiosk-slate::before { background: #0f172a; }
     .kiosk-slate .card-badge { background: #f1f5f9; color: #0f172a; }
     .kiosk-slate .kiosk-btn { background: #0f172a; color: #ffffff; }
 
-    .card-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .card-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
     .kiosk-icon-box {
-      width: 44px; height: 44px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0;
-      display: flex; align-items: center; justify-content: center; font-size: 22px;
+      width: 40px; height: 40px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
     }
     .card-badge {
-      font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 14px;
-      display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+      font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 12px;
+      display: flex; align-items: center; gap: 4px; text-transform: uppercase;
     }
-    .status-pulse { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
-    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .status-pulse { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
 
-    .kiosk-title { font-size: 17px; font-weight: 800; color: var(--text-main); margin-bottom: 3px; line-height: 1.3; }
-    .kiosk-sub { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 14px; }
+    .kiosk-title {
+      font-size: 15.5px; font-weight: 800; color: var(--text-main); margin-bottom: 2px;
+      line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
+    .kiosk-sub {
+      font-size: 11.5px; color: var(--text-muted); line-height: 1.35; margin-bottom: 12px;
+      overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+    }
     
     .kiosk-btn {
-      width: 100%; padding: 10px 14px; border-radius: 14px; font-weight: 700; font-size: 13px;
-      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
-      transition: all 0.15s ease;
+      width: 100%; padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px;
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
+      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
-    .kiosk-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
 
-    .kiosk-edit-bar { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; }
+    .kiosk-edit-bar { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; }
+
+    /* Modal Architecture */
+    .modal-backdrop {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px);
+      display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 14px;
+      touch-action: none;
+    }
+    .modal-window, .folder-popup-window {
+      background: #ffffff; border-radius: 20px; width: 100%; max-width: 520px; padding: 22px; max-height: 88vh;
+      overflow-y: auto; -webkit-overflow-scrolling: touch; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+    .folder-popup-window { max-width: 680px; }
+
+    /* Gatekeeper Modal */
+    #gatekeeper {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(8px);
+      display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px;
+      touch-action: none;
+    }
+    .gate-box {
+      background: #ffffff; border-radius: 24px; padding: 32px 24px; width: 100%; max-width: 360px; text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+    }
 
     .emoji-picker-shelf {
-      display: flex; flex-wrap: wrap; gap: 8px; background: #f8fafc; border: 1px solid var(--border);
-      padding: 10px; border-radius: 14px; margin-bottom: 12px;
+      display: flex; flex-wrap: wrap; gap: 6px; background: #f8fafc; border: 1px solid var(--border);
+      padding: 8px; border-radius: 12px; margin-bottom: 12px;
     }
     .emoji-chip {
-      font-size: 20px; padding: 6px; border-radius: 10px; cursor: pointer; transition: all 0.15s var(--ease-spring);
-      background: #ffffff; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center;
+      font-size: 19px; padding: 6px; border-radius: 8px; cursor: pointer;
+      background: #ffffff; border: 1px solid #e2e8f0; display: inline-flex;
     }
-    .emoji-chip:hover { transform: scale(1.3); border-color: var(--red-primary); }
 
-    .color-picker-group { display: flex; gap: 10px; margin-bottom: 16px; }
-    .color-swatch {
-      width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-      border: 3px solid transparent; transition: all 0.2s var(--ease-spring);
-    }
-    .color-swatch.active { border-color: #0f172a; transform: scale(1.15); }
+    .color-picker-group { display: flex; gap: 10px; margin-bottom: 14px; }
+    .color-swatch { width: 32px; height: 32px; border-radius: 50%; cursor: pointer; border: 3px solid transparent; }
+    .color-swatch.active { border-color: #0f172a; transform: scale(1.12); }
 
-    .pill { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; text-transform: uppercase; }
+    .pill { font-size: 10.5px; padding: 3px 8px; border-radius: 8px; font-weight: 700; text-transform: uppercase; }
     .pill-red { background: var(--red-light); color: var(--red-primary); }
     .pill-indigo { background: var(--indigo-light); color: var(--indigo-core); }
     .pill-magenta { background: var(--magenta-light); color: var(--magenta); }
-    .pill-emerald { background: var(--emerald-light); color: var(--emerald); }
-
-    /* Modal Animation */
-    .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
-      display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 14px;
-      animation: fadeIn 0.2s ease-out;
-    }
-    .modal-window, .folder-popup-window {
-      background: #ffffff; border-radius: 20px; width: 100%; max-width: 540px; padding: 24px; max-height: 90vh; overflow-y: auto;
-      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-      animation: popIn 0.3s var(--ease-spring) forwards;
-    }
-    .folder-popup-window { max-width: 700px; }
-
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    @keyframes popIn {
-      from { opacity: 0; transform: scale(0.92) translateY(10px); }
-      to { opacity: 1; transform: scale(1) translateY(0); }
-    }
-
-    #gatekeeper {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(6px);
-      display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px;
-    }
-    .gate-box {
-      background: #ffffff; border-radius: 22px; padding: 32px 24px; width: 100%; max-width: 380px; text-align: center;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-      animation: popIn 0.3s var(--ease-spring);
-    }
-
-    #toastMsg {
-      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-      background: #0f172a; color: #ffffff; padding: 10px 18px; border-radius: 20px;
-      font-size: 12.5px; z-index: 99999; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
-    }
 
     .hidden { display: none !important; }
 
-    @media (max-width: 768px) {
-      .mobile-header { display: flex; }
-      #appLayout { flex-direction: column; }
-      .sidebar {
-        position: fixed; top: 56px; left: 0; bottom: 0; width: 275px;
-        transform: translateX(-100%); box-shadow: 10px 0 25px rgba(0,0,0,0.1);
+    /* ============================================================
+       MOBILE & TABLET BREAKPOINTS (2x2 CARD GRID ON PHONES)
+       ============================================================ */
+    @media (max-width: 600px) {
+      .content-area { padding: max(16px, env(safe-area-inset-top)) 12px 40px 12px; }
+      
+      /* Pure 2x2 Clean Mobile Grid */
+      .kiosk-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
       }
-      .sidebar.open { transform: translateX(0); }
-      .content-area { padding: 18px 14px; max-height: calc(100vh - 56px); }
-      .grid, .kiosk-grid { grid-template-columns: 1fr; }
+      .kiosk-card {
+        padding: 12px 10px;
+        min-height: 165px;
+        border-radius: 16px;
+      }
+      .kiosk-icon-box { width: 34px; height: 34px; font-size: 17px; }
+      .kiosk-title { font-size: 13.5px; }
+      .kiosk-sub { font-size: 10.5px; margin-bottom: 8px; }
+      .kiosk-btn { padding: 8px 6px; font-size: 11px; border-radius: 10px; }
+
+      .grid { grid-template-columns: 1fr; }
       .view-header { flex-direction: column; align-items: flex-start; }
       .view-header button { width: 100%; }
-      #floatExpandBtn { display: none !important; }
+
+      /* Reposition Floating Button on Mobile to Avoid Any Conflict */
+      #floatMenuBtn {
+        top: max(10px, env(safe-area-inset-top));
+        right: 12px;
+        left: auto;
+      }
+    }
+
+    @media (min-width: 601px) and (max-width: 1024px) {
+      /* iPad and Android Tablet Viewport Frame */
+      .content-area { padding: 24px 20px 40px 72px; }
+      .kiosk-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
     }
   </style>
 </head>
 <body>
 
-<div id="toastMsg">Press back again to exit</div>
-
-<button id="floatExpandBtn" onclick="toggleSidebarCollapse()" title="Open Sidebar">
+<!-- Universal Fixed Floating Drawer Button -->
+<button id="floatMenuBtn" onclick="toggleSidebarDrawer(event)" title="Open Command Sidebar">
   ☰
 </button>
 
+<!-- Backdrop that freezes interactions outside the sidebar drawer -->
+<div id="sidebarBackdrop" onclick="closeSidebarDrawer()"></div>
+
+<!-- Gatekeeper Authenticator (No default: admin hint text) -->
 <div id="gatekeeper">
   <div class="gate-box">
     <div style="font-size: 34px; margin-bottom: 8px;">🔐</div>
     <h2 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">Enterprise Command Hub</h2>
     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">Enter Admin Authorization Code</p>
-    <input type="password" id="gateKey" placeholder="Access Code (default: admin)" style="text-align: center;" autofocus>
+    <input type="password" id="gateKey" placeholder="Enter Access Code" style="text-align: center;" autofocus>
     <button class="btn btn-red" style="width: 100%; padding: 11px;" onclick="verifyGate()">Authenticate Session</button>
     <div id="gateErr" style="color: var(--red-primary); font-size: 12px; margin-top: 8px; display: none;">Invalid passkey.</div>
   </div>
 </div>
 
-<header class="mobile-header">
-  <button class="burger-btn" onclick="toggleMobileSidebar()">☰</button>
-  <span style="font-size: 14px; font-weight: 800;"><span class="badge-dot" style="display:inline-block;"></span> COMMAND DESK</span>
-  <button class="btn btn-subtle" style="padding: 5px 10px; font-size: 12px;" onclick="lockApp()">🔒</button>
-</header>
-
 <div id="appLayout">
-  <aside class="sidebar collapsed" id="mainSidebar" onmouseenter="clearSidebarTimer()" onmouseleave="armSidebarTimer()">
+  <!-- Off-Canvas Slide Drawer -->
+  <aside class="sidebar" id="mainSidebar">
     <div>
       <div class="brand-container">
         <div class="brand-title">
           <span class="badge-dot"></span> COMMAND DESK
         </div>
-        <button class="btn-toggle-sidebar" onclick="closeSidebarNow()" title="Hide Sidebar">◀</button>
+        <button class="btn-close-drawer" onclick="closeSidebarDrawer()">✕ Close</button>
       </div>
 
       <div>
@@ -353,11 +396,9 @@
         <li><button class="nav-btn" onclick="switchView('credentials')">🔐 <span id="nav-credentials">Secured Credentials</span></button></li>
         <li><button class="nav-btn" onclick="switchView('htmlEngine')">⚡ <span id="nav-htmlEngine">HTML App Runtime</span></button></li>
         <li><button class="nav-btn" onclick="switchView('memos')">📋 <span id="nav-memos">Executive Memos</span></button></li>
-
         <li style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px;">
           <button class="nav-btn" onclick="switchView('labels')">🔤 Global Names & Buttons</button>
         </li>
-
         <li>
           <button class="nav-btn" onclick="switchProtectedView('cloud')">
             ☁️ <span>Cloud Synchronization</span>
@@ -379,17 +420,12 @@
 
   <main class="content-area" id="mainContentArea">
 
+    <!-- TAB 0: PRESENTATION DECK (DEFAULT FRONT PAGE) -->
     <section id="pane-kiosk" class="tab-pane active">
       <div class="view-header">
         <div>
-          <div class="heading-wrapper">
-            <h1 class="h1-title" id="title-kiosk">Customer Presentation Deck</h1>
-            <span class="icon-pencil-heading" onclick="renameModuleHeading('kiosk')" title="Rename Title">✎</span>
-          </div>
-          <div class="sub-lead-wrapper">
-            <p class="sub-lead" id="sub-kiosk">Quick access tools and live public portals</p>
-            <span class="icon-pencil-heading" onclick="renameKioskSubtitle()" title="Edit Subtitle">✎</span>
-          </div>
+          <h1 class="h1-title" id="title-kiosk">Customer Presentation Deck</h1>
+          <p class="sub-lead" id="sub-kiosk">Quick access tools and live public portals</p>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn btn-emerald" onclick="openModal('modalKioskItem')">+ Add Front Card</button>
@@ -399,13 +435,14 @@
       <div class="kiosk-grid" id="kioskGrid"></div>
     </section>
 
+    <!-- TAB 1: CENTRAL COMMAND FOLDERS (PROTECTED) -->
     <section id="pane-folders" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
-          <div class="heading-wrapper">
-            <h1 class="h1-title" id="title-folders">Central Command Folders</h1>
-            <span class="icon-pencil-heading" onclick="renameModuleHeading('folders')" title="Rename Heading">✎</span>
-          </div>
+          <h1 class="h1-title" id="title-folders">Central Command Folders</h1>
           <p class="sub-lead">Master repository categorized by functional operations</p>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
@@ -416,28 +453,30 @@
       <div class="grid" id="foldersGrid"></div>
     </section>
 
+    <!-- TAB 2: MISSION PORTALS -->
     <section id="pane-portals" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
-          <div class="heading-wrapper">
-            <h1 class="h1-title" id="title-portals">Mission Portals</h1>
-            <span class="icon-pencil-heading" onclick="renameModuleHeading('portals')" title="Rename Heading">✎</span>
-          </div>
+          <h1 class="h1-title" id="title-portals">Mission Portals</h1>
           <p class="sub-lead">Web admin gateways and executive shortcuts</p>
         </div>
         <button class="btn btn-red" onclick="openModal('modalLink')">+ Add Portal</button>
       </div>
-      <input type="text" id="linkFilter" placeholder="Filter portals by title, folder or URL..." oninput="renderLinks()">
+      <input type="text" id="linkFilter" placeholder="Filter portals..." oninput="renderLinks()">
       <div class="grid" id="linksGrid"></div>
     </section>
 
+    <!-- TAB 3: SECURED CREDENTIALS -->
     <section id="pane-credentials" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
-          <div class="heading-wrapper">
-            <h1 class="h1-title" id="title-credentials">Secured Credentials Vault</h1>
-            <span class="icon-pencil-heading" onclick="renameModuleHeading('credentials')" title="Rename Heading">✎</span>
-          </div>
+          <h1 class="h1-title" id="title-credentials">Secured Credentials Vault</h1>
           <p class="sub-lead">Protected login tokens, passwords, and master keys</p>
         </div>
         <button class="btn btn-magenta" onclick="openModal('modalCred')">+ Save Credential</button>
@@ -445,35 +484,37 @@
       <div class="grid" id="credsGrid"></div>
     </section>
 
+    <!-- TAB 4: HTML RUNTIME -->
     <section id="pane-htmlEngine" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
-          <div class="heading-wrapper">
-            <h1 class="h1-title" id="title-htmlEngine">HTML Application Runtime</h1>
-            <span class="icon-pencil-heading" onclick="renameModuleHeading('htmlEngine')" title="Rename Heading">✎</span>
-          </div>
+          <h1 class="h1-title" id="title-htmlEngine">HTML Application Runtime</h1>
           <p class="sub-lead">Run single-page tools & snippets in sandbox</p>
         </div>
         <button class="btn btn-red" onclick="openModal('modalHtml')">+ Add HTML Snippet</button>
       </div>
 
       <div class="drop-target" id="dropArea" onclick="document.getElementById('filePicker').click()">
-        <div style="font-size: 30px; margin-bottom: 6px;">📄</div>
-        <strong style="font-size: 14.5px;">Drop HTML file here or click to browse</strong>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports standalone .html, .htm, or web script files</p>
+        <div style="font-size: 26px; margin-bottom: 4px;">📄</div>
+        <strong style="font-size: 14px;">Drop HTML file here or click to browse</strong>
+        <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 3px;">Supports standalone .html, .htm, or web script files</p>
         <input type="file" id="filePicker" accept=".html,.htm,.txt" style="display: none;" onchange="handleFileDrop(event)">
       </div>
 
       <div class="grid" id="htmlGrid"></div>
     </section>
 
+    <!-- TAB 5: EXECUTIVE MEMOS -->
     <section id="pane-memos" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
-          <div class="heading-wrapper">
-            <h1 class="h1-title" id="title-memos">Executive Memo Pad</h1>
-            <span class="icon-pencil-heading" onclick="renameModuleHeading('memos')" title="Rename Heading">✎</span>
-          </div>
+          <h1 class="h1-title" id="title-memos">Executive Memo Pad</h1>
           <p class="sub-lead">Encrypted protocols, notes, and documentation</p>
         </div>
         <button class="btn btn-indigo" onclick="openModal('modalMemo')">+ Draft Memo</button>
@@ -481,7 +522,11 @@
       <div class="grid" id="memosGrid"></div>
     </section>
 
+    <!-- TAB 6: GLOBAL NAMES & BUTTONS -->
     <section id="pane-labels" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
           <h1 class="h1-title">Global Names & Button Controls</h1>
@@ -492,7 +537,6 @@
       <div style="max-width: 600px; display:flex; flex-direction:column; gap:16px;">
         <div class="dash-card">
           <h3 style="font-size: 15px; margin-bottom: 12px;">🔘 Action Button Labels</h3>
-          
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">FRONT CARD BUTTON LABEL</label>
           <input type="text" id="cfgCardBtnText" placeholder="e.g. Launch Page ➔">
 
@@ -502,7 +546,6 @@
 
         <div class="dash-card">
           <h3 style="font-size: 15px; margin-bottom: 12px;">📑 Category & Module Titles</h3>
-          
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">PRESENTATION DECK TITLE</label>
           <input type="text" id="cfgKioskTitle">
 
@@ -524,7 +567,6 @@
 
         <div class="dash-card">
           <h3 style="font-size: 15px; margin-bottom: 8px;">📁 Rename Individual Folders</h3>
-          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Rename any of your active folders directly:</p>
           <div id="cfgFolderInputsList" style="display:flex; flex-direction:column; gap:8px;"></div>
         </div>
 
@@ -532,7 +574,11 @@
       </div>
     </section>
 
+    <!-- TAB 7: CLOUD SYNC -->
     <section id="pane-cloud" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
           <h1 class="h1-title">Cloud Synchronization</h1>
@@ -558,7 +604,11 @@
       </div>
     </section>
 
+    <!-- TAB 8: MASTER PASSCODE -->
     <section id="pane-security" class="tab-pane">
+      <div class="page-nav-bar">
+        <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
+      </div>
       <div class="view-header">
         <div>
           <h1 class="h1-title">Master Passcode & Security</h1>
@@ -578,12 +628,13 @@
   </main>
 </div>
 
+<!-- FOLDER VAULT POPUP -->
 <div id="modalFolderPopup" class="modal-backdrop hidden">
   <div class="folder-popup-window">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
       <div style="display:flex; align-items:center; gap:8px;">
         <span style="font-size:22px;">📁</span>
-        <h2 id="popupFolderTitle" style="font-size:19px; font-weight:800; color:var(--text-main);"></h2>
+        <h2 id="popupFolderTitle" style="font-size:18px; font-weight:800; color:var(--text-main);"></h2>
       </div>
       <button class="btn btn-subtle" style="padding:4px 10px;" onclick="closeModal('modalFolderPopup')">✕ Close</button>
     </div>
@@ -591,6 +642,7 @@
   </div>
 </div>
 
+<!-- MODAL: ADD / EDIT FRONT CARD -->
 <div id="modalKioskItem" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalKioskHeading">Add Presentation Card</h3>
@@ -604,11 +656,11 @@
 
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">CHOOSE CARD COLOR THEME</label>
     <div class="color-picker-group">
-      <div class="color-swatch active" style="background:#059669;" data-color="emerald" onclick="selectCardColor('emerald', this)" title="Emerald Green"></div>
-      <div class="color-swatch" style="background:#dc2626;" data-color="crimson" onclick="selectCardColor('crimson', this)" title="Crimson Red"></div>
-      <div class="color-swatch" style="background:#4f46e5;" data-color="indigo" onclick="selectCardColor('indigo', this)" title="Royal Indigo"></div>
-      <div class="color-swatch" style="background:#c026d3;" data-color="magenta" onclick="selectCardColor('magenta', this)" title="Magenta Violet"></div>
-      <div class="color-swatch" style="background:#0f172a;" data-color="slate" onclick="selectCardColor('slate', this)" title="Executive Slate"></div>
+      <div class="color-swatch active" style="background:#059669;" data-color="emerald" onclick="selectCardColor('emerald', this)"></div>
+      <div class="color-swatch" style="background:#dc2626;" data-color="crimson" onclick="selectCardColor('crimson', this)"></div>
+      <div class="color-swatch" style="background:#4f46e5;" data-color="indigo" onclick="selectCardColor('indigo', this)"></div>
+      <div class="color-swatch" style="background:#c026d3;" data-color="magenta" onclick="selectCardColor('magenta', this)"></div>
+      <div class="color-swatch" style="background:#0f172a;" data-color="slate" onclick="selectCardColor('slate', this)"></div>
     </div>
     <input type="hidden" id="fKioskColor" value="emerald">
 
@@ -629,29 +681,30 @@
     </div>
 
     <div style="display:flex; gap:10px;">
-      <div style="width:85px;">
-        <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SELECTED</label>
-        <input type="text" id="fKioskIcon" style="text-align:center; font-size:20px;" placeholder="🧇" value="🧇">
+      <div style="width:75px;">
+        <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ICON</label>
+        <input type="text" id="fKioskIcon" style="text-align:center; font-size:18px;" value="🧇">
       </div>
       <div style="flex-grow:1;">
         <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">CARD TITLE</label>
-        <input type="text" id="fKioskTitle" placeholder="e.g. Official Website or Calculator">
+        <input type="text" id="fKioskTitle" placeholder="e.g. Official Website">
       </div>
     </div>
 
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SUBTITLE / DESCRIPTION</label>
-    <input type="text" id="fKioskSub" placeholder="e.g. Instant customer catalog or calculation tool">
+    <input type="text" id="fKioskSub" placeholder="e.g. Instant customer catalog">
 
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">DESTINATION WEB URL</label>
     <input type="text" id="fKioskUrl" placeholder="https://example.com">
 
     <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
       <button class="btn btn-subtle" onclick="closeModal('modalKioskItem')">Cancel</button>
-      <button class="btn btn-emerald" onclick="saveKioskCard()">Save Presentation Card</button>
+      <button class="btn btn-emerald" onclick="saveKioskCard()">Save Card</button>
     </div>
   </div>
 </div>
 
+<!-- MODAL: UNIVERSAL FAST CREATE -->
 <div id="modalFastCreate" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size:17px; margin-bottom:12px;">Universal Quick Create</h3>
@@ -668,6 +721,7 @@
   </div>
 </div>
 
+<!-- MODAL: ADD / EDIT PORTAL -->
 <div id="modalLink" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalLinkHeading">Mission Portal</h3>
@@ -693,6 +747,7 @@
   </div>
 </div>
 
+<!-- MODAL: ADD / EDIT CREDENTIAL -->
 <div id="modalCred" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalCredHeading">Secured Credential</h3>
@@ -726,6 +781,7 @@
   </div>
 </div>
 
+<!-- MODAL: ADD / EDIT HTML -->
 <div id="modalHtml" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalHtmlHeading">HTML Runtime Application</h3>
@@ -751,6 +807,7 @@
   </div>
 </div>
 
+<!-- MODAL: ADD / EDIT MEMO -->
 <div id="modalMemo" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 id="memoModalTitle" style="font-size: 17px; margin-bottom: 12px;">Executive Memo</h3>
@@ -811,7 +868,6 @@ let currentEditingLinkIndex = -1;
 let currentEditingCredIndex = -1;
 let currentEditingHtmlIndex = -1;
 let currentEditingMemoIndex = -1;
-let sidebarAutoCloseTimer = null;
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -841,6 +897,7 @@ function init() {
   updateHeadingsUI();
   populateGlobalLabelsUI();
 
+  // Landing view
   const activeTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'kiosk';
   switchView(activeTab);
 
@@ -854,45 +911,28 @@ function init() {
   }
 }
 
-// Auto-Closing Sidebar (5000ms timer with hover-pause)
-function toggleSidebarCollapse() {
+// Universal Drawer Engine
+function toggleSidebarDrawer(e) {
+  if (e) e.stopPropagation();
   const sidebar = document.getElementById("mainSidebar");
-  const floatBtn = document.getElementById("floatExpandBtn");
-  sidebar.classList.toggle("collapsed");
+  const backdrop = document.getElementById("sidebarBackdrop");
+  const isOpen = sidebar.classList.contains("open");
 
-  if (sidebar.classList.contains("collapsed")) {
-    floatBtn.style.display = "flex";
-    clearSidebarTimer();
+  if (isOpen) {
+    closeSidebarDrawer();
   } else {
-    floatBtn.style.display = "none";
-    armSidebarTimer();
+    sidebar.classList.add("open");
+    backdrop.classList.add("active");
+    document.body.classList.add("body-frozen");
   }
 }
 
-function closeSidebarNow() {
+function closeSidebarDrawer() {
   const sidebar = document.getElementById("mainSidebar");
-  const floatBtn = document.getElementById("floatExpandBtn");
-  sidebar.classList.add("collapsed");
-  floatBtn.style.display = "flex";
-  clearSidebarTimer();
-}
-
-function armSidebarTimer() {
-  clearSidebarTimer();
-  sidebarAutoCloseTimer = setTimeout(() => {
-    closeSidebarNow();
-  }, 5000); // Closes automatically after 5000ms of inactivity
-}
-
-function clearSidebarTimer() {
-  if (sidebarAutoCloseTimer) {
-    clearTimeout(sidebarAutoCloseTimer);
-    sidebarAutoCloseTimer = null;
-  }
-}
-
-function toggleMobileSidebar() {
-  document.getElementById("mainSidebar").classList.toggle("open");
+  const backdrop = document.getElementById("sidebarBackdrop");
+  sidebar.classList.remove("open");
+  backdrop.classList.remove("active");
+  document.body.classList.remove("body-frozen");
 }
 
 function switchProtectedView(tabKey) {
@@ -917,31 +957,8 @@ function switchView(tabKey) {
   if (idx !== -1) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
 
   sessionStorage.setItem(CURRENT_TAB_KEY, tabKey);
-  document.getElementById("mainSidebar").classList.remove("open");
-}
-
-function renameModuleHeading(moduleKey) {
-  const current = store.moduleNames[moduleKey] || moduleKey;
-  let next = prompt("Enter new section title (letters & spaces only):", current);
-  if (next) {
-    next = next.replace(/[^a-zA-Z\s]/g, '').trim();
-    if (next) {
-      store.moduleNames[moduleKey] = next;
-      updateHeadingsUI();
-      populateGlobalLabelsUI();
-      syncToGitHub();
-    }
-  }
-}
-
-function renameKioskSubtitle() {
-  let next = prompt("Enter new subtitle (or leave blank to clear):", store.kioskSubtitle || "");
-  if (next !== null) {
-    store.kioskSubtitle = next.trim();
-    updateHeadingsUI();
-    populateGlobalLabelsUI();
-    syncToGitHub();
-  }
+  closeSidebarDrawer();
+  window.scrollTo(0, 0);
 }
 
 function updateHeadingsUI() {
@@ -958,7 +975,6 @@ function updateHeadingsUI() {
   if (subEl) subEl.textContent = store.kioskSubtitle || "";
 }
 
-// Global Unified Names & Buttons Populator & Saver
 function populateGlobalLabelsUI() {
   const btnEl = document.getElementById("cfgCardBtnText");
   const folderBtnEl = document.getElementById("cfgFolderBtnText");
@@ -983,9 +999,7 @@ function populateGlobalLabelsUI() {
     listContainer.innerHTML = "";
     store.folders.forEach((f, idx) => {
       const row = document.createElement("div");
-      row.style.display = "flex";
-      row.style.gap = "8px";
-      row.style.alignItems = "center";
+      row.style.display = "flex"; row.style.gap = "8px"; row.style.alignItems = "center";
       row.innerHTML = `
         <span style="font-size:12px; font-weight:700; width:70px; color:var(--text-muted);">Folder ${idx + 1}:</span>
         <input type="text" class="cfg-folder-name-input" data-index="${idx}" value="${escapeHtml(f)}" style="margin:0;">
@@ -1009,7 +1023,6 @@ function saveUnifiedLabels() {
   store.moduleNames.htmlEngine = document.getElementById("cfgHtmlEngineTitle").value.trim() || store.moduleNames.htmlEngine;
   store.moduleNames.memos = document.getElementById("cfgMemosTitle").value.trim() || store.moduleNames.memos;
 
-  // Save each folder name and cascade changes across all assignments
   const folderInputs = document.querySelectorAll('.cfg-folder-name-input');
   folderInputs.forEach(input => {
     const idx = parseInt(input.dataset.index, 10);
@@ -1028,7 +1041,7 @@ function saveUnifiedLabels() {
   updateHeadingsUI();
   refreshAll();
   syncToGitHub();
-  alert("All category names, folder titles, and buttons have been updated!");
+  alert("All settings saved!");
 }
 
 function verifyGate() {
@@ -1047,7 +1060,7 @@ function verifyGate() {
 function lockApp() {
   sessionStorage.removeItem(SESSION_AUTH_KEY);
   document.getElementById("gatekeeper").classList.remove("hidden");
-  document.getElementById("mainSidebar").classList.remove("open");
+  closeSidebarDrawer();
 }
 
 function confirmAdminAction(actionName) {
@@ -1058,15 +1071,15 @@ function confirmAdminAction(actionName) {
   return false;
 }
 
-// COMPACT CUTE FRONT CARDS
+// 0. KIOSK FRONT CARDS
 function renderKioskDeck() {
   const grid = document.getElementById("kioskGrid");
   grid.innerHTML = "";
 
   if (store.kioskCards.length === 0) {
-    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:36px; background:#fff; border-radius:24px; border:1px solid var(--border);">
-      <p style="font-size:15px; color:var(--text-muted); margin-bottom:12px;">No Presentation Cards added yet.</p>
-      <button class="btn btn-emerald" onclick="openModal('modalKioskItem')">+ Create First Presentation Button</button>
+    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:32px; background:#fff; border-radius:20px; border:1px solid var(--border);">
+      <p style="font-size:14px; color:var(--text-muted); margin-bottom:12px;">No Presentation Cards added yet.</p>
+      <button class="btn btn-emerald" onclick="openModal('modalKioskItem')">+ Create First Card</button>
     </div>`;
     return;
   }
@@ -1079,7 +1092,7 @@ function renderKioskDeck() {
     el.className = `kiosk-card ${colorClass}`;
     el.innerHTML = `
       <div class="kiosk-edit-bar">
-        <button class="btn-subtle" style="padding:4px 8px; font-size:11px;" onclick="event.stopPropagation(); editKioskCard(${idx})">✎ Edit</button>
+        <button class="btn-subtle" style="padding:2px 6px; font-size:11px;" onclick="event.stopPropagation(); editKioskCard(${idx})">✎</button>
         <button class="btn-ghost-danger" onclick="event.stopPropagation(); deleteKioskCard(${idx})">🗑️</button>
       </div>
       <div>
@@ -1106,7 +1119,7 @@ function launchKioskItem(idx) {
   } else if (item.url) {
     window.open(item.url, "_blank");
   } else {
-    alert("No target destination configured for this button.");
+    alert("No URL configured for this card.");
   }
 }
 
@@ -1171,7 +1184,7 @@ function handleImportExistingAsset(val) {
     document.getElementById("fKioskIcon").value = "📋";
     document.getElementById("fKioskSub").value = `Document memo (${item.folder})`;
     document.getElementById("fKioskUrl").value = "";
-    document.getElementById("fKioskUrl").dataset.importedHtml = `<html><body style="font-family:sans-serif; padding:30px; line-height:1.6;"><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.content).replace(/\n/g, '<br>')}</p></body></html>`;
+    document.getElementById("fKioskUrl").dataset.importedHtml = `<html><body style="font-family:sans-serif; padding:24px; line-height:1.6;"><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.content).replace(/\n/g, '<br>')}</p></body></html>`;
   }
 }
 
@@ -1225,7 +1238,7 @@ function deleteKioskCard(idx) {
   }
 }
 
-// 1. CENTRAL COMMAND FOLDERS
+// 1. FOLDERS
 function promptCreateFolder() {
   let name = prompt("Enter New Folder Name (letters & spaces only):");
   if (name) {
@@ -1284,7 +1297,7 @@ function renderFolders() {
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <div style="display:flex; align-items:center; gap:6px;">
-            <strong style="font-size:16px; color:var(--text-main);">📁 ${escapeHtml(folder)}</strong>
+            <strong style="font-size:15px; color:var(--text-main);">📁 ${escapeHtml(folder)}</strong>
             <span class="icon-pencil-heading" title="Rename Folder" onclick="event.stopPropagation(); renameFolder('${escapeHtml(folder)}')">✎</span>
           </div>
           <span class="pill pill-red">${total} Items</span>
@@ -1314,8 +1327,8 @@ function openFolderPopup(folder) {
 
   if (total === 0) {
     body.innerHTML = `
-      <div style="text-align:center; padding:30px 10px; color:var(--text-muted);">
-        <p style="font-size:14px; margin-bottom:12px;">This folder has no files or links yet.</p>
+      <div style="text-align:center; padding:28px 10px; color:var(--text-muted);">
+        <p style="font-size:13.5px; margin-bottom:12px;">This folder has no files or links yet.</p>
         <button class="btn btn-red" onclick="closeModal('modalFolderPopup'); openModal('modalFastCreate');">+ Add Item</button>
       </div>`;
     openModal('modalFolderPopup');
@@ -1325,19 +1338,18 @@ function openFolderPopup(folder) {
   let html = `<div style="display:flex; flex-direction:column; gap:16px;">`;
 
   if (fLinks.length > 0) {
-    html += `<div>
-      <h4 style="font-size:13px; font-weight:700; color:var(--red-primary); margin-bottom:8px;">🌐 MISSION PORTALS (${fLinks.length})</h4>`;
+    html += `<div><h4 style="font-size:12.5px; font-weight:700; color:var(--red-primary); margin-bottom:8px;">🌐 MISSION PORTALS (${fLinks.length})</h4>`;
     fLinks.forEach(l => {
       const idx = store.links.indexOf(l);
       html += `
         <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
-            <strong style="font-size:13.5px;">${escapeHtml(l.title)}</strong> ${l.pin ? '🔒' : ''}
-            <div style="font-size:11.5px; color:var(--text-muted); word-break:break-all;">${escapeHtml(l.url)}</div>
+            <strong style="font-size:13px;">${escapeHtml(l.title)}</strong> ${l.pin ? '🔒' : ''}
+            <div style="font-size:11px; color:var(--text-muted); word-break:break-all;">${escapeHtml(l.url)}</div>
           </div>
           <div style="display:flex; gap:6px;">
-            <button class="btn btn-subtle" style="padding:4px 8px; font-size:12px;" onclick="closeModal('modalFolderPopup'); editPortal(${idx})">✎ Edit</button>
-            <button class="btn btn-red" style="padding:4px 10px; font-size:12px;" onclick="launchPortal(${idx})">Open ↗</button>
+            <button class="btn btn-subtle" style="padding:4px 8px; font-size:11.5px;" onclick="closeModal('modalFolderPopup'); editPortal(${idx})">✎ Edit</button>
+            <button class="btn btn-red" style="padding:4px 10px; font-size:11.5px;" onclick="launchPortal(${idx})">Open ↗</button>
           </div>
         </div>`;
     });
@@ -1345,19 +1357,18 @@ function openFolderPopup(folder) {
   }
 
   if (fCreds.length > 0) {
-    html += `<div>
-      <h4 style="font-size:13px; font-weight:700; color:var(--magenta); margin-bottom:8px;">🔐 SECURED CREDENTIALS (${fCreds.length})</h4>`;
+    html += `<div><h4 style="font-size:12.5px; font-weight:700; color:var(--magenta); margin-bottom:8px;">🔐 SECURED CREDENTIALS (${fCreds.length})</h4>`;
     fCreds.forEach(c => {
       const idx = store.credentials.indexOf(c);
       html += `
         <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
-            <strong style="font-size:13.5px;">${escapeHtml(c.title)}</strong> ${c.pin ? '🔒' : ''}
-            <div style="font-size:11.5px; color:var(--text-muted);">${escapeHtml(c.email)}</div>
+            <strong style="font-size:13px;">${escapeHtml(c.title)}</strong> ${c.pin ? '🔒' : ''}
+            <div style="font-size:11px; color:var(--text-muted);">${escapeHtml(c.email)}</div>
           </div>
           <div style="display:flex; gap:6px;">
-            <button class="btn btn-subtle" style="padding:4px 8px; font-size:12px;" onclick="closeModal('modalFolderPopup'); editCred(${idx})">✎ Edit</button>
-            <button class="btn btn-magenta" style="padding:4px 10px; font-size:12px;" onclick="revealCred(${idx})">Unlock 👁️</button>
+            <button class="btn btn-subtle" style="padding:4px 8px; font-size:11.5px;" onclick="closeModal('modalFolderPopup'); editCred(${idx})">✎ Edit</button>
+            <button class="btn btn-magenta" style="padding:4px 10px; font-size:11.5px;" onclick="revealCred(${idx})">Unlock 👁️</button>
           </div>
         </div>`;
     });
@@ -1365,19 +1376,18 @@ function openFolderPopup(folder) {
   }
 
   if (fDocs.length > 0) {
-    html += `<div>
-      <h4 style="font-size:13px; font-weight:700; color:var(--indigo-core); margin-bottom:8px;">⚡ HTML APPS (${fDocs.length})</h4>`;
+    html += `<div><h4 style="font-size:12.5px; font-weight:700; color:var(--indigo-core); margin-bottom:8px;">⚡ HTML APPS (${fDocs.length})</h4>`;
     fDocs.forEach(d => {
       const idx = store.htmlDocs.indexOf(d);
       html += `
         <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
-            <strong style="font-size:13.5px;">${escapeHtml(d.title)}</strong> ${d.pin ? '🔒' : ''}
-            <div style="font-size:11.5px; color:var(--text-muted);">${d.size || 'Script'}</div>
+            <strong style="font-size:13px;">${escapeHtml(d.title)}</strong> ${d.pin ? '🔒' : ''}
+            <div style="font-size:11px; color:var(--text-muted);">${d.size || 'Script'}</div>
           </div>
           <div style="display:flex; gap:6px;">
-            <button class="btn btn-subtle" style="padding:4px 8px; font-size:12px;" onclick="closeModal('modalFolderPopup'); editHtml(${idx})">✎ Edit</button>
-            <button class="btn btn-indigo" style="padding:4px 10px; font-size:12px;" onclick="runHtml(${idx})">Run App ⚡</button>
+            <button class="btn btn-subtle" style="padding:4px 8px; font-size:11.5px;" onclick="closeModal('modalFolderPopup'); editHtml(${idx})">✎ Edit</button>
+            <button class="btn btn-indigo" style="padding:4px 10px; font-size:11.5px;" onclick="runHtml(${idx})">Run ⚡</button>
           </div>
         </div>`;
     });
@@ -1385,17 +1395,16 @@ function openFolderPopup(folder) {
   }
 
   if (fMemos.length > 0) {
-    html += `<div>
-      <h4 style="font-size:13px; font-weight:700; color:#334155; margin-bottom:8px;">📋 EXECUTIVE MEMOS (${fMemos.length})</h4>`;
+    html += `<div><h4 style="font-size:12.5px; font-weight:700; color:#334155; margin-bottom:8px;">📋 EXECUTIVE MEMOS (${fMemos.length})</h4>`;
     fMemos.forEach(m => {
       const idx = store.memos.indexOf(m);
       html += `
         <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
-            <strong style="font-size:13.5px;">${escapeHtml(m.title)}</strong> ${m.pin ? '🔒' : ''}
-            <div style="font-size:11.5px; color:var(--text-muted);">${m.date || 'Memo'}</div>
+            <strong style="font-size:13px;">${escapeHtml(m.title)}</strong> ${m.pin ? '🔒' : ''}
+            <div style="font-size:11px; color:var(--text-muted);">${m.date || 'Memo'}</div>
           </div>
-          <button class="btn btn-subtle" style="padding:4px 10px; font-size:12px;" onclick="closeModal('modalFolderPopup'); readMemo(${idx})">Read / Edit ➔</button>
+          <button class="btn btn-subtle" style="padding:4px 10px; font-size:11.5px;" onclick="closeModal('modalFolderPopup'); readMemo(${idx})">Read ➔</button>
         </div>`;
     });
     html += `</div>`;
@@ -1415,7 +1424,7 @@ function deleteFolderDirect(fIndex) {
   }
 }
 
-// 2. MISSION PORTALS
+// 2. PORTALS
 function renderLinks() {
   const grid = document.getElementById("linksGrid");
   const filter = (document.getElementById("linkFilter").value || "").toLowerCase();
@@ -1439,13 +1448,13 @@ function renderLinks() {
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:14.5px;">${escapeHtml(link.title)} ${isLocked ? '🔒' : ''}</strong>
+          <strong style="font-size:14px;">${escapeHtml(link.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-red">${escapeHtml(link.folder)}</span>
         </div>
-        <p style="font-size:12px; color:var(--text-muted); word-break:break-all;">${isLocked ? '•••• Protected Destination' : escapeHtml(link.url)}</p>
+        <p style="font-size:11.5px; color:var(--text-muted); word-break:break-all;">${isLocked ? '•••• Protected Destination' : escapeHtml(link.url)}</p>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
-        <button class="btn btn-subtle" onclick="editPortal(${idx})">✎ Inspect / Edit</button>
+        <button class="btn btn-subtle" onclick="editPortal(${idx})">✎ Edit</button>
         <button class="btn btn-red" onclick="launchPortal(${idx})">Launch ↗</button>
         <button class="btn btn-ghost-danger" onclick="deleteLink(${idx})">🗑️</button>
       </div>
@@ -1515,7 +1524,7 @@ function deleteLink(idx) {
   }
 }
 
-// 3. SECURED CREDENTIALS (PASSWORDS STRICTLY MASKED IN FRONT ADMIN)
+// 3. SECURED CREDENTIALS
 function renderCredentials() {
   const grid = document.getElementById("credsGrid");
   grid.innerHTML = "";
@@ -1532,14 +1541,14 @@ function renderCredentials() {
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:14.5px;">${escapeHtml(c.title)} ${isLocked ? '🔒' : ''}</strong>
+          <strong style="font-size:14px;">${escapeHtml(c.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-magenta">${escapeHtml(c.folder)}</span>
         </div>
-        <div style="font-size:12.5px; margin:4px 0;"><b>Email / User:</b> ${escapeHtml(c.email)}</div>
-        <div style="font-size:12.5px;"><b>Key:</b> <span id="passSpan-${idx}" style="letter-spacing:1px;">••••••••••••</span></div>
+        <div style="font-size:12px; margin:4px 0;"><b>Account:</b> ${escapeHtml(c.email)}</div>
+        <div style="font-size:12px;"><b>Key:</b> <span id="passSpan-${idx}" style="letter-spacing:1px;">••••••••••••</span></div>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
-        <button class="btn btn-subtle" onclick="editCred(${idx})">✎ Inspect / Edit</button>
+        <button class="btn btn-subtle" onclick="editCred(${idx})">✎ Edit</button>
         <button class="btn btn-subtle" onclick="revealCred(${idx})">👁️ Reveal</button>
         <button class="btn btn-ghost-danger" onclick="deleteCred(${idx})">🗑️</button>
       </div>
@@ -1669,13 +1678,13 @@ function renderHtml() {
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:14.5px;">${escapeHtml(doc.title)} ${isLocked ? '🔒' : ''}</strong>
+          <strong style="font-size:14px;">${escapeHtml(doc.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-indigo">${escapeHtml(doc.folder)}</span>
         </div>
-        <p style="font-size:12px; color:var(--text-muted);">Payload: ${doc.size || 'Script'}</p>
+        <p style="font-size:11.5px; color:var(--text-muted);">Payload: ${doc.size || 'Script'}</p>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
-        <button class="btn btn-subtle" onclick="editHtml(${idx})">✎ Inspect / Edit</button>
+        <button class="btn btn-subtle" onclick="editHtml(${idx})">✎ Edit</button>
         <button class="btn btn-indigo" onclick="runHtml(${idx})">Execute ↗</button>
         <button class="btn btn-ghost-danger" onclick="deleteHtml(${idx})">🗑️</button>
       </div>
@@ -1749,7 +1758,7 @@ function deleteHtml(idx) {
   }
 }
 
-// 5. EXECUTIVE MEMOS
+// 5. MEMOS
 function renderMemos() {
   const grid = document.getElementById("memosGrid");
   grid.innerHTML = "";
@@ -1766,11 +1775,11 @@ function renderMemos() {
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:14.5px;">${escapeHtml(memo.title)} ${isLocked ? '🔒' : ''}</strong>
+          <strong style="font-size:14px;">${escapeHtml(memo.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-subtle" style="background:#f1f5f9; font-weight:700;">${escapeHtml(memo.folder)}</span>
         </div>
         <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-          ${isLocked ? '<i>Encrypted document. Click Inspect to authenticate.</i>' : escapeHtml(memo.content.substring(0, 90)) + '...'}
+          ${isLocked ? '<i>Encrypted document. Click Inspect to authenticate.</i>' : escapeHtml(memo.content.substring(0, 80)) + '...'}
         </p>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
@@ -1839,14 +1848,14 @@ function updateMasterKey() {
   syncToGitHub();
 }
 
-// CLOUD REST ENGINE
+// Cloud REST API
 async function syncToGitHub() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
   const badge = document.getElementById("syncStatus");
 
   if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) {
     badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Saved Locally (No Cloud Keys)";
+    badge.textContent = "● Saved Locally";
     return;
   }
 
@@ -1868,7 +1877,7 @@ async function syncToGitHub() {
     }
 
     const payload = {
-      message: "Sync Central Command Hub",
+      message: "Sync Command Hub",
       content: btoa(unescape(encodeURIComponent(JSON.stringify(store, null, 2)))),
       sha: GH_CONFIG.sha
     };
@@ -2013,21 +2022,19 @@ function setupHistoryTrap() {
   window.addEventListener("popstate", function(event) {
     const openModals = document.querySelectorAll(".modal-backdrop:not(.hidden)");
     if (openModals.length > 0) {
-      openModals.forEach(m => m.classList.add("hidden"));
+      openModals.forEach(m => closeModal(m.id));
       window.history.pushState({ page: 1 }, "", "");
       return;
     }
     const sidebar = document.getElementById("mainSidebar");
     if (sidebar.classList.contains("open")) {
-      sidebar.classList.remove("open");
+      closeSidebarDrawer();
       window.history.pushState({ page: 1 }, "", "");
       return;
     }
     if (!backPressedOnce) {
       backPressedOnce = true;
-      const toast = document.getElementById("toastMsg");
-      toast.style.opacity = "1";
-      setTimeout(() => { toast.style.opacity = "0"; backPressedOnce = false; }, 2000);
+      setTimeout(() => { backPressedOnce = false; }, 2000);
       window.history.pushState({ page: 1 }, "", "");
     } else {
       window.history.back();
@@ -2035,6 +2042,7 @@ function setupHistoryTrap() {
   });
 }
 
+// Background Freeze Handler
 function openModal(id) {
   if (id === 'modalKioskItem' && currentEditingKioskIndex === -1) {
     document.getElementById("modalKioskHeading").textContent = "Add Presentation Card";
@@ -2079,6 +2087,9 @@ function openModal(id) {
     document.getElementById("fMemoLocked").checked = false;
     toggleLockField('fMemoPinWrap', false);
   }
+
+  // Freeze background
+  document.body.classList.add("body-frozen");
   document.getElementById(id).classList.remove('hidden');
 }
 
@@ -2089,6 +2100,12 @@ function closeModal(id) {
   if (id === 'modalCred') currentEditingCredIndex = -1;
   if (id === 'modalHtml') currentEditingHtmlIndex = -1;
   if (id === 'modalMemo') currentEditingMemoIndex = -1;
+
+  // Unfreeze background only if no other modals are open
+  const remainingModals = document.querySelectorAll(".modal-backdrop:not(.hidden)");
+  if (remainingModals.length === 0 && !document.getElementById("mainSidebar").classList.contains("open")) {
+    document.body.classList.remove("body-frozen");
+  }
 }
 
 function escapeHtml(str) {
