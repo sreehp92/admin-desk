@@ -56,7 +56,6 @@ button:active { transform: scale(.97); }
 .btn-secondary { background: var(--navy-light); color: var(--navy); border: 1px solid #bfdbfe; }
 .btn-secondary:hover { background: #dbeafe; }
 .btn-gold { background: var(--gold); color: #fff; }
-.btn-whatsapp { background: #25d366; color: #fff; }
 .btn-danger { background: var(--danger-light); color: var(--danger); }
 
 .card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.02); }
@@ -133,8 +132,26 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
 .sub-tab-btn { background: transparent; border: 1px solid transparent; color: var(--text-muted); padding: 6px 12px; border-radius: 8px; font-size: 12px; }
 .sub-tab-btn.active { background: var(--navy-light); color: var(--navy); font-weight: 800; border-color: #bfdbfe; }
 
+/* GST Forms Compliance Cards */
+.gst-form-entry {
+  background: #f8fafc; border: 1px solid var(--border); border-radius: 12px; padding: 14px; margin-bottom: 10px;
+}
+.gst-form-title { font-size: 13.5px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+.gst-form-desc { font-size: 12px; color: var(--text-main); line-height: 1.45; }
+.gst-form-due { font-size: 11.5px; font-weight: 700; color: var(--gold); margin-top: 4px; }
+
+/* Modern Calculator Cards */
+.calc-card {
+  background: #ffffff; border: 1.5px solid #e2e8f0; border-radius: 14px; padding: 16px; margin-bottom: 14px;
+}
+.calc-card h4 { font-size: 14px; font-weight: 800; color: var(--navy); margin-bottom: 12px; }
+.calc-chip-result {
+  background: var(--navy-light); border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px; text-align: center;
+}
+.calc-chip-val { font-size: 16px; font-weight: 900; color: var(--navy); margin-top: 2px; }
+
 /* ============================================================
-   SINGLE-PAGE A4 PRINT SPEC (ZERO OVERFLOW, NO CUT-OFF IN PDF)
+   SINGLE-PAGE A4 PRINT SPEC (GUARANTEED NO SPILLOVER TO PAGE 2)
    ============================================================ */
 .print-only, .customer-print { display: none; }
 
@@ -156,48 +173,50 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
     margin: 0 !important; padding: 0 !important; overflow: hidden !important;
   }
   .invoice-paper .topband {
-    background: var(--navy) !important; color: #fff !important; padding: 2.5mm 8mm !important; font-size: 8.5px !important;
+    background: var(--navy) !important; color: #fff !important; padding: 2mm 8mm !important; font-size: 8px !important;
     display: flex !important; justify-content: space-between !important; font-weight: 800 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .invoice-paper .body {
-    flex: 1 1 auto !important; padding: 5mm 8mm 4mm !important; display: flex !important; flex-direction: column !important;
+    flex: 1 1 auto !important; padding: 4mm 8mm 3mm !important; display: flex !important; flex-direction: column !important;
     box-sizing: border-box !important; overflow: hidden !important;
   }
   
   .print-only, .customer-print { display: block !important; }
   .customer-form { display: none !important; }
   
-  .invoice-head { display: grid !important; grid-template-columns: 1.6fr 0.9fr !important; margin-bottom: 3mm !important; gap: 4mm !important; }
-  .company-box strong { font-size: 16px !important; color: var(--navy) !important; }
-  .company-box .hint { font-size: 8px !important; line-height: 1.3 !important; }
-  .invoice-meta { font-size: 8px !important; line-height: 1.35 !important; text-align: right !important; }
-  .invoice-number { font-size: 15px !important; color: var(--navy-dark) !important; }
+  .invoice-head { display: grid !important; grid-template-columns: 1.6fr 0.9fr !important; margin-bottom: 2mm !important; gap: 3mm !important; }
+  .company-box strong { font-size: 15px !important; color: var(--navy) !important; }
+  .company-box .hint { font-size: 7.5px !important; line-height: 1.25 !important; }
+  .invoice-meta { font-size: 7.5px !important; line-height: 1.3 !important; text-align: right !important; }
+  .invoice-number { font-size: 14px !important; color: var(--navy-dark) !important; }
 
-  .bill-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; border: 1px solid var(--border) !important; margin: 0 0 3mm !important; }
-  .bill-box { padding: 2.5mm 3.5mm !important; }
+  .bill-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; border: 1px solid var(--border) !important; margin: 0 0 2mm !important; }
+  .bill-box { padding: 2mm 3mm !important; }
   .bill-box + .bill-box { border-left: 1px solid var(--border) !important; }
-  .customer-print div { font-size: 8px !important; line-height: 1.3 !important; }
+  .customer-print div { font-size: 7.5px !important; line-height: 1.25 !important; }
 
-  .table-wrap { width: 100% !important; margin-bottom: 2.5mm !important; overflow: hidden !important; }
-  #itemsTable { width: 100% !important; min-width: 0 !important; font-size: 7.5px !important; table-layout: fixed !important; }
-  #itemsTable th, #itemsTable td { padding: 1.4mm 1mm !important; line-height: 1.15 !important; border: 1px solid var(--border) !important; }
-  #itemsTable th { font-size: 7.2px !important; background: var(--navy-light) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .table-wrap { width: 100% !important; margin-bottom: 2mm !important; overflow: hidden !important; }
+  #itemsTable { width: 100% !important; min-width: 0 !important; font-size: 7.2px !important; table-layout: fixed !important; }
+  #itemsTable th, #itemsTable td { padding: 1.2mm 0.8mm !important; line-height: 1.1 !important; border: 1px solid var(--border) !important; }
+  #itemsTable th { font-size: 7px !important; background: var(--navy-light) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   #itemsTable td input, #itemsTable td select, #itemsTable .remove-col { display: none !important; }
   #itemsTable .print-cell { display: inline !important; }
 
-  .summary-grid { display: grid !important; grid-template-columns: 1.3fr 0.9fr !important; gap: 4mm !important; margin-bottom: 2.5mm !important; }
-  .totals { padding: 1.8mm 2.8mm !important; border: 1px solid var(--border) !important; }
-  .total-line { font-size: 8px !important; padding: 0.8mm 0 !important; }
-  .total-line.grand { font-size: 12px !important; padding-top: 1.5mm !important; border-top: 1.5px solid var(--navy) !important; }
+  .summary-grid { display: grid !important; grid-template-columns: 1.3fr 0.9fr !important; gap: 3mm !important; margin-bottom: 2mm !important; }
+  .totals { padding: 1.5mm 2.5mm !important; border: 1px solid var(--border) !important; }
+  .total-line { font-size: 7.5px !important; padding: 0.6mm 0 !important; }
+  .total-line.grand { font-size: 11px !important; padding-top: 1.2mm !important; border-top: 1.5px solid var(--navy) !important; }
 
-  .tax-summary { width: 100% !important; table-layout: fixed !important; margin-bottom: 2.5mm !important; border: 1px solid var(--border) !important; }
-  .tax-summary th, .tax-summary td { font-size: 7.2px !important; padding: 1.2mm 0.8mm !important; word-break: break-all !important; }
+  /* Fully Contained Tax Breakdown Table */
+  .tax-summary { width: 100% !important; table-layout: fixed !important; margin-bottom: 2mm !important; border: 1px solid var(--border) !important; }
+  .tax-summary th, .tax-summary td { font-size: 7px !important; padding: 1mm 0.6mm !important; word-break: break-all !important; }
 
   .signature { display: flex !important; justify-content: flex-end !important; margin-top: auto !important; }
-  .signature-box { width: 55mm !important; min-height: 20mm !important; border: 1px dashed var(--border) !important; text-align: center !important; padding-top: 10mm !important; font-size: 7.5px !important; }
-  .footer-note { font-size: 7px !important; text-align: center !important; margin-top: 1.5mm !important; }
+  .signature-box { width: 50mm !important; min-height: 18mm !important; border: 1px dashed var(--border) !important; text-align: center !important; padding-top: 8mm !important; font-size: 7px !important; }
+  .footer-note { font-size: 6.8px !important; text-align: center !important; margin-top: 1mm !important; }
 }
 
+/* Mobile View Adjustments */
 @media (max-width: 700px) {
   .app { padding: 10px; }
   .top { flex-direction: column; align-items: stretch; padding: 10px; }
@@ -267,7 +286,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
         <div id="dashboardGraph" class="graph-chart"></div>
       </div>
 
-      <!-- Cloud Storage Footer (Cloud Sync Button Placed Near Pull Button) -->
+      <!-- Cloud Storage Footer -->
       <div class="cloud-footer-box">
         <div>
           <strong style="font-size:13px; color:var(--navy-dark);">Cloud Storage: GitHub Private Workspace (workspace-data)</strong>
@@ -365,9 +384,8 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
         <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" class="no-print">
           <button class="btn-secondary" onclick="addItem()">+ Add Line Item</button>
           <div style="display:flex; gap:8px; flex-wrap:wrap;">
-            <button class="btn-whatsapp" onclick="sharePdfToWhatsApp()">📲 WhatsApp Share (Full A4 PDF)</button>
             <button class="btn-primary" onclick="saveInvoice()">💾 Save & Push Cloud</button>
-            <button class="btn-gold" onclick="printInvoice()">🖨️ Print Single-Page A4</button>
+            <button class="btn-gold" onclick="printInvoice()">🖨️ Print Single-Page A4 / Download PDF</button>
           </div>
         </div>
 
@@ -391,7 +409,7 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
           </div>
         </div>
 
-        <!-- Strict Tax Summary Table -->
+        <!-- Fully Contained Tax Breakdown Table -->
         <table class="tax-summary print-only">
           <thead>
             <tr>
@@ -473,25 +491,25 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
     </div>
   </div>
 
-  <!-- 5. ADVANCED GST REPORTS (DAILY, BILL-WISE, GSTR-1 OUTWARD FORMULA SUITE) -->
+  <!-- 5. GST FILING, COMPLIANCE DIRECTORY & EXPORT SUITE -->
   <div id="reportsPage" class="page-panel no-print">
     <div class="page-back"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
+    
     <div class="card">
       <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
         <h2 class="section-title" style="margin:0;">GST Filing & Tax Outward Reports</h2>
         <div style="display:flex; gap:6px; flex-wrap:wrap;">
-          <button class="btn-secondary" onclick="printGstReport()">🖨️ Print</button>
-          <button class="btn-secondary" onclick="exportGstReportPdf()">📄 PDF</button>
-          <button class="btn-secondary" onclick="exportGstExcel()">📊 Excel (.xls)</button>
-          <button class="btn-secondary" onclick="exportGstCsv()">📑 CSV</button>
+          <button class="btn-secondary" onclick="exportGstReportPdf()">📄 Export PDF</button>
+          <button class="btn-secondary" onclick="exportGstExcel()">📊 Export Excel (.xls)</button>
+          <button class="btn-secondary" onclick="exportGstCsv()">📑 Export CSV</button>
         </div>
       </div>
 
       <!-- Sub-Tabs for Reports -->
       <div class="sub-tab-nav">
-        <button class="sub-tab-btn active" id="tabBtnDaily" onclick="switchGstTab('daily')">📅 Daily GST Outward Report</button>
+        <button class="sub-tab-btn active" id="tabBtnDaily" onclick="switchGstTab('daily')">📅 Daily Outward Report</button>
         <button class="sub-tab-btn" id="tabBtnBillwise" onclick="switchGstTab('billwise')">🧾 Bill-Wise Tax Summary</button>
-        <button class="sub-tab-btn" id="tabBtnGstr1" onclick="switchGstTab('gstr1')">📑 GSTR-1 Outward Filing Formula File</button>
+        <button class="sub-tab-btn" id="tabBtnGstr1" onclick="switchGstTab('gstr1')">📑 GSTR-1 Outward Filing Formula Sheet</button>
       </div>
 
       <div class="grid3" style="grid-template-columns: 1fr 1fr auto; align-items:end; margin-bottom:14px;">
@@ -507,10 +525,74 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
         </table>
       </div>
     </div>
+
+    <!-- GST FORMS COMPLIANCE DIRECTORY & DOWNLOADABLE REFERENCE -->
+    <div class="card">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px; flex-wrap:wrap; gap:8px;">
+        <div>
+          <h3 style="font-size:15px; font-weight:800; color:var(--navy);">GST Monthly Forms & Compliance Reference Guide</h3>
+          <p class="hint">Official filing rules, statutory due dates, and entity classifications</p>
+        </div>
+        <div style="display:flex; gap:6px;">
+          <button class="btn-secondary" onclick="exportGstGuideExcel()">📥 Export Guide (.xls)</button>
+          <button class="btn-secondary" onclick="exportGstGuideCsv()">📑 Export Guide (.csv)</button>
+        </div>
+      </div>
+
+      <h4 style="font-size:13px; font-weight:800; color:var(--navy-dark); margin-bottom:8px;">Core Monthly GST Forms</h4>
+      
+      <div class="gst-form-entry">
+        <div class="gst-form-title">GSTR-1: Outward Supplies & Sales Return</div>
+        <div class="gst-form-desc">Details of all outward supplies or sales made during the month, including B2B invoices, interstate sales, and HSN summaries.</div>
+        <div class="gst-form-due">Due Date: By the 11th of the next month.</div>
+      </div>
+
+      <div class="gst-form-entry">
+        <div class="gst-form-title">GSTR-3B: Monthly Summary Return & Tax Payment</div>
+        <div class="gst-form-desc">Summary return of inward and outward supplies, tax liability, and input tax credit (ITC) claimed, along with final tax payment settlement.</div>
+        <div class="gst-form-due">Due Date: By the 20th of the next month.</div>
+      </div>
+
+      <h4 style="font-size:13px; font-weight:800; color:var(--navy-dark); margin:16px 0 8px;">Specialized Monthly Forms (For Specific Entities)</h4>
+
+      <div class="gst-form-entry">
+        <div class="gst-form-title">GSTR-5: Non-Resident Foreign Taxpayers</div>
+        <div class="gst-form-desc">Filed by non-resident foreign taxpayers carrying out taxable business transactions in India.</div>
+        <div class="gst-form-due">Due Date: By the 13th of the next month.</div>
+      </div>
+
+      <div class="gst-form-entry">
+        <div class="gst-form-title">GSTR-5A: OIDAR Service Providers</div>
+        <div class="gst-form-desc">Filed by providers of Online Information Database Access and Retrieval (OIDAR) services from outside India to non-taxable persons in India.</div>
+        <div class="gst-form-due">Due Date: By the 20th of the next month.</div>
+      </div>
+
+      <div class="gst-form-entry">
+        <div class="gst-form-title">GSTR-6: Input Service Distributors (ISD)</div>
+        <div class="gst-form-desc">Filed by Input Service Distributors for distributing eligible input tax credit among branches and operational offices.</div>
+        <div class="gst-form-due">Due Date: By the 13th of the next month.</div>
+      </div>
+
+      <div class="gst-form-entry">
+        <div class="gst-form-title">GSTR-7: Tax Deducted at Source (TDS) Authorities</div>
+        <div class="gst-form-desc">Filed by registered government bodies and notified authorities required to deduct TDS under Section 51 of the CGST Act.</div>
+        <div class="gst-form-due">Due Date: By the 10th of the next month.</div>
+      </div>
+
+      <div class="gst-form-entry">
+        <div class="gst-form-title">GSTR-8: E-Commerce Operators (TCS)</div>
+        <div class="gst-form-desc">Filed by e-commerce operators required to collect Tax Collected at Source (TCS) on supplies made through their platform.</div>
+        <div class="gst-form-due">Due Date: By the 10th of the next month.</div>
+      </div>
+
+      <div style="background:#fef3c7; border:1px solid #fde68a; border-radius:10px; padding:12px; margin-top:10px; font-size:11.5px; color:#92400e; line-height:1.45;">
+        <strong>Auto-Drafted Statements Note:</strong> GSTR-2A and GSTR-2B are auto-drafted purchase and input tax credit statements generated by the portal on the 14th of the month. You do not file these returns yourself; you use them for matching vendor tax credits against purchase records.
+      </div>
+    </div>
   </div>
 </div>
 
-<!-- SEPARATED CALCULATORS MODAL (GST + SEPARATE PERCENTAGE CALCULATOR) -->
+<!-- REDESIGNED FINANCIAL CALCULATORS MODAL -->
 <div id="gstCalcModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('gstCalcModal')">
   <div class="modal">
     <div class="modal-head">
@@ -518,32 +600,56 @@ td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border)
       <button class="btn-secondary" onclick="closeModal('gstCalcModal')">✕</button>
     </div>
 
-    <!-- BOX 1: CLEAN GST CALCULATOR (REMOVED CONFUSING % TAB) -->
-    <div class="card" style="margin-bottom:16px; border:1px solid #bfdbfe; background:var(--navy-light);">
-      <h4 style="font-size:14px; color:var(--navy); margin-bottom:10px;">GST Forward / Reverse Calculator</h4>
-      <div class="grid3" style="grid-template-columns: 1.2fr 1fr; margin-bottom:10px;">
-        <div class="field"><label>Amount (₹)</label><input type="number" id="calcBase" value="1000" oninput="runGstCalc()"></div>
-        <div class="field"><label>GST Rate % (e.g. 5, 12, 18, 28)</label><input type="number" id="calcGstRate" value="18" min="0" step="0.1" oninput="runGstCalc()"></div>
+    <!-- CARD 1: STREAMLINED GST CALCULATOR -->
+    <div class="calc-card">
+      <h4>GST Forward Calculator</h4>
+      <div class="grid3" style="grid-template-columns: 1.2fr 1fr; margin-bottom:12px;">
+        <div class="field"><label>Base Amount (₹)</label><input type="number" id="calcBase" value="1000" oninput="runGstCalc()"></div>
+        <div class="field"><label>GST % Rate</label><input type="number" id="calcGstRate" value="18" min="0" step="0.1" oninput="runGstCalc()"></div>
       </div>
-      <div class="grid3">
-        <div class="field"><label>CGST (Half)</label><input id="calcCgst" readonly></div>
-        <div class="field"><label>SGST (Half)</label><input id="calcSgst" readonly></div>
-        <div class="field"><label>Total GST Tax</label><input id="calcTax" readonly style="font-weight:700; color:var(--navy);"></div>
-        <div class="field" style="grid-column:1/-1;"><label>Grand Total (Gross Payable)</label><input id="calcTotal" readonly style="font-size:15px; font-weight:900; color:var(--navy); background:#fff;"></div>
+      
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px; margin-bottom:10px;">
+        <div class="calc-chip-result">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted);">CGST (HALF)</div>
+          <div class="calc-chip-val" id="calcCgst">₹90.00</div>
+        </div>
+        <div class="calc-chip-result">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted);">SGST (HALF)</div>
+          <div class="calc-chip-val" id="calcSgst">₹90.00</div>
+        </div>
+        <div class="calc-chip-result">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted);">TOTAL GST</div>
+          <div class="calc-chip-val" id="calcTax">₹180.00</div>
+        </div>
+      </div>
+
+      <div style="background:var(--navy-dark); color:#fff; border-radius:10px; padding:12px 14px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:12px; font-weight:700; letter-spacing:0.5px;">TOTAL GROSS PAYABLE:</span>
+        <strong style="font-size:18px; color:#60a5fa;" id="calcTotal">₹1,180.00</strong>
       </div>
     </div>
 
-    <!-- BOX 2: SEPARATE DEDICATED PERCENTAGE CALCULATOR -->
-    <div class="card" style="margin-bottom:0; border:1px solid #fde68a; background:var(--gold-light);">
-      <h4 style="font-size:14px; color:var(--gold); margin-bottom:10px;">Independent Percentage Calculator</h4>
-      <div class="grid3" style="grid-template-columns: 1fr 1fr 1fr; margin-bottom:10px;">
-        <div class="field"><label>Total Value (₹)</label><input type="number" id="pctTotalInput" value="5000" oninput="runPctCalc()"></div>
-        <div class="field"><label>Percentage %</label><input type="number" id="pctRateInput" value="10" step="0.1" oninput="runPctCalc()"></div>
-        <div class="field"><label>Calculated Percentage</label><input id="pctResult" readonly style="font-weight:800; color:var(--navy-dark); background:#fff;"></div>
+    <!-- CARD 2: SEPARATE DEDICATED PERCENTAGE CALCULATOR -->
+    <div class="calc-card" style="margin-bottom:0;">
+      <h4>Independent Percentage Calculator</h4>
+      <div class="grid3" style="grid-template-columns: 1.2fr 1fr; margin-bottom:12px;">
+        <div class="field"><label>Principal / Total Value (₹)</label><input type="number" id="pctTotalInput" value="5000" oninput="runPctCalc()"></div>
+        <div class="field"><label>Percentage Rate %</label><input type="number" id="pctRateInput" value="10" step="0.1" oninput="runPctCalc()"></div>
       </div>
-      <div class="grid3">
-        <div class="field"><label>Amount After Discount (-%)</label><input id="pctDiscounted" readonly style="background:#fff;"></div>
-        <div class="field" style="grid-column: span 2;"><label>Amount After Markup (+%)</label><input id="pctMarkedUp" readonly style="background:#fff;"></div>
+
+      <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:10px;">
+        <div class="calc-chip-result">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted);">CALCULATED % VALUE</div>
+          <div class="calc-chip-val" id="pctResult">₹500.00</div>
+        </div>
+        <div class="calc-chip-result">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted);">AFTER DISCOUNT (-%)</div>
+          <div class="calc-chip-val" id="pctDiscounted">₹4,500.00</div>
+        </div>
+        <div class="calc-chip-result">
+          <div style="font-size:10px; font-weight:800; color:var(--text-muted);">AFTER MARKUP (+%)</div>
+          <div class="calc-chip-val" id="pctMarkedUp">₹5,500.00</div>
+        </div>
       </div>
     </div>
 
@@ -700,7 +806,7 @@ function setupHistoryNavigation() {
       }, 2000);
       window.history.pushState({ page: 'root' }, "", "");
     } else {
-      window.history.back(); // Allow browser to exit
+      window.history.back();
     }
   });
 }
@@ -839,7 +945,7 @@ function refreshDatalists() {
 }
 
 /* ============================================================
-   INVOICE ENGINE & TAX CALCULATOR
+   INVOICE ENGINE
    ============================================================ */
 function addItem(data = {}) {
   const tr = document.createElement('tr');
@@ -1004,90 +1110,7 @@ function printInvoice() {
 }
 
 /* ============================================================
-   TRUE FULL A4 SINGLE-PAGE PDF ATTACHMENT FOR WHATSAPP
-   ============================================================ */
-async function sharePdfToWhatsApp() {
-  calculate();
-  const cName = $('customerName').value.trim() || 'Valued Client';
-  const phone = $('customerPhone').value.trim().replace(/\D/g, '');
-  const invNo = $('invoiceNo').value;
-  const fileName = `Invoice-${invNo}.pdf`;
-
-  const dealClosingMessage = 
-`Dear ${cName},
-
-It was a pleasure doing business with you! Please find your official Tax Invoice attached as a PDF file.
-
-We truly appreciate your valued trust in SRI SIDDHAN ESSENTIAL. Everything is documented inside your bill for your records.
-
-Please let us know once received, and we look forward to a long and successful partnership!
-
-Warm regards,
-SRI SIDDHAN ESSENTIAL
-Ganapathy, Coimbatore | +91 96583 99991`;
-
-  // Create isolated single A4 container to prevent white trailing space
-  const invoiceElement = $('printableInvoiceArea');
-  const clone = invoiceElement.cloneNode(true);
-  clone.style.width = '210mm';
-  clone.style.minHeight = '297mm';
-  clone.style.maxHeight = '297mm';
-  clone.style.overflow = 'hidden';
-  clone.style.background = '#ffffff';
-
-  // Force show print elements in clone
-  clone.querySelectorAll('.print-only, .customer-print').forEach(el => el.style.display = 'block');
-  clone.querySelectorAll('.customer-form, .no-print').forEach(el => el.style.display = 'none');
-
-  const wrapper = document.createElement('div');
-  wrapper.style.position = 'fixed';
-  wrapper.style.top = '-9999px';
-  wrapper.style.left = '-9999px';
-  wrapper.appendChild(clone);
-  document.body.appendChild(wrapper);
-
-  const opt = {
-    margin: 0,
-    filename: fileName,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2, useCORS: true, scrollY: 0 },
-    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
-  };
-
-  try {
-    const pdfBlob = await html2pdf().set(opt).from(clone).outputPdf('blob');
-    document.body.removeChild(wrapper);
-
-    const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
-    if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
-      await navigator.share({
-        title: `Tax Invoice - ${invNo}`,
-        text: dealClosingMessage,
-        files: [pdfFile]
-      });
-    } else {
-      const link = document.createElement('a');
-      link.href = URL.createObjectURL(pdfBlob);
-      link.download = fileName;
-      link.click();
-
-      const cleanPhone = phone.length === 10 ? ('91' + phone) : phone;
-      const waUrl = cleanPhone 
-        ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(dealClosingMessage)}`
-        : `https://wa.me/?text=${encodeURIComponent(dealClosingMessage)}`;
-
-      alert("Invoice PDF generated and downloaded. Opening WhatsApp to attach and send!");
-      window.open(waUrl, '_blank');
-    }
-  } catch (err) {
-    if (wrapper.parentNode) document.body.removeChild(wrapper);
-    alert("Could not generate PDF: " + err.message);
-  }
-}
-
-/* ============================================================
-   SEPARATE FINANCIAL CALCULATORS
+   REDESIGNED FINANCIAL CALCULATORS
    ============================================================ */
 function runGstCalc() {
   const base = +$('calcBase').value || 0;
@@ -1095,10 +1118,10 @@ function runGstCalc() {
   const tax = base * (rate / 100);
   const total = base + tax;
 
-  $('calcCgst').value = money(tax / 2);
-  $('calcSgst').value = money(tax / 2);
-  $('calcTax').value = money(tax);
-  $('calcTotal').value = money(total);
+  $('calcCgst').textContent = money(tax / 2);
+  $('calcSgst').textContent = money(tax / 2);
+  $('calcTax').textContent = money(tax);
+  $('calcTotal').textContent = money(total);
 }
 
 function runPctCalc() {
@@ -1106,13 +1129,13 @@ function runPctCalc() {
   const pct = +$('pctRateInput').value || 0;
   const result = val * (pct / 100);
 
-  $('pctResult').value = money(result);
-  $('pctDiscounted').value = money(val - result);
-  $('pctMarkedUp').value = money(val + result);
+  $('pctResult').textContent = money(result);
+  $('pctDiscounted').textContent = money(val - result);
+  $('pctMarkedUp').textContent = money(val + result);
 }
 
 /* ============================================================
-   GST REPORTS SUITE (DAILY, BILL-WISE, GSTR-1 FORMULA SHEET)
+   GST REPORTS SUITE & COMPLIANCE GUIDE EXPORTS
    ============================================================ */
 function switchGstTab(tabName) {
   currentGstTab = tabName;
@@ -1243,10 +1266,6 @@ function exportGstReportPdf() {
   html2pdf().set(opt).from(element).save();
 }
 
-function printGstReport() {
-  window.print();
-}
-
 function exportGstExcel() {
   const invoices = getFilteredReportInvoices();
   let html = `<html><head><meta charset="utf-8"></head><body><h2>SRI SIDDHAN ESSENTIAL - GST OUTWARD SUPPLY (${currentGstTab.toUpperCase()})</h2><table border="1">`;
@@ -1273,6 +1292,52 @@ function exportGstCsv() {
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
   a.download = `GST-${currentGstTab}-${today()}.csv`;
+  a.click();
+}
+
+/* Compliance Guide Exports */
+function exportGstGuideExcel() {
+  const guideData = [
+    ["Form Name", "Category", "Description", "Statutory Due Date"],
+    ["GSTR-1", "Core Monthly", "Details of all outward supplies or sales made during the month.", "11th of the next month"],
+    ["GSTR-3B", "Core Monthly", "Summary return of inward and outward supplies, tax liability, and input tax credit (ITC) claimed, along with tax payment.", "20th of the next month"],
+    ["GSTR-5", "Specialized", "Filed by non-resident foreign taxpayers.", "13th of the next month"],
+    ["GSTR-5A", "Specialized", "Filed by providers of Online Information Database Access and Retrieval (OIDAR) services from outside India.", "20th of the next month"],
+    ["GSTR-6", "Specialized", "Filed by Input Service Distributors (ISD) for distributing input tax credit.", "13th of the next month"],
+    ["GSTR-7", "Specialized", "Filed by authorities required to deduct Tax Deducted at Source (TDS) under GST.", "10th of the next month"],
+    ["GSTR-8", "Specialized", "Filed by e-commerce operators required to collect Tax Collected at Source (TCS).", "10th of the next month"],
+    ["GSTR-2A/2B", "Auto-Drafted", "Auto-drafted purchase and ITC statements generated by the portal on the 14th of the month (used for matching, not filed).", "Auto-generated on 14th"]
+  ];
+
+  let html = `<html><head><meta charset="utf-8"></head><body><h2>GST Compliance Reference Guide</h2><table border="1">`;
+  guideData.forEach((row, rIdx) => {
+    html += "<tr>" + row.map(col => rIdx === 0 ? `<th>${col}</th>` : `<td>${col}</td>`).join('') + "</tr>";
+  });
+  html += `</table></body></html>`;
+
+  const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `GST_Compliance_Guide.xls`;
+  a.click();
+}
+
+function exportGstGuideCsv() {
+  const csv = 
+`Form Name,Category,Description,Statutory Due Date
+GSTR-1,Core Monthly,"Details of all outward supplies or sales made during the month.","11th of the next month"
+GSTR-3B,Core Monthly,"Summary return of inward and outward supplies, tax liability, and input tax credit (ITC) claimed, along with tax payment.","20th of the next month"
+GSTR-5,Specialized,"Filed by non-resident foreign taxpayers.","13th of the next month"
+GSTR-5A,Specialized,"Filed by providers of Online Information Database Access and Retrieval (OIDAR) services from outside India.","20th of the next month"
+GSTR-6,Specialized,"Filed by Input Service Distributors (ISD) for distributing input tax credit.","13th of the next month"
+GSTR-7,Specialized,"Filed by authorities required to deduct Tax Deducted at Source (TDS) under GST.","10th of the next month"
+GSTR-8,Specialized,"Filed by e-commerce operators required to collect Tax Collected at Source (TCS).","10th of the next month"
+GSTR-2A/2B,Auto-Drafted,"Auto-drafted purchase and ITC statements generated by portal on 14th (matching only).","Auto-generated on 14th"`;
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `GST_Compliance_Guide.csv`;
   a.click();
 }
 
