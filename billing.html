@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>SRI SIDDHAN ESSENTIAL - Enterprise Cloud Billing</title>
+<title>SRI SIDDHAN ESSENTIAL - Cloud Billing</title>
 <style>
 :root{
   --green:#2f6f4e;--green2:#3f865e;--light:#edf6ee;--line:#cbd8c5;
@@ -13,13 +13,13 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--dark);-webkit-tap-highlight-color:transparent}
 .app{max-width:1320px;margin:auto;padding:18px}
-.top{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;border:1px solid rgba(47,111,78,.15);border-radius:18px;background:rgba(255,255,255,.94);backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,0,0,.04);margin-bottom:16px}
+.top{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;border:1px solid rgba(47,111,78,.15);border-radius:18px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,0,0,.04);margin-bottom:16px}
 .brand{position:relative;padding:2px 0 2px 14px}
 .brand:before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:5px;border-radius:999px;background:linear-gradient(180deg,var(--green),var(--gold))}
 .brand h1{margin:0;font-size:24px;color:var(--dark);letter-spacing:.01em;font-weight:900}
 .brand p{margin:2px 0 0;color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 
-.cloud-bar{display:flex;align-items:center;gap:8px}
+.cloud-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .sync-pill{font-size:11px;font-weight:800;padding:5px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:5px}
 .sync-ok{background:#dcfce7;color:#15803d}
 .sync-pending{background:#fef3c7;color:#b45309}
@@ -35,13 +35,6 @@ button:active{transform:scale(.97)}
 .field label.required:after{content:" *";color:#dc2626}
 .field input,.field textarea,.field select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font:inherit;background:#fff;color:var(--dark);-webkit-appearance:none}
 .field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--green)}
-.locked-field input,.locked-field textarea{background:#f8faf7;color:#64748b;cursor:not-allowed}
-.locked-badge{font-size:9px;background:#e2e8f0;padding:2px 6px;border-radius:6px;margin-left:4px}
-
-.invoice-head{display:flex;justify-content:space-between;gap:16px}
-.company-box strong{font-size:20px;color:var(--green)}
-.invoice-badge{font-size:11px;font-weight:800;color:#2f4e29;letter-spacing:.08em}
-.invoice-number{font-size:22px;font-weight:900;color:#1d3320}
 
 .table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
 table{width:100%;border-collapse:collapse;min-width:850px}
@@ -60,7 +53,7 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
 .page-panel.active{display:block}
 .page-back{margin-bottom:14px}
 
-/* Dashboard */
+/* Dashboard Styles */
 .dashboard-wrap{display:grid;grid-template-columns:1.6fr .9fr;gap:16px;align-items:stretch}
 .dashboard-graph{background:linear-gradient(145deg,#163826,#2f6f4e);color:#fff;border-radius:18px;padding:20px;box-shadow:0 12px 30px rgba(22,56,38,.15)}
 .dashboard-graph h3{margin:0 0 4px;font-size:17px}
@@ -81,30 +74,129 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
 .modal{width:min(720px,100%);max-height:88vh;overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 25px 50px -12px rgba(0,0,0,.25);padding:22px}
 .modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
 
-/* Print Settings for Invoices */
+/* ============================================================
+   SINGLE PAGE A4 PRINT FIX (NO 2-PAGE OVERFLOW ON MOBILE/TAB/PC)
+   ============================================================ */
 .print-only,.customer-print{display:none}
-@media print{
-  @page{size:A4 portrait;margin:0!important}
-  html,body{width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;background:#fff!important;overflow:hidden!important}
-  .app{width:210mm!important;max-width:none!important;padding:0!important;margin:0!important}
-  .no-print,.top,.page-back,.actions,.gst-calculator,#billingTools,#productsPage,#customersPage,#reportsPage,#dashboardPage{display:none!important}
-  #billingPage{display:block!important;width:210mm!important;height:297mm!important;margin:0!important;padding:0!important;overflow:hidden!important}
-  .invoice-paper{width:210mm!important;height:297mm!important;border:1px solid #3f6f35!important;border-radius:0!important;box-shadow:none!important;display:flex!important;flex-direction:column!important;padding:0!important;margin:0!important}
-  .invoice-paper .topband{background:#3f6f35!important;color:#fff!important;padding:3mm 8mm!important;font-size:9px!important;display:flex!important;justify-content:space-between!important;font-weight:800!important}
-  .invoice-paper .body{flex:1 1 auto!important;padding:6mm 8mm 4mm!important;display:flex!important;flex-direction:column!important}
-  .print-only,.customer-print{display:block!important}
-  .customer-form{display:none!important}
-  #itemsTable td input,#itemsTable td select{display:none!important}
-  #itemsTable .print-cell{display:inline!important}
-  #itemsTable .remove-col{display:none!important}
-  #itemsTable{width:100%!important;min-width:0!important;font-size:8.5px!important}
-  #itemsTable th,#itemsTable td{padding:2mm 1.5mm!important}
-  .bill-grid{display:grid!important;grid-template-columns:1fr 1fr!important;border:1px solid #cbd8c5!important;margin:0 0 4mm!important}
-  .bill-box{padding:3mm 4mm!important}
-  .bill-box+.bill-box{border-left:1px solid #cbd8c5!important}
-  .summary-grid{display:grid!important;grid-template-columns:1.35fr .85fr!important;gap:4mm!important}
-  .signature{display:flex!important;justify-content:flex-end!important;margin-top:auto!important}
-  .signature-box{width:65mm!important;min-height:28mm!important;border-top:1px solid #8a9a81!important;text-align:center!important;padding-top:14mm!important;font-size:8.5px!important}
+@media print {
+  @page {
+    size: 210mm 297mm;
+    margin: 0 !important;
+  }
+  html, body {
+    width: 210mm !important;
+    height: 297mm !important;
+    max-width: 210mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff !important;
+    overflow: hidden !important;
+  }
+  .app {
+    width: 210mm !important;
+    max-width: 210mm !important;
+    height: 297mm !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+  .no-print, .top, .page-back, .actions, #productsPage, #customersPage, #reportsPage, #dashboardPage {
+    display: none !important;
+  }
+  #billingPage {
+    display: block !important;
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    overflow: hidden !important;
+    page-break-after: avoid !important;
+    break-after: avoid !important;
+  }
+  .invoice-paper {
+    width: 210mm !important;
+    height: 297mm !important;
+    max-height: 297mm !important;
+    border: 1.2px solid #2f6f4e !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+  }
+  .invoice-paper .topband {
+    background: #2f6f4e !important;
+    color: #fff !important;
+    padding: 2.5mm 8mm !important;
+    font-size: 8.5px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    font-weight: 800 !important;
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+  .invoice-paper .body {
+    flex: 1 1 auto !important;
+    padding: 5mm 8mm 4mm !important;
+    display: flex !important;
+    flex-direction: column !important;
+    box-sizing: border-box !important;
+    overflow: hidden !important;
+  }
+  .print-only, .customer-print { display: block !important; }
+  .customer-form { display: none !important; }
+  
+  .invoice-head {
+    display: grid !important;
+    grid-template-columns: 1.6fr 0.9fr !important;
+    margin-bottom: 3mm !important;
+    gap: 4mm !important;
+  }
+  .company-box strong { font-size: 17px !important; color: #2f6f4e !important; }
+  .company-box .hint { font-size: 8.5px !important; line-height: 1.35 !important; }
+  .invoice-meta { font-size: 8.5px !important; line-height: 1.45 !important; text-align: right !important; }
+  .invoice-number { font-size: 16px !important; color: #17351f !important; }
+
+  .bill-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    border: 1px solid #cbd8c5 !important;
+    margin: 0 0 3mm !important;
+  }
+  .bill-box { padding: 2.5mm 3.5mm !important; }
+  .bill-box + .bill-box { border-left: 1px solid #cbd8c5 !important; }
+  .customer-print div { font-size: 8.5px !important; line-height: 1.35 !important; }
+
+  .table-wrap { width: 100% !important; margin-bottom: 3mm !important; overflow: hidden !important; }
+  #itemsTable { width: 100% !important; min-width: 0 !important; font-size: 8px !important; table-layout: fixed !important; }
+  #itemsTable th, #itemsTable td { padding: 1.6mm 1.2mm !important; line-height: 1.2 !important; border: 1px solid #cbd8c5 !important; }
+  #itemsTable th { font-size: 7.5px !important; background: #edf6ee !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  #itemsTable td input, #itemsTable td select, #itemsTable .remove-col { display: none !important; }
+  #itemsTable .print-cell { display: inline !important; }
+
+  .summary-grid {
+    display: grid !important;
+    grid-template-columns: 1.3fr 0.9fr !important;
+    gap: 4mm !important;
+    margin-bottom: 3mm !important;
+  }
+  .totals { padding: 2mm 3mm !important; border: 1px solid #cbd8c5 !important; }
+  .total-line { font-size: 8.5px !important; padding: 1mm 0 !important; }
+  .total-line.grand { font-size: 13px !important; padding-top: 2mm !important; border-top: 1.5px solid #2f6f4e !important; }
+
+  .tax-summary { margin-bottom: 3mm !important; border: 1px solid #cbd8c5 !important; }
+  .tax-summary th, .tax-summary td { font-size: 7.5px !important; padding: 1.4mm 1mm !important; }
+
+  .signature { display: flex !important; justify-content: flex-end !important; margin-top: auto !important; }
+  .signature-box {
+    width: 60mm !important; min-height: 22mm !important; border: 1px dashed #cbd8c5 !important;
+    text-align: center !important; padding-top: 11mm !important; font-size: 8px !important;
+  }
+  .footer-note { font-size: 7.5px !important; text-align: center !important; margin-top: 2mm !important; }
 }
 
 @media(max-width:700px){
@@ -153,8 +245,8 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
       </div>
       <div class="dashboard-quick">
         <button class="dash-btn" onclick="showPage('billing'); newInvoice(true);"><span>➕</span><span><strong>Create Invoice</strong><small>New GST bill</small></span></button>
-        <button class="dash-btn" onclick="showPage('products')"><span>📦</span><span><strong>Products</strong><small>Catalog & Rates</small></span></button>
-        <button class="dash-btn" onclick="showPage('customers')"><span>👥</span><span><strong>Customers</strong><small>Ledger & Addresses</small></span></button>
+        <button class="dash-btn" onclick="showPage('products')"><span>📦</span><span><strong>Products Master</strong><small>Bulk upload & rates</small></span></button>
+        <button class="dash-btn" onclick="showPage('customers')"><span>👥</span><span><strong>Customer Ledger</strong><small>Bulk upload & details</small></span></button>
         <button class="dash-btn" onclick="showPage('reports')"><span>📊</span><span><strong>GST Filing</strong><small>Monthly Reports</small></span></button>
         <button class="dash-btn" onclick="openPreviousBills()"><span>🧾</span><span><strong>Previous Bills</strong><small>Open & Edit</small></span></button>
         <button class="dash-btn" onclick="openModal('gstCalcModal')"><span>🧮</span><span><strong>GST Calculator</strong><small>Quick computation</small></span></button>
@@ -178,7 +270,7 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
             <div id="printBusinessPhone" class="hint">+91 96583 99991 · SRISIDDHANESSENTIAL@GMAIL.COM</div>
             <div id="printBusinessGstin" class="hint">GSTIN: 33DQFPS0107C1ZF</div>
           </div>
-          <div class="invoice-meta" style="text-align:right">
+          <div class="invoice-meta">
             <div class="invoice-badge">INVOICE NO.</div>
             <div class="invoice-number" id="invoiceNoView">INV-2026-1001</div>
             <div><strong>Date:</strong> <span id="invoiceDateView"></span></div>
@@ -186,9 +278,9 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
           </div>
         </div>
 
-        <div class="bill-grid" style="margin:12px 0">
+        <div class="bill-grid">
           <div class="bill-box">
-            <div class="section-title" style="font-size:12px;margin-bottom:6px">BILL TO (RECIPIENT)</div>
+            <div class="section-title" style="font-size:12px;margin-bottom:4px">BILL TO (RECIPIENT)</div>
             <div class="customer-print">
               <div><strong>Name:</strong> <span id="printCustomerName">-</span></div>
               <div><strong>Phone:</strong> <span id="printCustomerPhone">-</span></div>
@@ -198,14 +290,14 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
             <div class="no-print customer-form">
               <div class="grid3">
                 <div class="field"><label class="required">Customer Name</label><input id="customerName" list="customerDatalist" placeholder="Type customer name" oninput="applyCustomerSelect(this)"></div>
-                <div class="field"><label>Phone</label><input id="customerPhone" placeholder="Phone number"></div>
+                <div class="field"><label>Phone Number</label><input id="customerPhone" placeholder="Mobile / WhatsApp"></div>
                 <div class="field"><label>GSTIN</label><input id="customerGstin" placeholder="Optional"></div>
                 <div class="field" style="grid-column:1/-1"><label>Address</label><textarea id="customerAddress" rows="2" placeholder="Address & City"></textarea></div>
               </div>
             </div>
           </div>
           <div class="bill-box">
-            <div class="section-title" style="font-size:12px;margin-bottom:6px">PAYMENT & NOTES</div>
+            <div class="section-title" style="font-size:12px;margin-bottom:4px">PAYMENT & DETAILS</div>
             <div class="customer-print">
               <div><strong>Mode:</strong> <span id="printPaymentMethod">Cash</span></div>
               <div><strong>Notes:</strong> <span id="printNotes">Thank you for choosing SRI SIDDHAN ESSENTIAL.</span></div>
@@ -225,36 +317,37 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
           <table id="itemsTable">
             <thead>
               <tr>
-                <th class="center" style="width:50px">S.No</th>
+                <th class="center" style="width:40px">#</th>
                 <th>Item / Product Description</th>
-                <th style="width:110px">HSN/SAC</th>
-                <th class="center" style="width:80px">Qty</th>
-                <th class="num" style="width:100px">Rate</th>
-                <th class="num" style="width:90px">GST %</th>
-                <th class="num" style="width:100px">GST Amt</th>
-                <th class="num" style="width:80px">Disc %</th>
-                <th class="num" style="width:110px">Total Amount</th>
-                <th class="remove-col" style="width:40px"></th>
+                <th style="width:105px">HSN/SAC</th>
+                <th class="center" style="width:75px">Qty</th>
+                <th class="num" style="width:95px">Rate</th>
+                <th class="num" style="width:85px">GST %</th>
+                <th class="num" style="width:95px">GST Amt</th>
+                <th class="num" style="width:75px">Disc %</th>
+                <th class="num" style="width:105px">Total Amount</th>
+                <th class="remove-col" style="width:36px"></th>
               </tr>
             </thead>
             <tbody id="itemsBody"></tbody>
           </table>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px" class="no-print">
-          <button class="secondary" onclick="addItem()">+ Add Line Item</button>
-          <div style="display:flex;gap:8px">
-            <button class="primary" style="background:#15803d" onclick="saveInvoice()">💾 Save & Push to Cloud</button>
-            <button class="primary" onclick="printInvoice()">🖨️ Print / PDF</button>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px" class="no-print">
+          <button class="secondary" onclick="addItem()">+ Add Item</button>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="primary" style="background:#25d366" onclick="shareWhatsApp()">📲 WhatsApp Share</button>
+            <button class="primary" style="background:#15803d" onclick="saveInvoice()">💾 Save to Cloud</button>
+            <button class="primary" onclick="printInvoice()">🖨️ Print Single-Page A4 / PDF</button>
           </div>
         </div>
 
-        <div class="summary-grid" style="margin-top:14px">
+        <div class="summary-grid" style="margin-top:12px">
           <div>
-            <div style="background:#f8faf7;border:1px solid #dfe7db;border-radius:10px;padding:10px 12px;font-size:12px">
+            <div style="background:#f8faf7;border:1px solid #dfe7db;border-radius:10px;padding:8px 10px;font-size:11.5px">
               <strong>Amount in Words:</strong> <span id="amountWords">Zero Rupees Only</span>
             </div>
-            <div class="print-only" style="margin-top:8px;font-size:9px;color:var(--muted)">
-              <strong>Terms & Conditions:</strong> Goods once sold will not be returned or exchanged unless agreed. Invoice discrepancies should be reported promptly.
+            <div class="print-only" style="margin-top:6px;font-size:8px;color:var(--muted)">
+              <strong>Terms:</strong> Goods once sold will not be returned unless agreed. Discrepancies must be reported promptly.
             </div>
           </div>
           <div>
@@ -268,8 +361,8 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
           </div>
         </div>
 
-        <div class="tax-summary print-only" style="margin-top:10px">
-          <table style="width:100%;font-size:8.5px">
+        <div class="tax-summary print-only">
+          <table style="width:100%;font-size:8px">
             <thead><tr><th>HSN/SAC</th><th>Taxable</th><th>CGST %</th><th>CGST Amt</th><th>SGST %</th><th>SGST Amt</th><th>Total Tax</th></tr></thead>
             <tbody id="taxSummaryBody"></tbody>
           </table>
@@ -278,6 +371,7 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
         <div class="signature print-only">
           <div class="signature-box">For <strong>SRI SIDDHAN ESSENTIAL</strong><br><br>Authorized Signatory</div>
         </div>
+        <div class="footer-note print-only">Thank you for choosing SRI SIDDHAN ESSENTIAL • Computer Generated Invoice</div>
       </div>
     </div>
   </div>
@@ -286,9 +380,13 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
   <div id="productsPage" class="page-panel no-print">
     <div class="page-back"><button class="secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <h2 class="section-title" style="margin:0">Product Catalog</h2>
-        <span id="productCount" class="sync-pill sync-ok">0 Products</span>
+        <div style="display:flex;gap:8px">
+          <button class="secondary" onclick="downloadTemplate('products')">📥 Download Template</button>
+          <button class="secondary" onclick="openBulkModal('products')">📤 Bulk Import</button>
+          <span id="productCount" class="sync-pill sync-ok">0 Products</span>
+        </div>
       </div>
       <div class="catalog-grid" style="margin-bottom:14px">
         <div class="field"><label class="required">Product Name</label><input id="productName" placeholder="e.g. Waffle Premix 1 KG"></div>
@@ -311,9 +409,13 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
   <div id="customersPage" class="page-panel no-print">
     <div class="page-back"><button class="secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
         <h2 class="section-title" style="margin:0">Customer Ledger</h2>
-        <span id="customerCount" class="sync-pill sync-ok">0 Customers</span>
+        <div style="display:flex;gap:8px">
+          <button class="secondary" onclick="downloadTemplate('customers')">📥 Download Template</button>
+          <button class="secondary" onclick="openBulkModal('customers')">📤 Bulk Import</button>
+          <span id="customerCount" class="sync-pill sync-ok">0 Customers</span>
+        </div>
       </div>
       <div class="customer-form-grid" style="margin-bottom:14px">
         <div class="field"><label>Customer Name</label><input id="catalogCustomerName" placeholder="Name"></div>
@@ -348,6 +450,33 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
           <tbody id="reportListBody"></tbody>
         </table>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- BULK IMPORT MODAL -->
+<div id="bulkModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('bulkModal')">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 style="margin:0;color:var(--green)" id="bulkModalTitle">Bulk Import</h3>
+      <button class="secondary" onclick="closeModal('bulkModal')">✕</button>
+    </div>
+    <p class="hint">Upload a spreadsheet (.xlsx, .xls, .csv) or paste rows directly from Excel.</p>
+    <input type="hidden" id="bulkTargetType" value="products">
+    
+    <div style="display:flex;gap:10px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+      <input type="file" id="bulkUploadFileInput" accept=".xlsx,.xls,.csv,.tsv" onchange="handleBulkFileUpload(this)">
+      <button class="secondary" onclick="downloadTemplate(document.getElementById('bulkTargetType').value)">Download Blank Template</button>
+    </div>
+    
+    <div class="field">
+      <label>OR PASTE EXCEL ROWS (TAB-SEPARATED)</label>
+      <textarea id="bulkPasteText" rows="6" placeholder="Paste data copied from Excel here..."></textarea>
+    </div>
+    
+    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
+      <button class="secondary" onclick="closeModal('bulkModal')">Cancel</button>
+      <button class="primary" onclick="executeBulkImport()">Process Import</button>
     </div>
   </div>
 </div>
@@ -403,7 +532,6 @@ const $=id=>document.getElementById(id);
 const today=()=>new Date().toISOString().slice(0,10);
 const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 
-// CLOUD DATABASE ENGINE (SYNCED WITH GITHUB workspace-data/billing-data.json)
 let CLOUD_CONFIG = { owner: "sreehp92", repo: "workspace-data", token: "", path: "billing-data.json", sha: "" };
 const CLOUD_CFG_KEY = "SSE_BILLING_CLOUD_CFG";
 
@@ -419,7 +547,6 @@ let db = {
 };
 
 function initApp(){
-  // Auto-inherit GitHub token from Command Desk if present
   const commandDeskCfg = localStorage.getItem("CORP_GH_CONFIG");
   if(commandDeskCfg){
     try{
@@ -462,7 +589,6 @@ function setCloudStatus(text, status){
   el.className = "sync-pill " + (status === "ok" ? "sync-ok" : "sync-pending");
 }
 
-// REST CLOUD ENGINE
 async function pushCloudData(){
   localStorage.setItem("SSE_LOCAL_DB", JSON.stringify(db));
   if(!CLOUD_CONFIG.token || !CLOUD_CONFIG.owner || !CLOUD_CONFIG.repo){
@@ -526,7 +652,7 @@ async function pullCloudData(showAlert=false){
         refreshAllData();
       }
       setCloudStatus("GitHub Synced", "ok");
-      if(showAlert) alert("All billing, customer and product data refreshed from GitHub Cloud!");
+      if(showAlert) alert("Data refreshed from GitHub Cloud!");
     } else {
       setCloudStatus("Ready to Push", "ok");
     }
@@ -566,7 +692,7 @@ function showPage(pageId){
   window.scrollTo(0,0);
 }
 
-// INVOICE ENGINE
+// INVOICE CALCULATION & ENGINE
 function addItem(data={}){
   const tr = document.createElement('tr');
   const idx = document.querySelectorAll('#itemsBody tr').length + 1;
@@ -631,7 +757,6 @@ function calculate(){
     tr.querySelector('.gst-amount').textContent = money(tax);
     tr.querySelector('.amount').textContent = money(total);
 
-    // Print values sync
     tr.querySelector('.item-print').textContent = tr.querySelector('.product-select').value || '-';
     tr.querySelector('.hsn-print').textContent = tr.querySelector('.hsn').value || '-';
     tr.querySelector('.qty-print').textContent = q;
@@ -665,7 +790,6 @@ function calculate(){
     </tr>
   `).join('');
 
-  // Sync Top View
   $('invoiceNoView').textContent = $('invoiceNo').value;
   $('invoiceDateView').textContent = $('invoiceDate').value;
   $('paymentView').textContent = $('paymentMethod').value;
@@ -714,7 +838,6 @@ function saveInvoice(){
   if(existingIdx >= 0) db.invoices[existingIdx] = invoice;
   else db.invoices.push(invoice);
 
-  // Auto-save new customer to catalog
   if(invoice.customerName){
     const cExists = db.customers.some(c=>c.name.toLowerCase()===invoice.customerName.toLowerCase());
     if(!cExists){
@@ -724,12 +847,43 @@ function saveInvoice(){
 
   refreshAllData();
   pushCloudData();
-  alert("Invoice successfully saved and pushed to Cloud!");
+  alert("Invoice saved and pushed to Cloud!");
 }
 
 function printInvoice(){
   calculate();
   window.print();
+}
+
+// 1-CLICK WHATSAPP SHARE
+function shareWhatsApp(){
+  calculate();
+  const cName = $('customerName').value.trim() || 'Valued Customer';
+  const phone = $('customerPhone').value.trim().replace(/\D/g, '');
+  const invNo = $('invoiceNo').value;
+  const invDate = $('invoiceDate').value;
+  const total = $('grandTotal').textContent;
+
+  const msg = 
+`*SRI SIDDHAN ESSENTIAL - TAX INVOICE*
+----------------------------------------
+Dear ${cName},
+Thank you for your valued purchase! Here are your invoice details:
+
+📄 *Invoice No:* ${invNo}
+📅 *Date:* ${invDate}
+💰 *Total Amount Payable:* ${total}
+🏢 *Supplier:* SRI SIDDHAN ESSENTIAL
+📍 *Location:* Coimbatore, Tamil Nadu
+
+We appreciate your business and look forward to serving you again. Please let us know if you need any further assistance!`;
+
+  const cleanPhone = phone.length === 10 ? ('91' + phone) : phone;
+  const url = cleanPhone 
+    ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`
+    : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+
+  window.open(url, '_blank');
 }
 
 function newInvoice(confirmPrompt=false){
@@ -745,7 +899,89 @@ function newInvoice(confirmPrompt=false){
   addItem();
 }
 
-// PRODUCT CATALOG
+// BULK DATA UPLOAD & TEMPLATE DOWNLOADS
+function openBulkModal(type){
+  $('bulkTargetType').value = type;
+  $('bulkModalTitle').textContent = type === 'products' ? "Bulk Import Products" : "Bulk Import Customers";
+  $('bulkPasteText').value = "";
+  $('bulkUploadFileInput').value = "";
+  openModal('bulkModal');
+}
+
+function downloadTemplate(type){
+  let csvContent = "";
+  let fileName = "";
+  if(type === 'products'){
+    csvContent = "Product Name,HSN,Rate,GST %,Unit\nVanilla Waffle Premix 1 KG,19012000,240,18,KGS\nChocolate Dip 1 KG,18069090,320,18,KGS";
+    fileName = "products_template.csv";
+  } else {
+    csvContent = "Customer Name,Phone,GSTIN,State Code,Address\nABC Bakery,9876543210,33AAAAA0000A1Z5,33,Gandhipuram Coimbatore";
+    fileName = "customers_template.csv";
+  }
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = fileName;
+  a.click();
+}
+
+function handleBulkFileUpload(input){
+  const file = input.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(e){
+    $('bulkPasteText').value = e.target.result;
+  };
+  reader.readAsText(file);
+}
+
+function executeBulkImport(){
+  const text = $('bulkPasteText').value.trim();
+  const type = $('bulkTargetType').value;
+  if(!text) return alert("Please select a file or paste data.");
+
+  const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
+  if(lines.length < 2) return alert("Data must have a header row and at least 1 record row.");
+
+  let count = 0;
+  for(let i = 1; i < lines.length; i++){
+    const delim = lines[i].includes('\t') ? '\t' : ',';
+    const cols = lines[i].split(delim).map(c => c.trim().replace(/^["']|["']$/g, ''));
+
+    if(type === 'products'){
+      const [name, hsn, rate, gst, uqc] = cols;
+      if(name){
+        db.products.push({
+          name,
+          hsn: hsn || '',
+          rate: parseFloat(rate) || 0,
+          gst: parseInt(gst) || 18,
+          uqc: uqc || 'NOS'
+        });
+        count++;
+      }
+    } else {
+      const [name, phone, gstin, stateCode, address] = cols;
+      if(name){
+        db.customers.push({
+          name,
+          phone: phone || '',
+          gstin: gstin || '',
+          stateCode: stateCode || '33',
+          address: address || ''
+        });
+        count++;
+      }
+    }
+  }
+
+  closeModal('bulkModal');
+  refreshAllData();
+  pushCloudData();
+  alert(`Imported ${count} ${type} successfully!`);
+}
+
+// PRODUCTS
 function renderProducts(){
   $('productListBody').innerHTML = db.products.map((p,idx)=>`
     <tr>
@@ -835,7 +1071,7 @@ function deleteCustomer(idx){
   }
 }
 
-// PREVIOUS BILLS
+// PREVIOUS INVOICES
 function openPreviousBills(){
   const list = $('previousBillsBody');
   if(!db.invoices.length){
@@ -899,7 +1135,6 @@ function renderDashboard(){
   $('dashGstCollected').textContent = money(gstMonth);
   $('dashInvoiceCount').textContent = db.invoices.length;
 
-  // Chart (Last 7 Days)
   const chart = $('dashboardGraph');
   const days = [];
   const base = new Date();
