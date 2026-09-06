@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Command Desk | Executive Hub</title>
+  <title>Command Desk | Enterprise Hub</title>
   <style>
     :root {
       --bg-body: #f8fafc;
@@ -15,6 +15,8 @@
       --red-primary: #dc2626;
       --red-hover: #b91c1c;
       --red-light: #fef2f2;
+      --indigo-core: #4f46e5;
+      --indigo-light: #eef2ff;
       --magenta: #c026d3;
       --magenta-light: #fdf4ff;
       --sidebar-w: 260px;
@@ -39,10 +41,10 @@
     }
     .brand-title {
       font-size: 15px; font-weight: 800; letter-spacing: -0.3px; color: var(--text-main);
-      display: flex; align-items: center; gap: 8px; margin-bottom: 18px;
+      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
     }
     .badge-dot { width: 9px; height: 9px; background: var(--red-primary); border-radius: 50%; }
-    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 20px; }
+    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 18px; }
     .sync-ok { background: #dcfce7; color: #15803d; }
     .sync-pending { background: #fef3c7; color: #b45309; }
 
@@ -63,14 +65,14 @@
     .h1-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
     .sub-lead { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; }
 
-    /* Drag and Drop Zone */
+    /* Drag & Drop */
     .drop-target {
       border: 2px dashed #cbd5e1; border-radius: 14px; background: #ffffff;
       padding: 32px 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s ease;
     }
-    .drop-target:hover, .drop-target.dragover { border-color: var(--magenta); background: var(--magenta-light); }
+    .drop-target:hover, .drop-target.dragover { border-color: var(--indigo-core); background: var(--indigo-light); }
 
-    /* Controls */
+    /* Form Controls */
     input, select, textarea {
       width: 100%; background: #ffffff; border: 1px solid var(--border); border-radius: 8px;
       padding: 10px 12px; font-size: 13.5px; color: var(--text-main); margin-top: 5px; margin-bottom: 12px;
@@ -84,20 +86,42 @@
     .btn:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(1); }
     .btn-red { background: var(--red-primary); color: #ffffff; }
     .btn-red:hover:not(:disabled) { background: var(--red-hover); }
+    .btn-indigo { background: var(--indigo-core); color: #ffffff; }
+    .btn-indigo:hover:not(:disabled) { background: #4338ca; }
     .btn-magenta { background: var(--magenta); color: #ffffff; }
     .btn-subtle { background: #ffffff; color: var(--text-main); border: 1px solid var(--border); }
     .btn-ghost-danger { background: transparent; color: var(--red-primary); border: none; padding: 4px 6px; font-size: 13px; cursor: pointer; }
 
+    /* Grids & Cards */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .dash-card {
       background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
       padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 125px;
     }
+
+    /* Unique Royal Crimson / Indigo Folder Cards */
+    .folder-card {
+      background: linear-gradient(145deg, #ffffff 60%, #fdf2f8 100%);
+      border: 1px solid #fed7aa;
+      border-left: 5px solid #dc2626;
+      border-radius: 14px;
+      padding: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(220, 38, 38, 0.04);
+      transition: all 0.2s ease;
+    }
+    .folder-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(220, 38, 38, 0.12);
+      border-color: #dc2626;
+    }
+
     .pill { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; }
     .pill-red { background: var(--red-light); color: var(--red-primary); }
+    .pill-indigo { background: var(--indigo-light); color: var(--indigo-core); }
     .pill-magenta { background: var(--magenta-light); color: var(--magenta); }
 
-    /* Security Gatekeeper Overlay */
+    /* Gatekeeper Overlay */
     #gatekeeper {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(6px);
       display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px;
@@ -113,12 +137,13 @@
       display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 14px;
     }
     .modal-window {
-      background: #ffffff; border-radius: 14px; width: 100%; max-width: 480px; padding: 22px; max-height: 90vh; overflow-y: auto;
+      background: #ffffff; border-radius: 14px; width: 100%; max-width: 540px; padding: 22px; max-height: 90vh; overflow-y: auto;
     }
 
-    .folder-drawer {
-      background: #ffffff; border: 1px solid var(--border); border-left: 4px solid var(--magenta);
-      border-radius: 12px; padding: 18px; margin-top: 18px;
+    /* Folder Pop-up Inspector Modal */
+    .folder-popup-window {
+      background: #ffffff; border-radius: 16px; width: 100%; max-width: 680px; padding: 24px; max-height: 85vh; overflow-y: auto;
+      border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     }
 
     #toastMsg {
@@ -177,11 +202,13 @@
         <span id="syncStatus" class="sync-badge sync-pending">● Initializing Sync</span>
       </div>
       <ul class="nav-list">
-        <li><button class="nav-btn active" onclick="switchView('portals')">🌐 Portals & Vault</button></li>
-        <li><button class="nav-btn" onclick="switchView('htmlEngine')">⚡ HTML Runtime</button></li>
-        <li><button class="nav-btn" onclick="switchView('folders')">📁 Organizational Folders</button></li>
+        <!-- 1ST & MOST IMPORTANT: Central Command Folders -->
+        <li><button class="nav-btn active" onclick="switchView('folders')">📁 Central Command Folders</button></li>
+        <li><button class="nav-btn" onclick="switchView('portals')">🌐 Mission Portals</button></li>
+        <li><button class="nav-btn" onclick="switchView('credentials')">🔐 Secured Credentials</button></li>
+        <li><button class="nav-btn" onclick="switchView('htmlEngine')">⚡ HTML App Runtime</button></li>
         <li><button class="nav-btn" onclick="switchView('memos')">📋 Executive Memos</button></li>
-        <li><button class="nav-btn" onclick="switchView('system')">⚙️ GitHub Sync Settings</button></li>
+        <li><button class="nav-btn" onclick="switchView('system')">⚙️ Cloud Synchronization</button></li>
       </ul>
     </div>
     <div style="margin-top: 20px;">
@@ -190,30 +217,49 @@
   </aside>
 
   <main class="content-area">
-    <!-- TAB 1: PORTALS & PASSWORDS -->
-    <section id="pane-portals" class="tab-pane active">
+    <!-- TAB 1: CENTRAL COMMAND FOLDERS (DEFAULT LANDING PAGE) -->
+    <section id="pane-folders" class="tab-pane active">
+      <div class="view-header">
+        <div>
+          <h1 class="h1-title">Central Command Folders</h1>
+          <p class="sub-lead">Master directory of all business resources, vaults, links, and documents</p>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-red" onclick="promptCreateFolder()">+ New Folder</button>
+          <button class="btn btn-indigo" onclick="openModal('modalFastCreate')">⚡ Quick Create</button>
+        </div>
+      </div>
+
+      <div class="grid" id="foldersGrid"></div>
+    </section>
+
+    <!-- TAB 2: MISSION PORTALS -->
+    <section id="pane-portals" class="tab-pane">
       <div class="view-header">
         <div>
           <h1 class="h1-title">Mission Portals</h1>
-          <p class="sub-lead">Web portals and secure bookmarks</p>
+          <p class="sub-lead">Web admin consoles, gateways, and critical business links</p>
         </div>
         <button class="btn btn-red" onclick="openModal('modalLink')">+ Add Portal</button>
       </div>
 
       <input type="text" id="linkFilter" placeholder="Filter portals..." oninput="renderLinks()">
       <div class="grid" id="linksGrid"></div>
+    </section>
 
-      <div class="view-header" style="margin-top: 30px;">
+    <!-- TAB 3: SECURED CREDENTIALS -->
+    <section id="pane-credentials" class="tab-pane">
+      <div class="view-header">
         <div>
-          <h2 class="h1-title" style="font-size: 18px;">Secured Credentials</h2>
-          <p class="sub-lead">Protected login tokens and passwords</p>
+          <h1 class="h1-title">Secured Credentials Vault</h1>
+          <p class="sub-lead">Master credentials, logins, and API access tokens</p>
         </div>
         <button class="btn btn-magenta" onclick="openModal('modalCred')">+ Save Credential</button>
       </div>
       <div class="grid" id="credsGrid"></div>
     </section>
 
-    <!-- TAB 2: HTML RUNTIME (RESTORED DRAG & DROP) -->
+    <!-- TAB 4: HTML RUNTIME -->
     <section id="pane-htmlEngine" class="tab-pane">
       <div class="view-header">
         <div>
@@ -223,7 +269,6 @@
         <button class="btn btn-red" onclick="openModal('modalHtml')">+ Add HTML Snippet</button>
       </div>
 
-      <!-- Drag & Drop / File Browser Area -->
       <div class="drop-target" id="dropArea" onclick="document.getElementById('filePicker').click()">
         <div style="font-size: 32px; margin-bottom: 6px;">📄</div>
         <strong style="font-size: 15px;">Drop HTML file here or click to browse</strong>
@@ -234,43 +279,24 @@
       <div class="grid" id="htmlGrid"></div>
     </section>
 
-    <!-- TAB 3: ORGANIZATIONAL FOLDERS -->
-    <section id="pane-folders" class="tab-pane">
-      <div class="view-header">
-        <div>
-          <h1 class="h1-title">Organizational Folders</h1>
-          <p class="sub-lead">Categorized views across all repositories</p>
-        </div>
-        <button class="btn btn-red" onclick="promptCreateFolder()">+ New Folder</button>
-      </div>
-      <div class="grid" id="foldersGrid"></div>
-      <div id="folderDrawer" class="folder-drawer hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-          <strong id="drawerFolderName" style="font-size: 16px;"></strong>
-          <button class="btn btn-subtle" style="padding: 4px 10px;" onclick="closeFolderDrawer()">✕</button>
-        </div>
-        <div id="drawerContents"></div>
-      </div>
-    </section>
-
-    <!-- TAB 4: EXECUTIVE MEMOS -->
+    <!-- TAB 5: EXECUTIVE MEMOS -->
     <section id="pane-memos" class="tab-pane">
       <div class="view-header">
         <div>
           <h1 class="h1-title">Executive Memo Pad</h1>
-          <p class="sub-lead">Documentation and encrypted memos</p>
+          <p class="sub-lead">Confidential protocols, notes, and documentation</p>
         </div>
-        <button class="btn btn-magenta" onclick="openModal('modalMemo')">+ Draft Memo</button>
+        <button class="btn btn-indigo" onclick="openModal('modalMemo')">+ Draft Memo</button>
       </div>
       <div class="grid" id="memosGrid"></div>
     </section>
 
-    <!-- TAB 5: GITHUB SYNC -->
+    <!-- TAB 6: GITHUB CLOUD SYNC -->
     <section id="pane-system" class="tab-pane">
       <div class="view-header">
         <div>
           <h1 class="h1-title">Cloud Synchronization Engine</h1>
-          <p class="sub-lead">Sync seamlessly via GitHub private repository</p>
+          <p class="sub-lead">Multi-device live synchronization via GitHub REST API</p>
         </div>
       </div>
       <div style="max-width: 520px; display: flex; flex-direction: column; gap: 16px;">
@@ -301,15 +327,47 @@
   </main>
 </div>
 
+<!-- POP-UP MODAL: FOLDER VAULT INSPECTOR -->
+<div id="modalFolderPopup" class="modal-backdrop hidden">
+  <div class="folder-popup-window">
+    <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
+      <div style="display:flex; align-items:center; gap:8px;">
+        <span style="font-size:22px;">📁</span>
+        <h2 id="popupFolderTitle" style="font-size:19px; font-weight:800; color:var(--text-main);"></h2>
+      </div>
+      <button class="btn btn-subtle" style="padding:4px 10px;" onclick="closeModal('modalFolderPopup')">✕ Close</button>
+    </div>
+
+    <div id="popupFolderBody"></div>
+  </div>
+</div>
+
+<!-- MODAL: QUICK UNIVERSAL CREATE SELECTOR -->
+<div id="modalFastCreate" class="modal-backdrop hidden">
+  <div class="modal-window">
+    <h3 style="font-size:17px; margin-bottom:12px;">Universal Creator</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Select what you want to create or add:</p>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <button class="btn btn-red" onclick="closeModal('modalFastCreate'); openModal('modalLink');">🌐 Mission Portal</button>
+      <button class="btn btn-magenta" onclick="closeModal('modalFastCreate'); openModal('modalCred');">🔐 Credential</button>
+      <button class="btn btn-indigo" onclick="closeModal('modalFastCreate'); openModal('modalHtml');">⚡ HTML Snippet</button>
+      <button class="btn btn-subtle" onclick="closeModal('modalFastCreate'); openModal('modalMemo');">📋 Executive Memo</button>
+    </div>
+    <div style="margin-top:16px; text-align:right;">
+      <button class="btn btn-subtle" onclick="closeModal('modalFastCreate')">Cancel</button>
+    </div>
+  </div>
+</div>
+
 <!-- MODAL: ADD PORTAL -->
 <div id="modalLink" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;">Add Mission Portal</h3>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">PORTAL TITLE (LETTERS ONLY)</label>
-    <input type="text" id="fLinkTitle" class="input-alpha" placeholder="Control Gateway">
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">URL</label>
+    <input type="text" id="fLinkTitle" class="input-alpha" placeholder="e.g. Master Control Center">
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">WEB URL</label>
     <input type="url" id="fLinkUrl" placeholder="https://example.com">
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
     <select id="fLinkFolder"></select>
     
     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
@@ -330,20 +388,20 @@
 <!-- MODAL: ADD CREDENTIAL -->
 <div id="modalCred" class="modal-backdrop hidden">
   <div class="modal-window">
-    <h3 style="font-size: 17px; margin-bottom: 12px;">Save Credential</h3>
+    <h3 style="font-size: 17px; margin-bottom: 12px;">Save Secured Credential</h3>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">TITLE (LETTERS ONLY)</label>
-    <input type="text" id="fCredTitle" class="input-alpha" placeholder="Google Workspace Admin">
+    <input type="text" id="fCredTitle" class="input-alpha" placeholder="Google Workspace Master">
     
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">EMAIL ADDRESS (STRICT VALIDATION)</label>
     <input type="email" id="fCredEmail" placeholder="thegoogle123@gmail.com" oninput="validateCredForm()">
     <div id="emailErr" style="font-size: 11px; color: var(--red-primary); margin-top: -8px; margin-bottom: 8px; display: none;">
-      Must be a complete, valid email format (e.g. name@domain.com)
+      Must be complete valid email format (e.g. name@domain.com)
     </div>
 
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SECRET KEY / PASSWORD</label>
     <input type="password" id="fCredPass" placeholder="Secret Key" oninput="validateCredForm()">
 
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
     <select id="fCredFolder"></select>
 
     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
@@ -366,10 +424,10 @@
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;">Store HTML Snippet</h3>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SNIPPET NAME</label>
-    <input type="text" id="fHtmlTitle" class="input-alpha" placeholder="Waffle Rate Calculator">
+    <input type="text" id="fHtmlTitle" class="input-alpha" placeholder="Waffle Cost Calculator">
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">RAW HTML CODE</label>
     <textarea id="fHtmlCode" rows="7" placeholder="<!DOCTYPE html>..."></textarea>
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
     <select id="fHtmlFolder"></select>
 
     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
@@ -392,8 +450,8 @@
   <div class="modal-window">
     <h3 id="memoModalTitle" style="font-size: 17px; margin-bottom: 12px;">Executive Memo</h3>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">TITLE (LETTERS ONLY)</label>
-    <input type="text" id="fMemoTitle" class="input-alpha" placeholder="Branch Operations Protocol">
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
+    <input type="text" id="fMemoTitle" class="input-alpha" placeholder="Franchise Operations Protocol">
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
     <select id="fMemoFolder"></select>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">DOCUMENT BODY</label>
     <textarea id="fMemoContent" rows="8" placeholder="Enter notes..."></textarea>
@@ -408,13 +466,13 @@
 
     <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
       <button class="btn btn-subtle" onclick="closeModal('modalMemo')">Close</button>
-      <button class="btn btn-magenta" onclick="saveMemo()">Save Memo</button>
+      <button class="btn btn-indigo" onclick="saveMemo()">Save Memo</button>
     </div>
   </div>
 </div>
 
 <script>
-// State Management Engine
+// Master State Management
 let GH_CONFIG = { owner: "", repo: "", token: "", path: "data.json", sha: "" };
 const STORAGE_KEY = "CORP_GH_DATA";
 const GH_CONFIG_KEY = "CORP_GH_CONFIG";
@@ -430,9 +488,7 @@ let store = {
   memos: []
 };
 
-let activeInspectFolder = null;
 let currentEditingMemoIndex = -1;
-
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function init() {
@@ -452,10 +508,10 @@ function init() {
   setupHistoryTrap();
   setupDragAndDrop();
 
-  // Session persistence across page refreshes
+  // Session state persistence
   if (sessionStorage.getItem(SESSION_AUTH_KEY) === "true") {
     document.getElementById("gatekeeper").classList.add("hidden");
-    const activeTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'portals';
+    const activeTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'folders';
     switchView(activeTab);
     refreshAll();
   }
@@ -465,7 +521,7 @@ function init() {
   }
 }
 
-// Drag & Drop Setup
+// Drag & Drop Runtime Listener
 function setupDragAndDrop() {
   const dropArea = document.getElementById("dropArea");
   if (!dropArea) return;
@@ -503,7 +559,6 @@ function processHtmlFile(file) {
     const rawCode = evt.target.result;
     const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z\s]/g, '') || "HTML Script";
     
-    // Auto-populate the HTML modal
     document.getElementById("fHtmlTitle").value = cleanTitle;
     document.getElementById("fHtmlCode").value = rawCode;
     document.getElementById("fHtmlPin").value = "";
@@ -515,7 +570,7 @@ function processHtmlFile(file) {
   reader.readAsText(file);
 }
 
-// Hardware Back-Button Trap
+// Navigation & Back-Button Protection
 let backPressedOnce = false;
 function setupHistoryTrap() {
   window.history.pushState({ page: 1 }, "", "");
@@ -557,16 +612,15 @@ function switchView(tabKey) {
   const pane = document.getElementById(`pane-${tabKey}`);
   if (pane) pane.classList.add('active');
 
-  const tabs = ['portals', 'htmlEngine', 'folders', 'memos', 'system'];
+  const tabs = ['folders', 'portals', 'credentials', 'htmlEngine', 'memos', 'system'];
   const idx = tabs.indexOf(tabKey);
   if (idx !== -1) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
 
   sessionStorage.setItem(CURRENT_TAB_KEY, tabKey);
   document.getElementById("mainSidebar").classList.remove("open");
-  if (tabKey === 'folders') closeFolderDrawer();
 }
 
-// Authentication
+// Security Gate & Locks
 function verifyGate() {
   const val = document.getElementById("gateKey").value.trim();
   if (val === store.masterKey || val === "admin") {
@@ -587,10 +641,10 @@ function lockApp() {
 }
 
 function confirmAdminAction(actionName) {
-  const code = prompt(`Security Action: Enter Admin Passkey to delete this ${actionName}:`);
+  const code = prompt(`Admin Authorization Required: Enter Master Passcode to permanently delete this ${actionName}:`);
   if (!code) return false;
   if (code === store.masterKey || code === "admin") return true;
-  alert("Authorization failed. Incorrect master passkey.");
+  alert("Authorization failed. Incorrect passkey.");
   return false;
 }
 
@@ -621,23 +675,20 @@ function validateCredForm() {
   const errEl = document.getElementById("emailErr");
   const btn = document.getElementById("btnSaveCred");
 
-  if (emailVal.length > 0 && !isValidEmail) {
-    errEl.style.display = "block";
-  } else {
-    errEl.style.display = "none";
-  }
+  if (emailVal.length > 0 && !isValidEmail) errEl.style.display = "block";
+  else errEl.style.display = "none";
 
   btn.disabled = !(isValidEmail && passVal.length > 0);
 }
 
-// GitHub REST Cloud Engine
+// Cloud REST API
 async function syncToGitHub() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
   const badge = document.getElementById("syncStatus");
 
   if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) {
     badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Saved Locally (Configure Cloud)";
+    badge.textContent = "● Saved Locally (No Cloud Keys)";
     return;
   }
 
@@ -659,7 +710,7 @@ async function syncToGitHub() {
     }
 
     const payload = {
-      message: "Synced via Executive Hub",
+      message: "Sync Central Command Hub",
       content: btoa(unescape(encodeURIComponent(JSON.stringify(store, null, 2)))),
       sha: GH_CONFIG.sha
     };
@@ -682,7 +733,7 @@ async function syncToGitHub() {
       badge.textContent = "● GitHub Synced";
     } else {
       badge.className = "sync-badge sync-pending";
-      badge.textContent = "● Sync Conflict (Check PAT)";
+      badge.textContent = "● Cloud Sync Error";
     }
   } catch (err) {
     badge.className = "sync-badge sync-pending";
@@ -693,7 +744,7 @@ async function syncToGitHub() {
 async function fetchGitHubData(showAlert = false) {
   if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) return;
   const badge = document.getElementById("syncStatus");
-  badge.textContent = "● Pulling...";
+  badge.textContent = "● Pulling from GitHub...";
 
   try {
     const res = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}?t=${Date.now()}`, {
@@ -716,11 +767,11 @@ async function fetchGitHubData(showAlert = false) {
       }
       badge.className = "sync-badge sync-ok";
       badge.textContent = "● GitHub Synced";
-      if (showAlert) alert("Sync completed.");
+      if (showAlert) alert("Workspace successfully updated from GitHub!");
     }
   } catch (e) {
     badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Sync Error";
+    badge.textContent = "● Fetch Failed";
   }
 }
 
@@ -730,16 +781,16 @@ function saveGitHubConfig() {
   GH_CONFIG.token = document.getElementById("ghToken").value.trim();
   GH_CONFIG.sha = "";
   localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
-  alert("Settings saved. Connecting...");
+  alert("Cloud configuration saved! Connecting...");
   fetchGitHubData(true);
 }
 
 function refreshAll() {
   updateFolderSelects();
+  renderFolders();
   renderLinks();
   renderCredentials();
   renderHtml();
-  renderFolders();
   renderMemos();
 }
 
@@ -762,7 +813,166 @@ function updateFolderSelects() {
   });
 }
 
-// 1. Mission Portals
+// 1. CENTRAL COMMAND FOLDERS (POPUP VAULT SYSTEM)
+function promptCreateFolder() {
+  let name = prompt("Enter Folder Name (Letters & spaces only):");
+  if (name) {
+    name = name.replace(/[^a-zA-Z\s]/g, '').trim();
+    if (name && !store.folders.includes(name)) {
+      store.folders.push(name);
+      refreshAll();
+      syncToGitHub();
+    }
+  }
+}
+
+function renderFolders() {
+  const grid = document.getElementById("foldersGrid");
+  grid.innerHTML = "";
+
+  store.folders.forEach((folder, fIndex) => {
+    const fLinks = store.links.filter(x => x.folder === folder);
+    const fCreds = store.credentials.filter(x => x.folder === folder);
+    const fDocs = store.htmlDocs.filter(x => x.folder === folder);
+    const fMemos = store.memos.filter(x => x.folder === folder);
+    const total = fLinks.length + fCreds.length + fDocs.length + fMemos.length;
+
+    const card = document.createElement("div");
+    card.className = "folder-card";
+    card.onclick = () => openFolderPopup(folder);
+    card.innerHTML = `
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <strong style="font-size:16px; color:var(--text-main);">📁 ${escapeHtml(folder)}</strong>
+          <span class="pill pill-red">${total} Assets</span>
+        </div>
+        <div style="font-size:12px; color:var(--text-muted); margin-top:10px; line-height:1.5;">
+          ${fLinks.length} Portals • ${fCreds.length} Credentials<br>
+          ${fDocs.length} HTML Apps • ${fMemos.length} Memos
+        </div>
+      </div>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; pt:8px;">
+        <span style="font-size:12px; font-weight:700; color:var(--red-primary);">Tap to Open Vault ➔</span>
+        <button class="btn-ghost-danger" onclick="event.stopPropagation(); deleteFolderDirect(${fIndex})">🗑️</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function openFolderPopup(folder) {
+  document.getElementById("popupFolderTitle").textContent = folder + " Vault";
+  const body = document.getElementById("popupFolderBody");
+  
+  const fLinks = store.links.filter(x => x.folder === folder);
+  const fCreds = store.credentials.filter(x => x.folder === folder);
+  const fDocs = store.htmlDocs.filter(x => x.folder === folder);
+  const fMemos = store.memos.filter(x => x.folder === folder);
+
+  let html = `<div style="display:flex; flex-direction:column; gap:18px;">`;
+
+  // Portals Section
+  html += `<div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <h4 style="font-size:13px; font-weight:700; color:var(--red-primary);">🌐 MISSION PORTALS (${fLinks.length})</h4>
+    </div>`;
+  if (fLinks.length === 0) {
+    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No portals saved in this folder.</p>`;
+  } else {
+    fLinks.forEach(l => {
+      const idx = store.links.indexOf(l);
+      html += `
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <div>
+            <strong style="font-size:13.5px;">${escapeHtml(l.title)}</strong> ${l.pin ? '🔒' : ''}
+            <div style="font-size:11.5px; color:var(--text-muted); word-break:break-all;">${escapeHtml(l.url)}</div>
+          </div>
+          <button class="btn btn-red" style="padding:5px 10px; font-size:12px;" onclick="launchPortal(${idx})">Open Page ↗</button>
+        </div>`;
+    });
+  }
+  html += `</div>`;
+
+  // Credentials Section
+  html += `<div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <h4 style="font-size:13px; font-weight:700; color:var(--magenta);">🔐 SECURED CREDENTIALS (${fCreds.length})</h4>
+    </div>`;
+  if (fCreds.length === 0) {
+    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No credentials saved in this folder.</p>`;
+  } else {
+    fCreds.forEach(c => {
+      const idx = store.credentials.indexOf(c);
+      html += `
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <div>
+            <strong style="font-size:13.5px;">${escapeHtml(c.title)}</strong> ${c.pin ? '🔒' : ''}
+            <div style="font-size:11.5px; color:var(--text-muted);">${escapeHtml(c.email)}</div>
+          </div>
+          <button class="btn btn-magenta" style="padding:5px 10px; font-size:12px;" onclick="revealCred(${idx})">Unlock 👁️</button>
+        </div>`;
+    });
+  }
+  html += `</div>`;
+
+  // HTML Applications Section
+  html += `<div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <h4 style="font-size:13px; font-weight:700; color:var(--indigo-core);">⚡ HTML RUNTIME APPS (${fDocs.length})</h4>
+    </div>`;
+  if (fDocs.length === 0) {
+    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No HTML apps saved in this folder.</p>`;
+  } else {
+    fDocs.forEach(d => {
+      const idx = store.htmlDocs.indexOf(d);
+      html += `
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <div>
+            <strong style="font-size:13.5px;">${escapeHtml(d.title)}</strong> ${d.pin ? '🔒' : ''}
+            <div style="font-size:11.5px; color:var(--text-muted);">${d.size || 'Script'}</div>
+          </div>
+          <button class="btn btn-indigo" style="padding:5px 10px; font-size:12px;" onclick="runHtml(${idx})">Run App ⚡</button>
+        </div>`;
+    });
+  }
+  html += `</div>`;
+
+  // Executive Memos Section
+  html += `<div>
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+      <h4 style="font-size:13px; font-weight:700; color:#334155;">📋 EXECUTIVE MEMOS (${fMemos.length})</h4>
+    </div>`;
+  if (fMemos.length === 0) {
+    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No memos saved in this folder.</p>`;
+  } else {
+    fMemos.forEach(m => {
+      const idx = store.memos.indexOf(m);
+      html += `
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+          <div>
+            <strong style="font-size:13.5px;">${escapeHtml(m.title)}</strong> ${m.pin ? '🔒' : ''}
+            <div style="font-size:11.5px; color:var(--text-muted);">${m.date || 'Memo'}</div>
+          </div>
+          <button class="btn btn-subtle" style="padding:5px 10px; font-size:12px;" onclick="closeModal('modalFolderPopup'); readMemo(${idx})">Read Memo ➔</button>
+        </div>`;
+    });
+  }
+  html += `</div></div>`;
+
+  body.innerHTML = html;
+  openModal('modalFolderPopup');
+}
+
+function deleteFolderDirect(fIndex) {
+  const folderName = store.folders[fIndex];
+  if (confirmAdminAction(`folder "${folderName}" and its assignments`)) {
+    store.folders.splice(fIndex, 1);
+    refreshAll();
+    syncToGitHub();
+  }
+}
+
+// 2. MISSION PORTALS
 function renderLinks() {
   const grid = document.getElementById("linksGrid");
   const filter = (document.getElementById("linkFilter").value || "").toLowerCase();
@@ -824,27 +1034,25 @@ function saveLink() {
   document.getElementById("fLinkPin").value = "";
   document.getElementById("fLinkLocked").checked = false;
   toggleLockField('fLinkPinWrap', false);
-  renderLinks();
-  renderFolders();
+  refreshAll();
   syncToGitHub();
 }
 
 function deleteLink(idx) {
   if (confirmAdminAction("portal")) {
     store.links.splice(idx, 1);
-    renderLinks();
-    renderFolders();
+    refreshAll();
     syncToGitHub();
   }
 }
 
-// 2. Credentials
+// 3. SECURED CREDENTIALS
 function renderCredentials() {
   const grid = document.getElementById("credsGrid");
   grid.innerHTML = "";
 
   if (store.credentials.length === 0) {
-    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No credentials saved.</p>`;
+    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No credentials saved yet.</p>`;
     return;
   }
 
@@ -858,7 +1066,7 @@ function renderCredentials() {
           <strong style="font-size:14.5px;">${escapeHtml(c.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-magenta">${escapeHtml(c.folder)}</span>
         </div>
-        <div style="font-size:12.5px; margin:4px 0;"><b>Account:</b> ${escapeHtml(c.email)}</div>
+        <div style="font-size:12.5px; margin:4px 0;"><b>Email / User:</b> ${escapeHtml(c.email)}</div>
         <div style="font-size:12.5px;"><b>Key:</b> <span id="passSpan-${idx}">••••••••</span></div>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
@@ -877,7 +1085,8 @@ function revealCred(idx) {
     if (entered !== item.pin) return alert("Incorrect Security PIN.");
   }
   const el = document.getElementById(`passSpan-${idx}`);
-  el.textContent = (el.textContent === "••••••••") ? item.pass : "••••••••";
+  if (el) el.textContent = (el.textContent === "••••••••") ? item.pass : "••••••••";
+  else alert(`Secret Key: ${item.pass}`);
 }
 
 function saveCred() {
@@ -888,7 +1097,7 @@ function saveCred() {
   const isLocked = document.getElementById("fCredLocked").checked;
   const pin = isLocked ? document.getElementById("fCredPin").value.trim() : "";
 
-  if (!EMAIL_REGEX.test(email)) return alert("Valid email format required.");
+  if (!EMAIL_REGEX.test(email)) return alert("Valid complete email format required (e.g. name@gmail.com).");
   store.credentials.push({ title, email, pass, folder, pin });
   closeModal('modalCred');
   document.getElementById("fCredTitle").value = "";
@@ -897,21 +1106,19 @@ function saveCred() {
   document.getElementById("fCredPin").value = "";
   document.getElementById("fCredLocked").checked = false;
   toggleLockField('fCredPinWrap', false);
-  renderCredentials();
-  renderFolders();
+  refreshAll();
   syncToGitHub();
 }
 
 function deleteCred(idx) {
   if (confirmAdminAction("credential")) {
     store.credentials.splice(idx, 1);
-    renderCredentials();
-    renderFolders();
+    refreshAll();
     syncToGitHub();
   }
 }
 
-// 3. HTML Application Runtime
+// 4. HTML RUNTIME
 function renderHtml() {
   const grid = document.getElementById("htmlGrid");
   grid.innerHTML = "";
@@ -929,12 +1136,12 @@ function renderHtml() {
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
           <strong style="font-size:14.5px;">${escapeHtml(doc.title)} ${isLocked ? '🔒' : ''}</strong>
-          <span class="pill pill-red">${escapeHtml(doc.folder)}</span>
+          <span class="pill pill-indigo">${escapeHtml(doc.folder)}</span>
         </div>
         <p style="font-size:12px; color:var(--text-muted);">Payload: ${doc.size || 'Script'}</p>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
-        <button class="btn btn-red" onclick="runHtml(${idx})">Execute ↗</button>
+        <button class="btn btn-indigo" onclick="runHtml(${idx})">Execute ↗</button>
         <button class="btn btn-ghost-danger" onclick="deleteHtml(${idx})">🗑️</button>
       </div>
     `;
@@ -970,21 +1177,19 @@ function saveHtmlDoc() {
   document.getElementById("fHtmlPin").value = "";
   document.getElementById("fHtmlLocked").checked = false;
   toggleLockField('fHtmlPinWrap', false);
-  renderHtml();
-  renderFolders();
+  refreshAll();
   syncToGitHub();
 }
 
 function deleteHtml(idx) {
   if (confirmAdminAction("HTML snippet")) {
     store.htmlDocs.splice(idx, 1);
-    renderHtml();
-    renderFolders();
+    refreshAll();
     syncToGitHub();
   }
 }
 
-// 4. Memos
+// 5. EXECUTIVE MEMOS
 function renderMemos() {
   const grid = document.getElementById("memosGrid");
   grid.innerHTML = "";
@@ -1002,7 +1207,7 @@ function renderMemos() {
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
           <strong style="font-size:14.5px;">${escapeHtml(memo.title)} ${isLocked ? '🔒' : ''}</strong>
-          <span class="pill pill-magenta">${escapeHtml(memo.folder)}</span>
+          <span class="pill pill-subtle" style="background:#f1f5f9; font-weight:700;">${escapeHtml(memo.folder)}</span>
         </div>
         <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
           ${isLocked ? '<i>Encrypted document. Click Open to authenticate.</i>' : escapeHtml(memo.content.substring(0, 90)) + '...'}
@@ -1049,84 +1254,16 @@ function saveMemo() {
 
   closeModal('modalMemo');
   currentEditingMemoIndex = -1;
-  renderMemos();
-  renderFolders();
+  refreshAll();
   syncToGitHub();
 }
 
 function deleteMemo(idx) {
   if (confirmAdminAction("memo document")) {
     store.memos.splice(idx, 1);
-    renderMemos();
-    renderFolders();
+    refreshAll();
     syncToGitHub();
   }
-}
-
-// 5. Folders
-function promptCreateFolder() {
-  let name = prompt("Folder Name (letters only):");
-  if (name) {
-    name = name.replace(/[^a-zA-Z\s]/g, '').trim();
-    if (name && !store.folders.includes(name)) {
-      store.folders.push(name);
-      refreshAll();
-      syncToGitHub();
-    }
-  }
-}
-
-function renderFolders() {
-  const grid = document.getElementById("foldersGrid");
-  grid.innerHTML = "";
-
-  store.folders.forEach(folder => {
-    const total = store.links.filter(x => x.folder === folder).length +
-                  store.credentials.filter(x => x.folder === folder).length +
-                  store.htmlDocs.filter(x => x.folder === folder).length +
-                  store.memos.filter(x => x.folder === folder).length;
-
-    const card = document.createElement("div");
-    card.className = "dash-card";
-    card.style.cursor = "pointer";
-    card.onclick = () => openFolderDrawer(folder);
-    card.innerHTML = `
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <strong style="font-size:15px;">📁 ${escapeHtml(folder)}</strong>
-        <span class="pill pill-magenta">${total} Items</span>
-      </div>
-      <div style="font-size:12px; color:var(--magenta); margin-top:14px; font-weight:700;">View Contents ➔</div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function openFolderDrawer(folder) {
-  const drawer = document.getElementById("folderDrawer");
-  document.getElementById("drawerFolderName").textContent = "📁 " + folder;
-  drawer.classList.remove("hidden");
-
-  const container = document.getElementById("drawerContents");
-  const fLinks = store.links.filter(x => x.folder === folder);
-  const fMemos = store.memos.filter(x => x.folder === folder);
-
-  let html = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:10px;">`;
-  fLinks.forEach(l => {
-    html += `<div style="background:#f8fafc; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-size:12.5px;">
-      <b>🌐 ${escapeHtml(l.title)}</b> ${l.pin ? '🔒' : ''}
-    </div>`;
-  });
-  fMemos.forEach(m => {
-    html += `<div style="background:#f8fafc; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-size:12.5px;">
-      <b>📋 ${escapeHtml(m.title)}</b> ${m.pin ? '🔒' : ''}
-    </div>`;
-  });
-  html += `</div>`;
-  container.innerHTML = html;
-}
-
-function closeFolderDrawer() {
-  document.getElementById("folderDrawer").classList.add("hidden");
 }
 
 function updateMasterKey() {
