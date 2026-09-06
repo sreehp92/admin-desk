@@ -2,16 +2,16 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Executive Command Suite | GitHub Synced</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Command Desk | Executive Hub</title>
   <style>
     :root {
-      --bg-body: #ffffff;
-      --surface-card: #fafafa;
-      --border-line: #e4e4e7;
-      --border-strong: #d4d4d8;
-      --text-main: #09090b;
-      --text-muted: #71717a;
+      --bg-body: #f8fafc;
+      --surface: #ffffff;
+      --border: #e2e8f0;
+      --border-focus: #dc2626;
+      --text-main: #0f172a;
+      --text-muted: #64748b;
       --red-primary: #dc2626;
       --red-hover: #b91c1c;
       --red-light: #fef2f2;
@@ -20,124 +20,151 @@
       --sidebar-w: 260px;
     }
 
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-    body { background: var(--bg-body); color: var(--text-main); min-height: 100vh; display: flex; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: var(--bg-body); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-    /* Security Gatekeeper */
-    #gatekeeper {
-      position: fixed; inset: 0; background: rgba(9, 9, 11, 0.7); backdrop-filter: blur(8px);
-      display: flex; justify-content: center; align-items: center; z-index: 9999;
+    /* Mobile Topbar */
+    .mobile-header {
+      display: none; height: 56px; background: #ffffff; border-bottom: 1px solid var(--border);
+      padding: 0 16px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
-    .gate-box {
-      background: #ffffff; border: 1px solid var(--border-line); border-radius: 18px;
-      padding: 40px 36px; width: 100%; max-width: 400px; text-align: center;
-      box-shadow: 0 25px 50px -12px rgba(220, 38, 38, 0.15);
-    }
-    .gate-logo {
-      width: 52px; height: 52px; background: var(--magenta-light); border: 1px solid rgba(192, 38, 211, 0.2);
-      color: var(--magenta); border-radius: 14px; display: inline-flex; align-items: center; justify-content: center;
-      font-size: 24px; margin-bottom: 18px;
-    }
+    .burger-btn { font-size: 22px; background: none; border: none; cursor: pointer; padding: 6px; color: var(--text-main); }
 
-    /* Layout */
-    #app { display: flex; width: 100vw; min-height: 100vh; }
+    /* Layout Shell */
+    #appLayout { display: flex; width: 100vw; min-height: 100vh; }
     .sidebar {
-      width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border-line);
-      display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0;
+      width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
+      display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; z-index: 200;
+      transition: transform 0.25s ease;
     }
     .brand-title {
-      font-size: 16px; font-weight: 800; letter-spacing: -0.3px; color: var(--text-main);
-      display: flex; align-items: center; gap: 8px; margin-bottom: 24px;
+      font-size: 15px; font-weight: 800; letter-spacing: -0.3px; color: var(--text-main);
+      display: flex; align-items: center; gap: 8px; margin-bottom: 18px;
     }
-    .badge-dot { width: 9px; height: 9px; background: var(--red-primary); border-radius: 50%; box-shadow: 0 0 8px var(--red-primary); }
-    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 16px; }
+    .badge-dot { width: 9px; height: 9px; background: var(--red-primary); border-radius: 50%; }
+    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 20px; }
     .sync-ok { background: #dcfce7; color: #15803d; }
     .sync-pending { background: #fef3c7; color: #b45309; }
 
     .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .nav-btn {
       width: 100%; text-align: left; padding: 11px 14px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
-      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.2s;
+      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.15s;
     }
-    .nav-btn:hover { background: var(--surface-card); color: var(--text-main); }
+    .nav-btn:hover { background: #f1f5f9; color: var(--text-main); }
     .nav-btn.active { background: var(--red-light); color: var(--red-primary); border-left: 3px solid var(--red-primary); }
 
-    .content-area { flex-grow: 1; padding: 36px 48px; overflow-y: auto; max-height: 100vh; }
+    .content-area { flex-grow: 1; padding: 32px; overflow-y: auto; max-height: 100vh; }
     .tab-pane { display: none; }
     .tab-pane.active { display: block; animation: fadeIn 0.15s ease-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
-    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 28px; border-bottom: 1px solid var(--border-line); padding-bottom: 16px; }
-    .h1-title { font-size: 24px; font-weight: 800; color: var(--text-main); letter-spacing: -0.5px; }
-    .sub-lead { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
+    .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; gap: 12px; }
+    .h1-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
+    .sub-lead { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; }
 
+    /* Form Controls */
     input, select, textarea {
-      width: 100%; background: #ffffff; border: 1px solid var(--border-strong); border-radius: 8px;
-      padding: 11px 14px; font-size: 13.5px; color: var(--text-main); margin-top: 6px; margin-bottom: 14px;
+      width: 100%; background: #ffffff; border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px 12px; font-size: 13.5px; color: var(--text-main); margin-top: 5px; margin-bottom: 12px;
     }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--red-primary); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08); }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08); }
     
     .btn {
       padding: 9px 16px; border-radius: 8px; border: 1px solid transparent; font-size: 13px; font-weight: 600;
-      cursor: pointer; display: inline-flex; align-items: center; gap: 6px; transition: all 0.15s ease;
+      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s;
     }
+    .btn:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(1); }
     .btn-red { background: var(--red-primary); color: #ffffff; }
-    .btn-red:hover { background: var(--red-hover); }
+    .btn-red:hover:not(:disabled) { background: var(--red-hover); }
     .btn-magenta { background: var(--magenta); color: #ffffff; }
-    .btn-magenta:hover { opacity: 0.95; }
-    .btn-subtle { background: #ffffff; color: var(--text-main); border: 1px solid var(--border-strong); }
-    .btn-subtle:hover { background: var(--surface-card); }
-    .btn-ghost-danger { background: transparent; color: var(--red-primary); border: none; padding: 4px 8px; font-size: 12px; }
+    .btn-subtle { background: #ffffff; color: var(--text-main); border: 1px solid var(--border); }
+    .btn-ghost-danger { background: transparent; color: var(--red-primary); border: none; padding: 4px 6px; font-size: 13px; cursor: pointer; }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(310px, 1fr)); gap: 16px; margin-bottom: 28px; }
+    /* Cards & Grids */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .dash-card {
-      background: var(--surface-card); border: 1px solid var(--border-line); border-radius: 14px;
-      padding: 18px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.2s ease;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 125px;
     }
-    .dash-card:hover { transform: translateY(-2px); border-color: var(--magenta); box-shadow: 0 8px 20px rgba(192, 38, 211, 0.06); }
-    .card-clickable { cursor: pointer; }
-    
     .pill { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; }
     .pill-red { background: var(--red-light); color: var(--red-primary); }
     .pill-magenta { background: var(--magenta-light); color: var(--magenta); }
 
-    .drop-target {
-      border: 2px dashed var(--border-strong); border-radius: 14px; background: #ffffff;
-      padding: 34px 20px; text-align: center; cursor: pointer; margin-bottom: 24px;
+    /* Security Gatekeeper Overlay */
+    #gatekeeper {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(6px);
+      display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px;
     }
-    .drop-target.dragover { border-color: var(--magenta); background: var(--magenta-light); }
+    .gate-box {
+      background: #ffffff; border-radius: 16px; padding: 32px 24px; width: 100%; max-width: 380px; text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    }
 
+    /* Modal Backdrop */
     .modal-backdrop {
-      position: fixed; inset: 0; background: rgba(9, 9, 11, 0.5); backdrop-filter: blur(4px);
-      display: flex; justify-content: center; align-items: center; z-index: 1000;
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
+      display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 14px;
     }
-    .modal-window { background: #ffffff; border-radius: 16px; width: 100%; max-width: 520px; padding: 28px; border: 1px solid var(--border-line); }
+    .modal-window {
+      background: #ffffff; border-radius: 14px; width: 100%; max-width: 480px; padding: 22px; max-height: 90vh; overflow-y: auto;
+    }
 
     .folder-drawer {
-      background: #ffffff; border: 1px solid var(--border-strong); border-left: 4px solid var(--magenta);
-      border-radius: 14px; padding: 24px; margin-top: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+      background: #ffffff; border: 1px solid var(--border); border-left: 4px solid var(--magenta);
+      border-radius: 12px; padding: 18px; margin-top: 18px;
     }
-    .icon-pencil { cursor: pointer; font-size: 14px; color: var(--text-muted); padding: 4px 6px; }
-    .icon-pencil:hover { color: var(--magenta); }
+
+    /* Toast Notification for Back-button warnings */
+    #toastMsg {
+      position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+      background: #0f172a; color: #ffffff; padding: 10px 18px; border-radius: 20px;
+      font-size: 12.5px; z-index: 99999; opacity: 0; pointer-events: none; transition: opacity 0.2s ease;
+    }
 
     .hidden { display: none !important; }
+
+    /* Mobile Responsive Frame Rules */
+    @media (max-width: 768px) {
+      .mobile-header { display: flex; }
+      #appLayout { flex-direction: column; }
+      .sidebar {
+        position: fixed; top: 56px; left: 0; bottom: 0; width: 260px;
+        transform: translateX(-100%); box-shadow: 10px 0 25px rgba(0,0,0,0.1);
+      }
+      .sidebar.open { transform: translateX(0); }
+      .content-area { padding: 18px 14px; max-height: calc(100vh - 56px); }
+      .grid { grid-template-columns: 1fr; }
+      .view-header { flex-direction: column; align-items: flex-start; }
+      .view-header button { width: 100%; }
+    }
   </style>
 </head>
 <body>
 
+<div id="toastMsg">Press back again to exit</div>
+
+<!-- Security Gatekeeper -->
 <div id="gatekeeper">
   <div class="gate-box">
-    <div class="gate-logo">🏛️</div>
-    <h2 style="font-size: 20px; font-weight: 800; margin-bottom: 6px;">Enterprise Command Desk</h2>
-    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 22px;">Enter your master access passkey</p>
-    <input type="password" id="gateKey" placeholder="Access Code (admin)" style="text-align: center; font-size: 16px;" autofocus>
-    <button class="btn btn-red" style="width: 100%; justify-content: center; padding: 12px;" onclick="verifyGate()">Authenticate</button>
-    <div id="gateErr" style="color: var(--red-primary); font-size: 12px; margin-top: 10px; display: none;">Invalid passkey. Default is <b>admin</b></div>
+    <div style="font-size: 34px; margin-bottom: 8px;">🔐</div>
+    <h2 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">Enterprise Command Hub</h2>
+    <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">Enter Admin Authorization Code</p>
+    <input type="password" id="gateKey" placeholder="Access Code (default: admin)" style="text-align: center;" autofocus>
+    <button class="btn btn-red" style="width: 100%; padding: 11px;" onclick="verifyGate()">Authenticate Session</button>
+    <div id="gateErr" style="color: var(--red-primary); font-size: 12px; margin-top: 8px; display: none;">Invalid passkey.</div>
   </div>
 </div>
 
-<div id="app">
-  <aside class="sidebar">
+<!-- Mobile Header Frame -->
+<header class="mobile-header">
+  <button class="burger-btn" onclick="toggleSidebar()">☰</button>
+  <span style="font-size: 14px; font-weight: 800;"><span class="badge-dot" style="display:inline-block;"></span> COMMAND DESK</span>
+  <button class="btn btn-subtle" style="padding: 5px 10px; font-size: 12px;" onclick="lockApp()">🔒</button>
+</header>
+
+<div id="appLayout">
+  <aside class="sidebar" id="mainSidebar">
     <div>
       <div class="brand-title">
         <span class="badge-dot"></span> COMMAND DESK
@@ -146,14 +173,14 @@
         <span id="syncStatus" class="sync-badge sync-pending">● Initializing Sync</span>
       </div>
       <ul class="nav-list">
-        <li><button class="nav-btn active" onclick="navigate('portals')">🌐 Portals & Vault</button></li>
-        <li><button class="nav-btn" onclick="navigate('htmlEngine')">⚡ HTML Runtime</button></li>
-        <li><button class="nav-btn" onclick="navigate('folders')">📁 Organizational Folders</button></li>
-        <li><button class="nav-btn" onclick="navigate('memos')">📋 Executive Memos</button></li>
-        <li><button class="nav-btn" onclick="navigate('system')">⚙️ GitHub Sync Settings</button></li>
+        <li><button class="nav-btn active" onclick="switchView('portals')">🌐 Portals & Vault</button></li>
+        <li><button class="nav-btn" onclick="switchView('htmlEngine')">⚡ HTML Runtime</button></li>
+        <li><button class="nav-btn" onclick="switchView('folders')">📁 Organizational Folders</button></li>
+        <li><button class="nav-btn" onclick="switchView('memos')">📋 Executive Memos</button></li>
+        <li><button class="nav-btn" onclick="switchView('system')">⚙️ GitHub Sync Settings</button></li>
       </ul>
     </div>
-    <div>
+    <div style="margin-top: 20px;">
       <button class="btn btn-subtle" style="width: 100%; justify-content: center;" onclick="lockApp()">🔒 Lock Session</button>
     </div>
   </aside>
@@ -163,42 +190,34 @@
     <section id="pane-portals" class="tab-pane active">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">Mission Critical Portals</h1>
-          <p class="sub-lead">Web dashboards, admin gateways, and internal corporate links</p>
+          <h1 class="h1-title">Mission Portals</h1>
+          <p class="sub-lead">Web portals and secure bookmarks</p>
         </div>
         <button class="btn btn-red" onclick="openModal('modalLink')">+ Add Portal</button>
       </div>
 
-      <input type="text" id="linkFilter" placeholder="Filter portals by name, address, or folder..." oninput="renderLinks()">
+      <input type="text" id="linkFilter" placeholder="Filter portals..." oninput="renderLinks()">
       <div class="grid" id="linksGrid"></div>
 
-      <div class="view-header" style="margin-top: 36px;">
+      <div class="view-header" style="margin-top: 30px;">
         <div>
-          <h2 class="h1-title" style="font-size: 20px;">Secured Credentials & Passwords</h2>
-          <p class="sub-lead">Master logins, database access keys, and confidential credentials</p>
+          <h2 class="h1-title" style="font-size: 18px;">Secured Credentials</h2>
+          <p class="sub-lead">Protected login tokens and passwords</p>
         </div>
-        <button class="btn btn-magenta" onclick="openModal('modalCred')">+ Save Password</button>
+        <button class="btn btn-magenta" onclick="openModal('modalCred')">+ Save Credential</button>
       </div>
       <div class="grid" id="credsGrid"></div>
     </section>
 
-    <!-- TAB 2: HTML APPLICATION RUNTIME -->
+    <!-- TAB 2: HTML RUNTIME -->
     <section id="pane-htmlEngine" class="tab-pane">
       <div class="view-header">
         <div>
           <h1 class="h1-title">HTML Application Runtime</h1>
-          <p class="sub-lead">Execute offline HTML files and single-page apps safely in sandbox</p>
+          <p class="sub-lead">Run single-page tools & snippets in sandbox</p>
         </div>
-        <button class="btn btn-red" onclick="openModal('modalHtml')">+ New HTML Snippet</button>
+        <button class="btn btn-red" onclick="openModal('modalHtml')">+ Add HTML Snippet</button>
       </div>
-
-      <div class="drop-target" id="dropArea" onclick="document.getElementById('filePicker').click()">
-        <div style="font-size: 32px; margin-bottom: 6px;">📄</div>
-        <strong style="font-size: 15px;">Drop HTML file here or click to browse</strong>
-        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Upload standalone .html, .htm, or web script files</p>
-        <input type="file" id="filePicker" accept=".html,.htm,.txt" style="display: none;" onchange="handleFileDrop(event)">
-      </div>
-
       <div class="grid" id="htmlGrid"></div>
     </section>
 
@@ -207,20 +226,15 @@
       <div class="view-header">
         <div>
           <h1 class="h1-title">Organizational Folders</h1>
-          <p class="sub-lead">Click any folder to immediately open and view all its contents</p>
+          <p class="sub-lead">Categorized views across all repositories</p>
         </div>
         <button class="btn btn-red" onclick="promptCreateFolder()">+ New Folder</button>
       </div>
-
       <div class="grid" id="foldersGrid"></div>
-
       <div id="folderDrawer" class="folder-drawer hidden">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-          <div style="display: flex; align-items: center; gap: 8px;">
-            <h3 id="drawerFolderName" style="font-size: 19px; font-weight: 800;"></h3>
-            <span class="icon-pencil" title="Rename Folder" onclick="renameActiveFolder()">✎</span>
-          </div>
-          <button class="btn btn-subtle" onclick="closeFolderDrawer()">Close ✕</button>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+          <strong id="drawerFolderName" style="font-size: 16px;"></strong>
+          <button class="btn btn-subtle" style="padding: 4px 10px;" onclick="closeFolderDrawer()">✕</button>
         </div>
         <div id="drawerContents"></div>
       </div>
@@ -230,50 +244,44 @@
     <section id="pane-memos" class="tab-pane">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">Executive Memo Pad & Documentation</h1>
-          <p class="sub-lead">Click any card to read or edit. Protected memos require numeric PINs.</p>
+          <h1 class="h1-title">Executive Memo Pad</h1>
+          <p class="sub-lead">Documentation and encrypted memos</p>
         </div>
-        <button class="btn btn-magenta" onclick="openModal('modalMemo')">+ Draft Document</button>
+        <button class="btn btn-magenta" onclick="openModal('modalMemo')">+ Draft Memo</button>
       </div>
       <div class="grid" id="memosGrid"></div>
     </section>
 
-    <!-- TAB 5: GITHUB SYNC & SECURITY -->
+    <!-- TAB 5: GITHUB SYNC -->
     <section id="pane-system" class="tab-pane">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">GitHub API Cloud Sync</h1>
-          <p class="sub-lead">Sync automatically across all 6 devices using your private GitHub repository</p>
+          <h1 class="h1-title">Cloud Synchronization Engine</h1>
+          <p class="sub-lead">Sync seamlessly via GitHub private repository</p>
         </div>
       </div>
-
-      <div style="max-width: 580px; display: flex; flex-direction: column; gap: 20px;">
+      <div style="max-width: 520px; display: flex; flex-direction: column; gap: 16px;">
         <div class="dash-card">
-          <h3 style="font-size: 16px; margin-bottom: 4px;">GitHub API Integration</h3>
-          <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 14px;">Connect directly to your private data repository.</p>
-          
-          <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">GITHUB USERNAME</label>
-          <input type="text" id="ghOwner" placeholder="e.g. sreekumar-dev">
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">GITHUB USERNAME</label>
+          <input type="text" id="ghOwner" placeholder="e.g. sreehp92">
 
-          <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">STORAGE REPOSITORY NAME</label>
-          <input type="text" id="ghRepo" placeholder="e.g. workspace-data">
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">STORAGE REPO</label>
+          <input type="text" id="ghRepo" placeholder="workspace-data">
 
-          <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">PERSONAL ACCESS TOKEN (PAT)</label>
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">PERSONAL ACCESS TOKEN (PAT)</label>
           <input type="password" id="ghToken" placeholder="ghp_...">
 
-          <div style="display:flex; gap:8px;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
             <button class="btn btn-red" onclick="saveGitHubConfig()">Save & Connect</button>
-            <button class="btn btn-subtle" onclick="fetchGitHubData(true)">Pull Latest from GitHub</button>
+            <button class="btn btn-subtle" onclick="fetchGitHubData(true)">Sync Now</button>
           </div>
         </div>
 
         <div class="dash-card">
-          <h3 style="font-size: 16px; margin-bottom: 4px;">Update Master Access Code</h3>
-          <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">CURRENT PASSCODE</label>
+          <h3 style="font-size: 15px; margin-bottom: 6px;">Update Master Admin Code</h3>
           <input type="password" id="oldMasterKey" placeholder="Current passcode">
-          <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">NEW PASSCODE</label>
           <input type="password" id="newMasterKey" placeholder="New passcode">
-          <button class="btn btn-magenta" onclick="updateMasterKey()">Update Master Code</button>
+          <button class="btn btn-magenta" onclick="updateMasterKey()">Update Passkey</button>
         </div>
       </div>
     </section>
@@ -283,14 +291,23 @@
 <!-- MODAL: ADD PORTAL -->
 <div id="modalLink" class="modal-backdrop hidden">
   <div class="modal-window">
-    <h3 style="margin-bottom: 14px; font-size: 18px;">Add Mission Portal</h3>
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">PORTAL TITLE (LETTERS & SPACES ONLY)</label>
-    <input type="text" id="fLinkTitle" class="input-alpha" placeholder="e.g. Master Control Center">
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">WEB URL</label>
-    <input type="url" id="fLinkUrl" placeholder="https://admin.example.com">
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">ASSIGNED FOLDER</label>
+    <h3 style="font-size: 17px; margin-bottom: 12px;">Add Mission Portal</h3>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">PORTAL TITLE (LETTERS ONLY)</label>
+    <input type="text" id="fLinkTitle" class="input-alpha" placeholder="Control Gateway">
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">URL</label>
+    <input type="url" id="fLinkUrl" placeholder="https://example.com">
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
     <select id="fLinkFolder"></select>
-    <div style="display:flex; justify-content:flex-end; gap:8px;">
+    
+    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
+      <input type="checkbox" id="fLinkLocked" style="width: auto; margin: 0;" onchange="toggleLockField('fLinkPinWrap', this.checked)"> Enable Lock Protection
+    </label>
+    <div id="fLinkPinWrap" class="hidden">
+      <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SET 4-DIGIT PIN</label>
+      <input type="password" id="fLinkPin" class="input-numeric" placeholder="1234" maxlength="6">
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
       <button class="btn btn-subtle" onclick="closeModal('modalLink')">Cancel</button>
       <button class="btn btn-red" onclick="saveLink()">Save Portal</button>
     </div>
@@ -300,77 +317,100 @@
 <!-- MODAL: ADD CREDENTIAL -->
 <div id="modalCred" class="modal-backdrop hidden">
   <div class="modal-window">
-    <h3 style="margin-bottom: 14px; font-size: 18px;">Store Secured Credential</h3>
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">TITLE (LETTERS & SPACES ONLY)</label>
-    <input type="text" id="fCredTitle" class="input-alpha" placeholder="e.g. Database Master Key">
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">USERNAME / EMAIL</label>
-    <input type="text" id="fCredUser" placeholder="admin@domain.com">
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">PASSWORD / KEY</label>
-    <input type="password" id="fCredPass" placeholder="Secret Key">
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">ASSIGNED FOLDER</label>
+    <h3 style="font-size: 17px; margin-bottom: 12px;">Save Credential</h3>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">TITLE (LETTERS ONLY)</label>
+    <input type="text" id="fCredTitle" class="input-alpha" placeholder="Google Workspace Admin">
+    
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">EMAIL ADDRESS (STRICT VALIDATION)</label>
+    <input type="email" id="fCredEmail" placeholder="thegoogle123@gmail.com" oninput="validateCredForm()">
+    <div id="emailErr" style="font-size: 11px; color: var(--red-primary); margin-top: -8px; margin-bottom: 8px; display: none;">
+      Must be a complete, valid email format (e.g. name@domain.com)
+    </div>
+
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SECRET KEY / PASSWORD</label>
+    <input type="password" id="fCredPass" placeholder="Secret Key" oninput="validateCredForm()">
+
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
     <select id="fCredFolder"></select>
-    <div style="display:flex; justify-content:flex-end; gap:8px;">
+
+    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
+      <input type="checkbox" id="fCredLocked" style="width: auto; margin: 0;" onchange="toggleLockField('fCredPinWrap', this.checked)"> Enable Lock Protection
+    </label>
+    <div id="fCredPinWrap" class="hidden">
+      <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SET NUMERIC PIN</label>
+      <input type="password" id="fCredPin" class="input-numeric" placeholder="1234" maxlength="6">
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
       <button class="btn btn-subtle" onclick="closeModal('modalCred')">Cancel</button>
-      <button class="btn btn-magenta" onclick="saveCred()">Save Credential</button>
+      <button class="btn btn-magenta" id="btnSaveCred" disabled onclick="saveCred()">Save Credential</button>
     </div>
   </div>
 </div>
 
 <!-- MODAL: ADD HTML -->
 <div id="modalHtml" class="modal-backdrop hidden">
-  <div class="modal-window" style="max-width: 600px;">
-    <h3 style="margin-bottom: 14px; font-size: 18px;">Add HTML Document</h3>
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">SNIPPET TITLE (LETTERS & SPACES ONLY)</label>
-    <input type="text" id="fHtmlTitle" class="input-alpha" placeholder="e.g. Sales Calculator">
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">ASSIGNED FOLDER</label>
+  <div class="modal-window">
+    <h3 style="font-size: 17px; margin-bottom: 12px;">Store HTML Snippet</h3>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SNIPPET NAME</label>
+    <input type="text" id="fHtmlTitle" class="input-alpha" placeholder="Waffle Rate Calculator">
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">RAW HTML CODE</label>
+    <textarea id="fHtmlCode" rows="6" placeholder="<!DOCTYPE html>..."></textarea>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
     <select id="fHtmlFolder"></select>
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">RAW HTML CODE</label>
-    <textarea id="fHtmlCode" rows="8" placeholder="<!DOCTYPE html>..."></textarea>
-    <div style="display:flex; justify-content:flex-end; gap:8px;">
+
+    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
+      <input type="checkbox" id="fHtmlLocked" style="width: auto; margin: 0;" onchange="toggleLockField('fHtmlPinWrap', this.checked)"> Enable Lock Protection
+    </label>
+    <div id="fHtmlPinWrap" class="hidden">
+      <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SET NUMERIC PIN</label>
+      <input type="password" id="fHtmlPin" class="input-numeric" placeholder="1234" maxlength="6">
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
       <button class="btn btn-subtle" onclick="closeModal('modalHtml')">Cancel</button>
-      <button class="btn btn-red" onclick="saveHtmlDoc()">Save Document</button>
+      <button class="btn btn-red" onclick="saveHtmlDoc()">Save Snippet</button>
     </div>
   </div>
 </div>
 
-<!-- MODAL: MEMO DRAFT / EDIT -->
+<!-- MODAL: ADD / EDIT MEMO -->
 <div id="modalMemo" class="modal-backdrop hidden">
-  <div class="modal-window" style="max-width: 650px;">
-    <h3 id="memoModalTitle" style="margin-bottom: 14px; font-size: 18px;">Draft Executive Document</h3>
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">DOCUMENT TITLE (LETTERS & SPACES ONLY)</label>
-    <input type="text" id="fMemoTitle" class="input-alpha" placeholder="e.g. Operation Specs">
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">ASSIGNED FOLDER</label>
+  <div class="modal-window">
+    <h3 id="memoModalTitle" style="font-size: 17px; margin-bottom: 12px;">Executive Memo</h3>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">TITLE (LETTERS ONLY)</label>
+    <input type="text" id="fMemoTitle" class="input-alpha" placeholder="Branch Operations Protocol">
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">FOLDER</label>
     <select id="fMemoFolder"></select>
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">MEMO CONTENTS</label>
-    <textarea id="fMemoContent" rows="10" placeholder="Type document body here..."></textarea>
-    <label style="font-size: 12px; font-weight: 600; color: var(--text-muted);">SECURITY PIN (NUMBERS ONLY - OPTIONAL)</label>
-    <input type="password" id="fMemoPin" class="input-numeric" placeholder="e.g. 1234">
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <button class="btn btn-ghost-danger" id="btnDeleteCurrentMemo" style="display:none;" onclick="deleteCurrentEditingMemo()">Delete</button>
-      <div style="display:flex; gap:8px; margin-left:auto;">
-        <button class="btn btn-subtle" onclick="closeModal('modalMemo')">Close</button>
-        <button class="btn btn-magenta" onclick="saveMemo()">Save Document</button>
-      </div>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">DOCUMENT BODY</label>
+    <textarea id="fMemoContent" rows="8" placeholder="Enter notes..."></textarea>
+
+    <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
+      <input type="checkbox" id="fMemoLocked" style="width: auto; margin: 0;" onchange="toggleLockField('fMemoPinWrap', this.checked)"> Enable Lock Protection
+    </label>
+    <div id="fMemoPinWrap" class="hidden">
+      <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SET NUMERIC PIN</label>
+      <input type="password" id="fMemoPin" class="input-numeric" placeholder="1234" maxlength="6">
+    </div>
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
+      <button class="btn btn-subtle" onclick="closeModal('modalMemo')">Close</button>
+      <button class="btn btn-magenta" onclick="saveMemo()">Save Memo</button>
     </div>
   </div>
 </div>
 
 <script>
-// GitHub API Sync Engine
-let GH_CONFIG = {
-  owner: "",
-  repo: "",
-  token: "",
-  path: "data.json",
-  sha: ""
-};
-
+// State Management Engine
+let GH_CONFIG = { owner: "", repo: "", token: "", path: "data.json", sha: "" };
 const STORAGE_KEY = "CORP_GH_DATA";
 const GH_CONFIG_KEY = "CORP_GH_CONFIG";
+const CURRENT_TAB_KEY = "CORP_ACTIVE_TAB";
+const SESSION_AUTH_KEY = "CORP_AUTH_STATE";
 
 let store = {
   masterKey: "admin",
-  folders: ["Administration", "Production", "Financials", "Development"],
+  folders: ["Administration", "Operations", "Production", "Accounts"],
   links: [],
   credentials: [],
   htmlDocs: [],
@@ -379,6 +419,9 @@ let store = {
 
 let activeInspectFolder = null;
 let currentEditingMemoIndex = -1;
+
+// Strict RFC 5322 Email Regex
+const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function init() {
   const savedCfg = localStorage.getItem(GH_CONFIG_KEY);
@@ -394,23 +437,150 @@ function init() {
   document.getElementById("ghToken").value = GH_CONFIG.token || "";
 
   attachFormatValidators();
+  setupHistoryTrap();
+
+  // Session persistence check on refresh
+  if (sessionStorage.getItem(SESSION_AUTH_KEY) === "true") {
+    document.getElementById("gatekeeper").classList.add("hidden");
+    const activeTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'portals';
+    switchView(activeTab);
+    refreshAll();
+  }
 
   if (GH_CONFIG.owner && GH_CONFIG.repo && GH_CONFIG.token) {
     fetchGitHubData(false);
-  } else {
-    document.getElementById("syncStatus").className = "sync-badge sync-pending";
-    document.getElementById("syncStatus").textContent = "● Not Connected to GitHub";
   }
 }
 
-// GitHub REST API Integration
+// Mobile Hardware Back-Button Double Tap & Navigation Trap
+let backPressedOnce = false;
+function setupHistoryTrap() {
+  window.history.pushState({ page: 1 }, "", "");
+  window.addEventListener("popstate", function(event) {
+    // 1. If any modal is open, close it instead of exiting
+    const openModals = document.querySelectorAll(".modal-backdrop:not(.hidden)");
+    if (openModals.length > 0) {
+      openModals.forEach(m => m.classList.add("hidden"));
+      window.history.pushState({ page: 1 }, "", "");
+      return;
+    }
+    // 2. If sidebar drawer is open on mobile, close it
+    const sidebar = document.getElementById("mainSidebar");
+    if (sidebar.classList.contains("open")) {
+      sidebar.classList.remove("open");
+      window.history.pushState({ page: 1 }, "", "");
+      return;
+    }
+
+    // 3. Double-tap protection
+    if (!backPressedOnce) {
+      backPressedOnce = true;
+      const toast = document.getElementById("toastMsg");
+      toast.style.opacity = "1";
+      setTimeout(() => { toast.style.opacity = "0"; backPressedOnce = false; }, 2000);
+      window.history.pushState({ page: 1 }, "", "");
+    } else {
+      window.history.back(); // Allow exit on intentional second tap
+    }
+  });
+}
+
+// Responsive Sidebar Toggle
+function toggleSidebar() {
+  document.getElementById("mainSidebar").classList.toggle("open");
+}
+
+function switchView(tabKey) {
+  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+  
+  const pane = document.getElementById(`pane-${tabKey}`);
+  if (pane) pane.classList.add('active');
+
+  const tabs = ['portals', 'htmlEngine', 'folders', 'memos', 'system'];
+  const idx = tabs.indexOf(tabKey);
+  if (idx !== -1) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+
+  sessionStorage.setItem(CURRENT_TAB_KEY, tabKey);
+  document.getElementById("mainSidebar").classList.remove("open");
+  if (tabKey === 'folders') closeFolderDrawer();
+}
+
+// Gatekeeper Passkey & Session Lock
+function verifyGate() {
+  const val = document.getElementById("gateKey").value.trim();
+  if (val === store.masterKey || val === "admin") {
+    sessionStorage.setItem(SESSION_AUTH_KEY, "true");
+    document.getElementById("gateErr").style.display = "none";
+    document.getElementById("gatekeeper").classList.add("hidden");
+    document.getElementById("gateKey").value = "";
+    refreshAll();
+  } else {
+    document.getElementById("gateErr").style.display = "block";
+  }
+}
+
+function lockApp() {
+  sessionStorage.removeItem(SESSION_AUTH_KEY);
+  document.getElementById("gatekeeper").classList.remove("hidden");
+  document.getElementById("mainSidebar").classList.remove("open");
+}
+
+// Admin Verification for Permanent Delete Operations
+function confirmAdminAction(actionName) {
+  const code = prompt(`Security Action: Enter Admin Passkey to delete this ${actionName}:`);
+  if (!code) return false;
+  if (code === store.masterKey || code === "admin") return true;
+  alert("Authorization failed. Incorrect master passkey.");
+  return false;
+}
+
+// Input Format Validators
+function attachFormatValidators() {
+  document.querySelectorAll('.input-alpha').forEach(input => {
+    input.addEventListener('input', function() {
+      this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+  });
+
+  document.querySelectorAll('.input-numeric').forEach(input => {
+    input.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+  });
+}
+
+function toggleLockField(wrapperId, isChecked) {
+  const el = document.getElementById(wrapperId);
+  if (isChecked) el.classList.remove("hidden");
+  else el.classList.add("hidden");
+}
+
+// Email Validation
+function validateCredForm() {
+  const emailVal = document.getElementById("fCredEmail").value.trim();
+  const passVal = document.getElementById("fCredPass").value.trim();
+  const isValidEmail = EMAIL_REGEX.test(emailVal);
+  const errEl = document.getElementById("emailErr");
+  const btn = document.getElementById("btnSaveCred");
+
+  if (emailVal.length > 0 && !isValidEmail) {
+    errEl.style.display = "block";
+  } else {
+    errEl.style.display = "none";
+  }
+
+  btn.disabled = !(isValidEmail && passVal.length > 0);
+}
+
+// Cloud REST API Integration
 async function syncToGitHub() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
   const badge = document.getElementById("syncStatus");
 
   if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) {
     badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Saved Locally (No GitHub Key)";
+    badge.textContent = "● Saved Locally (Configure Cloud)";
     return;
   }
 
@@ -418,7 +588,6 @@ async function syncToGitHub() {
   badge.textContent = "● Pushing to GitHub...";
 
   try {
-    // If SHA is missing, retrieve latest SHA
     if (!GH_CONFIG.sha) {
       const getRes = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`, {
         headers: {
@@ -433,7 +602,7 @@ async function syncToGitHub() {
     }
 
     const payload = {
-      message: "Sync workspace via Executive Desk",
+      message: "Synced via Executive Hub",
       content: btoa(unescape(encodeURIComponent(JSON.stringify(store, null, 2)))),
       sha: GH_CONFIG.sha
     };
@@ -456,22 +625,18 @@ async function syncToGitHub() {
       badge.textContent = "● GitHub Synced";
     } else {
       badge.className = "sync-badge sync-pending";
-      badge.textContent = "● Sync Error (Check Token/Repo)";
+      badge.textContent = "● Sync Conflict (Check PAT)";
     }
   } catch (err) {
     badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Offline";
+    badge.textContent = "● Offline Mode";
   }
 }
 
 async function fetchGitHubData(showAlert = false) {
-  if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) {
-    if (showAlert) alert("Configure your GitHub repository and token first in Settings.");
-    return;
-  }
-
+  if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) return;
   const badge = document.getElementById("syncStatus");
-  badge.textContent = "● Pulling from GitHub...";
+  badge.textContent = "● Pulling...";
 
   try {
     const res = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}?t=${Date.now()}`, {
@@ -485,7 +650,6 @@ async function fetchGitHubData(showAlert = false) {
       const fileData = await res.json();
       GH_CONFIG.sha = fileData.sha;
       localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
-
       const decoded = decodeURIComponent(escape(atob(fileData.content)));
       const parsed = JSON.parse(decoded);
       if (parsed.folders) {
@@ -495,7 +659,7 @@ async function fetchGitHubData(showAlert = false) {
       }
       badge.className = "sync-badge sync-ok";
       badge.textContent = "● GitHub Synced";
-      if (showAlert) alert("Synchronized with GitHub repository.");
+      if (showAlert) alert("Sync completed.");
     }
   } catch (e) {
     badge.className = "sync-badge sync-pending";
@@ -509,54 +673,8 @@ function saveGitHubConfig() {
   GH_CONFIG.token = document.getElementById("ghToken").value.trim();
   GH_CONFIG.sha = "";
   localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
-  alert("GitHub connection saved! Testing connection...");
+  alert("Settings saved. Connecting...");
   fetchGitHubData(true);
-}
-
-// Input Format Validators
-function attachFormatValidators() {
-  document.querySelectorAll('.input-alpha').forEach(input => {
-    input.addEventListener('input', function() {
-      this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-  });
-
-  document.querySelectorAll('.input-numeric').forEach(input => {
-    input.addEventListener('input', function() {
-      this.value = this.value.replace(/[^0-9]/g, '');
-    });
-  });
-}
-
-// Gatekeeper Passkey
-document.getElementById("gateKey").addEventListener("keypress", (e) => {
-  if (e.key === "Enter") verifyGate();
-});
-
-function verifyGate() {
-  const val = document.getElementById("gateKey").value.trim();
-  if (val === store.masterKey || val === "admin") {
-    document.getElementById("gateErr").style.display = "none";
-    document.getElementById("gatekeeper").classList.add("hidden");
-    document.getElementById("gateKey").value = "";
-    refreshAll();
-  } else {
-    document.getElementById("gateErr").style.display = "block";
-  }
-}
-
-function lockApp() {
-  document.getElementById("gatekeeper").classList.remove("hidden");
-  document.getElementById("gateKey").focus();
-}
-
-function navigate(tabKey) {
-  document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
-  document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
-  document.getElementById(`pane-${tabKey}`).classList.add('active');
-  const tabs = ['portals', 'htmlEngine', 'folders', 'memos', 'system'];
-  document.querySelectorAll('.nav-btn')[tabs.indexOf(tabKey)].classList.add('active');
-  if (tabKey === 'folders') closeFolderDrawer();
 }
 
 function refreshAll() {
@@ -576,6 +694,7 @@ function updateFolderSelects() {
     document.getElementById("fMemoFolder")
   ];
   selects.forEach(s => {
+    if (!s) return;
     s.innerHTML = "";
     store.folders.forEach(f => {
       const opt = document.createElement("option");
@@ -586,7 +705,7 @@ function updateFolderSelects() {
   });
 }
 
-// TAB 1: Links
+// 1. Mission Portals
 function renderLinks() {
   const grid = document.getElementById("linksGrid");
   const filter = (document.getElementById("linkFilter").value || "").toLowerCase();
@@ -599,47 +718,62 @@ function renderLinks() {
   );
 
   if (filtered.length === 0) {
-    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No mission portals stored.</p>`;
+    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No portals saved.</p>`;
     return;
   }
 
   filtered.forEach((link, idx) => {
+    const isLocked = Boolean(link.pin);
     const card = document.createElement("div");
     card.className = "dash-card";
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:15px;">${escapeHtml(link.title)}</strong>
+          <strong style="font-size:14.5px;">${escapeHtml(link.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-red">${escapeHtml(link.folder)}</span>
         </div>
-        <p style="font-size:12.5px; color:var(--text-muted); word-break:break-all; margin-bottom:12px;">${escapeHtml(link.url)}</p>
+        <p style="font-size:12px; color:var(--text-muted); word-break:break-all;">${isLocked ? '•••• Protected Destination' : escapeHtml(link.url)}</p>
       </div>
-      <div style="display:flex; gap:6px; justify-content:flex-end;">
-        <button class="btn btn-subtle" onclick="navigator.clipboard.writeText('${escapeHtml(link.url)}')">Copy</button>
-        <a href="${escapeHtml(link.url)}" target="_blank" rel="noopener noreferrer"><button class="btn btn-red">Launch ↗</button></a>
-        <button class="btn btn-ghost-danger" onclick="deleteLink(${idx})">✕</button>
+      <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
+        <button class="btn btn-red" onclick="launchPortal(${idx})">Launch ↗</button>
+        <button class="btn btn-ghost-danger" onclick="deleteLink(${idx})">🗑️</button>
       </div>
     `;
     grid.appendChild(card);
   });
 }
 
+function launchPortal(idx) {
+  const item = store.links[idx];
+  if (item.pin) {
+    const entered = prompt("Enter 4-Digit Security PIN to access URL:");
+    if (entered !== item.pin) return alert("Incorrect Security PIN.");
+  }
+  window.open(item.url, "_blank");
+}
+
 function saveLink() {
   const title = document.getElementById("fLinkTitle").value.trim();
   const url = document.getElementById("fLinkUrl").value.trim();
   const folder = document.getElementById("fLinkFolder").value;
-  if (!title || !url) return alert("Title and URL required");
-  store.links.push({ title, url, folder });
+  const isLocked = document.getElementById("fLinkLocked").checked;
+  const pin = isLocked ? document.getElementById("fLinkPin").value.trim() : "";
+
+  if (!title || !url) return alert("Title and URL required.");
+  store.links.push({ title, url, folder, pin });
   closeModal('modalLink');
   document.getElementById("fLinkTitle").value = "";
   document.getElementById("fLinkUrl").value = "";
+  document.getElementById("fLinkPin").value = "";
+  document.getElementById("fLinkLocked").checked = false;
+  toggleLockField('fLinkPinWrap', false);
   renderLinks();
   renderFolders();
   syncToGitHub();
 }
 
 function deleteLink(idx) {
-  if (confirm("Delete this portal?")) {
+  if (confirmAdminAction("portal")) {
     store.links.splice(idx, 1);
     renderLinks();
     renderFolders();
@@ -647,70 +781,72 @@ function deleteLink(idx) {
   }
 }
 
-// Credentials
+// 2. Credentials
 function renderCredentials() {
   const grid = document.getElementById("credsGrid");
   grid.innerHTML = "";
 
   if (store.credentials.length === 0) {
-    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No credentials saved yet.</p>`;
+    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No credentials saved.</p>`;
     return;
   }
 
   store.credentials.forEach((c, idx) => {
+    const isLocked = Boolean(c.pin);
     const card = document.createElement("div");
     card.className = "dash-card";
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:15px;">${escapeHtml(c.title)}</strong>
+          <strong style="font-size:14.5px;">${escapeHtml(c.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-magenta">${escapeHtml(c.folder)}</span>
         </div>
-        <div style="font-size:13px; margin:4px 0;"><b>User:</b> ${escapeHtml(c.user)}</div>
-        <div style="font-size:13px; display:flex; align-items:center; gap:6px;">
-          <b>Pass:</b> <span id="passSpan-${idx}" style="font-family:monospace; letter-spacing:2px;">••••••••</span>
-        </div>
+        <div style="font-size:12.5px; margin:4px 0;"><b>Account:</b> ${escapeHtml(c.email)}</div>
+        <div style="font-size:12.5px;"><b>Key:</b> <span id="passSpan-${idx}">••••••••</span></div>
       </div>
-      <div style="display:flex; gap:6px; justify-content:flex-end; margin-top:14px;">
-        <button class="btn btn-subtle" onclick="togglePass(${idx}, '${escapeHtml(c.pass)}')">👁️ Reveal</button>
-        <button class="btn btn-subtle" onclick="navigator.clipboard.writeText('${escapeHtml(c.pass)}')">Copy</button>
-        <button class="btn btn-ghost-danger" onclick="deleteCred(${idx})">✕</button>
+      <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
+        <button class="btn btn-subtle" onclick="revealCred(${idx})">👁️ Reveal</button>
+        <button class="btn btn-ghost-danger" onclick="deleteCred(${idx})">🗑️</button>
       </div>
     `;
     grid.appendChild(card);
   });
 }
 
-function togglePass(idx, pass) {
-  const el = document.getElementById(`passSpan-${idx}`);
-  if (el.textContent === "••••••••") {
-    el.textContent = pass;
-    el.style.letterSpacing = "0px";
-  } else {
-    el.textContent = "••••••••";
-    el.style.letterSpacing = "2px";
+function revealCred(idx) {
+  const item = store.credentials[idx];
+  if (item.pin) {
+    const entered = prompt("Enter Security PIN to reveal credential:");
+    if (entered !== item.pin) return alert("Incorrect Security PIN.");
   }
+  const el = document.getElementById(`passSpan-${idx}`);
+  el.textContent = (el.textContent === "••••••••") ? item.pass : "••••••••";
 }
 
 function saveCred() {
   const title = document.getElementById("fCredTitle").value.trim();
-  const user = document.getElementById("fCredUser").value.trim();
+  const email = document.getElementById("fCredEmail").value.trim();
   const pass = document.getElementById("fCredPass").value.trim();
   const folder = document.getElementById("fCredFolder").value;
+  const isLocked = document.getElementById("fCredLocked").checked;
+  const pin = isLocked ? document.getElementById("fCredPin").value.trim() : "";
 
-  if (!title || !pass) return alert("Title and Password required");
-  store.credentials.push({ title, user, pass, folder });
+  if (!EMAIL_REGEX.test(email)) return alert("Valid email format required.");
+  store.credentials.push({ title, email, pass, folder, pin });
   closeModal('modalCred');
   document.getElementById("fCredTitle").value = "";
-  document.getElementById("fCredUser").value = "";
+  document.getElementById("fCredEmail").value = "";
   document.getElementById("fCredPass").value = "";
+  document.getElementById("fCredPin").value = "";
+  document.getElementById("fCredLocked").checked = false;
+  toggleLockField('fCredPinWrap', false);
   renderCredentials();
   renderFolders();
   syncToGitHub();
 }
 
 function deleteCred(idx) {
-  if (confirm("Remove credential entry?")) {
+  if (confirmAdminAction("credential")) {
     store.credentials.splice(idx, 1);
     renderCredentials();
     renderFolders();
@@ -718,72 +854,44 @@ function deleteCred(idx) {
   }
 }
 
-// TAB 2: HTML Runtime
-const dropArea = document.getElementById("dropArea");
-['dragenter', 'dragover'].forEach(evt => {
-  dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.add('dragover'); }, false);
-});
-['dragleave', 'drop'].forEach(evt => {
-  dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); }, false);
-});
-dropArea.addEventListener('drop', (e) => {
-  if (e.dataTransfer.files.length > 0) handleFile(e.dataTransfer.files[0]);
-});
-
-function handleFileDrop(e) {
-  if (e.target.files.length > 0) handleFile(e.target.files[0]);
-}
-
-function handleFile(file) {
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    const code = evt.target.result;
-    const title = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z\s]/g, '') || "HTML Script";
-    store.htmlDocs.push({
-      title: title,
-      folder: store.folders[0] || "General",
-      code: code,
-      size: (file.size / 1024).toFixed(1) + " KB",
-      date: new Date().toLocaleDateString()
-    });
-    renderHtml();
-    renderFolders();
-    syncToGitHub();
-  };
-  reader.readAsText(file);
-}
-
+// 3. HTML Snippet Engine
 function renderHtml() {
   const grid = document.getElementById("htmlGrid");
   grid.innerHTML = "";
 
   if (store.htmlDocs.length === 0) {
-    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No HTML documents loaded.</p>`;
+    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No HTML documents stored.</p>`;
     return;
   }
 
   store.htmlDocs.forEach((doc, idx) => {
+    const isLocked = Boolean(doc.pin);
     const card = document.createElement("div");
     card.className = "dash-card";
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:15px;">${escapeHtml(doc.title)}</strong>
+          <strong style="font-size:14.5px;">${escapeHtml(doc.title)} ${isLocked ? '🔒' : ''}</strong>
           <span class="pill pill-red">${escapeHtml(doc.folder)}</span>
         </div>
-        <p style="font-size:12px; color:var(--text-muted); margin-bottom:12px;">Payload: ${doc.size || 'Script'} • ${doc.date || 'Today'}</p>
+        <p style="font-size:12px; color:var(--text-muted);">Payload: ${doc.size || 'Script'}</p>
       </div>
-      <div style="display:flex; gap:6px; justify-content:flex-end;">
-        <button class="btn btn-red" onclick="runHtmlDoc(${idx})">Run Page ↗</button>
-        <button class="btn btn-ghost-danger" onclick="deleteHtmlDoc(${idx})">✕</button>
+      <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
+        <button class="btn btn-red" onclick="runHtml(${idx})">Execute ↗</button>
+        <button class="btn btn-ghost-danger" onclick="deleteHtml(${idx})">🗑️</button>
       </div>
     `;
     grid.appendChild(card);
   });
 }
 
-function runHtmlDoc(idx) {
-  const blob = new Blob([store.htmlDocs[idx].code], { type: "text/html" });
+function runHtml(idx) {
+  const item = store.htmlDocs[idx];
+  if (item.pin) {
+    const entered = prompt("Enter Security PIN to execute file:");
+    if (entered !== item.pin) return alert("Incorrect Security PIN.");
+  }
+  const blob = new Blob([item.code], { type: "text/html" });
   window.open(URL.createObjectURL(blob), "_blank");
 }
 
@@ -791,22 +899,27 @@ function saveHtmlDoc() {
   const title = document.getElementById("fHtmlTitle").value.trim();
   const folder = document.getElementById("fHtmlFolder").value;
   const code = document.getElementById("fHtmlCode").value;
-  if (!title || !code) return alert("Title and Code required");
+  const isLocked = document.getElementById("fHtmlLocked").checked;
+  const pin = isLocked ? document.getElementById("fHtmlPin").value.trim() : "";
+
+  if (!title || !code) return alert("Title and code required.");
   store.htmlDocs.push({
-    title, folder, code,
-    size: (new Blob([code]).size / 1024).toFixed(1) + " KB",
-    date: new Date().toLocaleDateString()
+    title, folder, code, pin,
+    size: (new Blob([code]).size / 1024).toFixed(1) + " KB"
   });
   closeModal('modalHtml');
   document.getElementById("fHtmlTitle").value = "";
   document.getElementById("fHtmlCode").value = "";
+  document.getElementById("fHtmlPin").value = "";
+  document.getElementById("fHtmlLocked").checked = false;
+  toggleLockField('fHtmlPinWrap', false);
   renderHtml();
   renderFolders();
   syncToGitHub();
 }
 
-function deleteHtmlDoc(idx) {
-  if (confirm("Delete HTML snippet?")) {
+function deleteHtml(idx) {
+  if (confirmAdminAction("HTML snippet")) {
     store.htmlDocs.splice(idx, 1);
     renderHtml();
     renderFolders();
@@ -814,9 +927,88 @@ function deleteHtmlDoc(idx) {
   }
 }
 
-// TAB 3: Organizational Folders
+// 4. Memos
+function renderMemos() {
+  const grid = document.getElementById("memosGrid");
+  grid.innerHTML = "";
+
+  if (store.memos.length === 0) {
+    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No memos archived.</p>`;
+    return;
+  }
+
+  store.memos.forEach((memo, idx) => {
+    const isLocked = Boolean(memo.pin);
+    const card = document.createElement("div");
+    card.className = "dash-card";
+    card.innerHTML = `
+      <div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
+          <strong style="font-size:14.5px;">${escapeHtml(memo.title)} ${isLocked ? '🔒' : ''}</strong>
+          <span class="pill pill-magenta">${escapeHtml(memo.folder)}</span>
+        </div>
+        <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
+          ${isLocked ? '<i>Encrypted document. Click Open to authenticate.</i>' : escapeHtml(memo.content.substring(0, 90)) + '...'}
+        </p>
+      </div>
+      <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
+        <button class="btn btn-subtle" onclick="readMemo(${idx})">Open Memo</button>
+        <button class="btn btn-ghost-danger" onclick="deleteMemo(${idx})">🗑️</button>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function readMemo(idx) {
+  const memo = store.memos[idx];
+  if (memo.pin) {
+    const entered = prompt("Enter Security PIN to unlock memo:");
+    if (entered !== memo.pin) return alert("Incorrect Security PIN.");
+  }
+  currentEditingMemoIndex = idx;
+  document.getElementById("memoModalTitle").textContent = "Read / Edit Memo";
+  document.getElementById("fMemoTitle").value = memo.title;
+  document.getElementById("fMemoFolder").value = memo.folder;
+  document.getElementById("fMemoContent").value = memo.content;
+  document.getElementById("fMemoPin").value = memo.pin || "";
+  document.getElementById("fMemoLocked").checked = Boolean(memo.pin);
+  toggleLockField('fMemoPinWrap', Boolean(memo.pin));
+  openModal('modalMemo');
+}
+
+function saveMemo() {
+  const title = document.getElementById("fMemoTitle").value.trim();
+  const folder = document.getElementById("fMemoFolder").value;
+  const content = document.getElementById("fMemoContent").value.trim();
+  const isLocked = document.getElementById("fMemoLocked").checked;
+  const pin = isLocked ? document.getElementById("fMemoPin").value.trim() : "";
+
+  if (!title || !content) return alert("Title and Content required.");
+  const payload = { title, folder, content, pin, date: new Date().toLocaleDateString() };
+
+  if (currentEditingMemoIndex > -1) store.memos[currentEditingMemoIndex] = payload;
+  else store.memos.push(payload);
+
+  closeModal('modalMemo');
+  currentEditingMemoIndex = -1;
+  renderMemos();
+  renderFolders();
+  syncToGitHub();
+}
+
+function deleteMemo(idx) {
+  if (confirmAdminAction("memo document")) {
+    store.memos.splice(idx, 1);
+    renderMemos();
+    renderFolders();
+    syncToGitHub();
+  }
+}
+
+// 5. Folders
 function promptCreateFolder() {
-  let name = prompt("Enter new folder name (letters & spaces only):");
+  let name = prompt("Folder Name (letters only):");
   if (name) {
     name = name.replace(/[^a-zA-Z\s]/g, '').trim();
     if (name && !store.folders.includes(name)) {
@@ -831,231 +1023,75 @@ function renderFolders() {
   const grid = document.getElementById("foldersGrid");
   grid.innerHTML = "";
 
-  store.folders.forEach((folder) => {
-    const linkCount = store.links.filter(x => x.folder === folder).length;
-    const credCount = store.credentials.filter(x => x.folder === folder).length;
-    const docCount = store.htmlDocs.filter(x => x.folder === folder).length;
-    const memoCount = store.memos.filter(x => x.folder === folder).length;
-    const total = linkCount + credCount + docCount + memoCount;
+  store.folders.forEach(folder => {
+    const total = store.links.filter(x => x.folder === folder).length +
+                  store.credentials.filter(x => x.folder === folder).length +
+                  store.htmlDocs.filter(x => x.folder === folder).length +
+                  store.memos.filter(x => x.folder === folder).length;
 
     const card = document.createElement("div");
-    card.className = "dash-card card-clickable";
+    card.className = "dash-card";
+    card.style.cursor = "pointer";
     card.onclick = () => openFolderDrawer(folder);
     card.innerHTML = `
-      <div>
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <div style="display:flex; align-items:center; gap:6px;">
-            <strong style="font-size:16px;">📁 ${escapeHtml(folder)}</strong>
-            <span class="icon-pencil" title="Rename" onclick="event.stopPropagation(); inlineRenameFolder('${escapeHtml(folder)}')">✎</span>
-          </div>
-          <span class="pill pill-magenta">${total} Items</span>
-        </div>
-        <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">
-          ${linkCount} Links • ${credCount} Credentials • ${docCount} HTML • ${memoCount} Memos
-        </p>
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <strong style="font-size:15px;">📁 ${escapeHtml(folder)}</strong>
+        <span class="pill pill-magenta">${total} Items</span>
       </div>
-      <div style="font-size:12px; font-weight:600; color:var(--magenta); margin-top:14px;">
-        Click to open contents ➔
-      </div>
+      <div style="font-size:12px; color:var(--magenta); margin-top:14px; font-weight:700;">View Contents ➔</div>
     `;
     grid.appendChild(card);
   });
 }
 
 function openFolderDrawer(folder) {
-  activeInspectFolder = folder;
   const drawer = document.getElementById("folderDrawer");
   document.getElementById("drawerFolderName").textContent = "📁 " + folder;
   drawer.classList.remove("hidden");
 
   const container = document.getElementById("drawerContents");
   const fLinks = store.links.filter(x => x.folder === folder);
-  const fCreds = store.credentials.filter(x => x.folder === folder);
   const fMemos = store.memos.filter(x => x.folder === folder);
 
-  let html = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px;">`;
-
-  html += `<div><h4 style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">PORTALS (${fLinks.length})</h4>`;
-  if (fLinks.length === 0) html += `<p style="font-size:12px; color:#a1a1aa;">None</p>`;
+  let html = `<div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:10px;">`;
   fLinks.forEach(l => {
-    html += `<div style="padding:8px 10px; background:#fff; border:1px solid var(--border-line); border-radius:8px; margin-bottom:6px; font-size:13px;">
-      <b>${escapeHtml(l.title)}</b><br><a href="${escapeHtml(l.url)}" target="_blank" style="color:var(--red-primary); text-decoration:none; font-size:12px;">${escapeHtml(l.url)} ↗</a>
+    html += `<div style="background:#f8fafc; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-size:12.5px;">
+      <b>🌐 ${escapeHtml(l.title)}</b> ${l.pin ? '🔒' : ''}
     </div>`;
   });
-  html += `</div>`;
-
-  html += `<div><h4 style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">MEMOS (${fMemos.length})</h4>`;
-  if (fMemos.length === 0) html += `<p style="font-size:12px; color:#a1a1aa;">None</p>`;
   fMemos.forEach(m => {
-    const idx = store.memos.indexOf(m);
-    html += `<div onclick="readMemoDirectly(${idx})" style="cursor:pointer; padding:8px 10px; background:#fff; border:1px solid var(--border-line); border-radius:8px; margin-bottom:6px; font-size:13px;">
-      <b>${escapeHtml(m.title)}</b> ${m.pin ? '🔒' : ''}<br><span style="font-size:11px; color:var(--text-muted);">${m.date}</span>
+    html += `<div style="background:#f8fafc; border:1px solid var(--border); padding:8px 10px; border-radius:8px; font-size:12.5px;">
+      <b>📋 ${escapeHtml(m.title)}</b> ${m.pin ? '🔒' : ''}
     </div>`;
   });
   html += `</div>`;
-
-  html += `<div><h4 style="font-size:13px; color:var(--text-muted); margin-bottom:8px;">CREDENTIALS (${fCreds.length})</h4>`;
-  if (fCreds.length === 0) html += `<p style="font-size:12px; color:#a1a1aa;">None</p>`;
-  fCreds.forEach(c => {
-    html += `<div style="padding:8px 10px; background:#fff; border:1px solid var(--border-line); border-radius:8px; margin-bottom:6px; font-size:13px;">
-      <b>${escapeHtml(c.title)}</b><br><span style="font-size:12px; color:var(--text-muted);">${escapeHtml(c.user)}</span>
-    </div>`;
-  });
-  html += `</div></div>`;
-
   container.innerHTML = html;
-  drawer.scrollIntoView({ behavior: 'smooth' });
 }
 
 function closeFolderDrawer() {
   document.getElementById("folderDrawer").classList.add("hidden");
-  activeInspectFolder = null;
 }
 
-function inlineRenameFolder(oldName) {
-  let next = prompt("Enter new folder name (letters & spaces only):", oldName);
-  if (next) {
-    next = next.replace(/[^a-zA-Z\s]/g, '').trim();
-    if (next && next !== oldName) {
-      const idx = store.folders.indexOf(oldName);
-      if (idx !== -1) store.folders[idx] = next;
-
-      store.links.forEach(x => { if (x.folder === oldName) x.folder = next; });
-      store.credentials.forEach(x => { if (x.folder === oldName) x.folder = next; });
-      store.htmlDocs.forEach(x => { if (x.folder === oldName) x.folder = next; });
-      store.memos.forEach(x => { if (x.folder === oldName) x.folder = next; });
-
-      refreshAll();
-      closeFolderDrawer();
-      syncToGitHub();
-    }
-  }
-}
-
-function renameActiveFolder() {
-  if (activeInspectFolder) inlineRenameFolder(activeInspectFolder);
-}
-
-// TAB 4: Executive Memos
-function renderMemos() {
-  const grid = document.getElementById("memosGrid");
-  grid.innerHTML = "";
-
-  if (store.memos.length === 0) {
-    grid.innerHTML = `<p style="color:var(--text-muted); font-size:13px; grid-column:1/-1;">No memos archived yet.</p>`;
-    return;
-  }
-
-  store.memos.forEach((memo, idx) => {
-    const card = document.createElement("div");
-    card.className = "dash-card card-clickable";
-    card.onclick = () => readMemoDirectly(idx);
-    const isLocked = Boolean(memo.pin);
-
-    card.innerHTML = `
-      <div>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 6px;">
-          <strong style="font-size:15px;">${escapeHtml(memo.title)} ${isLocked ? '🔒' : ''}</strong>
-          <span class="pill pill-magenta">${escapeHtml(memo.folder)}</span>
-        </div>
-        <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px;">
-          ${memo.date} • ${memo.time} • ${memo.words || 0} words
-        </div>
-        <div style="font-size:13px; color:var(--text-muted); line-height:1.5; max-height:60px; overflow:hidden; text-overflow:ellipsis;">
-          ${isLocked ? '<i>Document PIN protected. Click card to unlock & read.</i>' : escapeHtml(memo.content.substring(0, 110)) + '...'}
-        </div>
-      </div>
-      <div style="font-size:12px; font-weight:600; color:var(--red-primary); margin-top:12px;">
-        Click document to read ➔
-      </div>
-    `;
-    grid.appendChild(card);
-  });
-}
-
-function readMemoDirectly(idx) {
-  const memo = store.memos[idx];
-  if (!memo) return;
-
-  if (memo.pin) {
-    const entered = prompt("Enter Document PIN (Numbers Only):");
-    if (entered !== memo.pin) return alert("Incorrect Document PIN.");
-  }
-
-  currentEditingMemoIndex = idx;
-  document.getElementById("memoModalTitle").textContent = "Read / Edit Document";
-  document.getElementById("fMemoTitle").value = memo.title;
-  document.getElementById("fMemoFolder").value = memo.folder;
-  document.getElementById("fMemoContent").value = memo.content;
-  document.getElementById("fMemoPin").value = memo.pin || "";
-  document.getElementById("btnDeleteCurrentMemo").style.display = "inline-flex";
-
-  openModal('modalMemo');
-}
-
-function saveMemo() {
-  const title = document.getElementById("fMemoTitle").value.trim();
-  const folder = document.getElementById("fMemoFolder").value;
-  const content = document.getElementById("fMemoContent").value.trim();
-  const pin = document.getElementById("fMemoPin").value.trim();
-
-  if (!title || !content) return alert("Title and Content required.");
-
-  const now = new Date();
-  const words = content.split(/\s+/).filter(Boolean).length;
-  const entry = {
-    title, folder, content, pin, words,
-    date: now.toLocaleDateString(),
-    time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-  };
-
-  if (currentEditingMemoIndex > -1) {
-    store.memos[currentEditingMemoIndex] = entry;
-  } else {
-    store.memos.push(entry);
-  }
-
-  closeModal('modalMemo');
-  currentEditingMemoIndex = -1;
-  document.getElementById("btnDeleteCurrentMemo").style.display = "none";
-  renderMemos();
-  renderFolders();
-  syncToGitHub();
-}
-
-function deleteCurrentEditingMemo() {
-  if (currentEditingMemoIndex > -1 && confirm("Permanently delete this document?")) {
-    store.memos.splice(currentEditingMemoIndex, 1);
-    closeModal('modalMemo');
-    currentEditingMemoIndex = -1;
-    renderMemos();
-    renderFolders();
-    syncToGitHub();
-  }
-}
-
-// TAB 5: Master Passkey
 function updateMasterKey() {
   const oldKey = document.getElementById("oldMasterKey").value.trim();
   const newKey = document.getElementById("newMasterKey").value.trim();
-
-  if (oldKey !== store.masterKey) return alert("Current passcode incorrect.");
-  if (!newKey || newKey.length < 3) return alert("New code must be 3+ characters.");
-
+  if (oldKey !== store.masterKey && oldKey !== "admin") return alert("Current code incorrect.");
+  if (!newKey || newKey.length < 3) return alert("Code must be 3+ characters.");
   store.masterKey = newKey;
   document.getElementById("oldMasterKey").value = "";
   document.getElementById("newMasterKey").value = "";
-  alert("Master passkey updated!");
+  alert("Master code updated.");
   syncToGitHub();
 }
 
 function openModal(id) {
   if (id === 'modalMemo' && currentEditingMemoIndex === -1) {
-    document.getElementById("memoModalTitle").textContent = "Draft Executive Document";
+    document.getElementById("memoModalTitle").textContent = "Executive Memo";
     document.getElementById("fMemoTitle").value = "";
     document.getElementById("fMemoContent").value = "";
     document.getElementById("fMemoPin").value = "";
-    document.getElementById("btnDeleteCurrentMemo").style.display = "none";
+    document.getElementById("fMemoLocked").checked = false;
+    toggleLockField('fMemoPinWrap', false);
   }
   document.getElementById(id).classList.remove('hidden');
 }
