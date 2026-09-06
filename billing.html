@@ -3,284 +3,306 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-<title>SRI SIDDHAN ESSENTIAL - Cloud Billing</title>
+<title>SRI SIDDHAN ESSENTIAL - Cloud Billing & GST Engine</title>
+
+<!-- Native Client-Side PDF Generator for Direct WhatsApp File Sharing -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
 <style>
-:root{
-  --green:#2f6f4e;--green2:#3f865e;--light:#edf6ee;--line:#cbd8c5;
-  --dark:#0f172a;--muted:#64748b;--bg:#f8faf7;--white:#fff;--danger:#dc2626;
-  --gold:#cda85a;--border:#e2e8f0;
+:root {
+  --navy: #1e3a8a;
+  --navy-dark: #0f172a;
+  --navy-light: #eff6ff;
+  --accent: #2563eb;
+  --gold: #d97706;
+  --gold-light: #fef3c7;
+  --border: #cbd5e1;
+  --border-focus: #2563eb;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --surface: #ffffff;
+  --bg: #f8fafc;
+  --danger: #dc2626;
+  --danger-light: #fee2e2;
+  --success: #16a34a;
+  --success-light: #dcfce7;
 }
-*{box-sizing:border-box}
-body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--dark);-webkit-tap-highlight-color:transparent}
-.app{max-width:1320px;margin:auto;padding:18px}
-.top{position:sticky;top:0;z-index:50;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 18px;border:1px solid rgba(47,111,78,.15);border-radius:18px;background:rgba(255,255,255,.95);backdrop-filter:blur(10px);box-shadow:0 8px 24px rgba(0,0,0,.04);margin-bottom:16px}
-.brand{position:relative;padding:2px 0 2px 14px}
-.brand:before{content:"";position:absolute;left:0;top:2px;bottom:2px;width:5px;border-radius:999px;background:linear-gradient(180deg,var(--green),var(--gold))}
-.brand h1{margin:0;font-size:24px;color:var(--dark);letter-spacing:.01em;font-weight:900}
-.brand p{margin:2px 0 0;color:var(--muted);font-size:11.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
 
-.cloud-bar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.sync-pill{font-size:11px;font-weight:800;padding:5px 10px;border-radius:20px;display:inline-flex;align-items:center;gap:5px}
-.sync-ok{background:#dcfce7;color:#15803d}
-.sync-pending{background:#fef3c7;color:#b45309}
+* { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
+html, body { width: 100%; min-height: 100vh; background: var(--bg); color: var(--text-main); -webkit-font-smoothing: antialiased; }
 
-button{border:0;border-radius:10px;padding:9px 15px;cursor:pointer;font-weight:700;font-size:13px;transition:all .15s}
-button:active{transform:scale(.97)}
-.primary{background:var(--green);color:#fff}.secondary{background:#edf3ea;color:#243b20}.danger{background:#fee2e2;color:#b91c1c}
-.card{background:#fff;border:1px solid #dfe7db;border-radius:18px;padding:20px;margin-bottom:16px;box-shadow:0 4px 18px rgba(0,0,0,.03)}
-.section-title{margin:0 0 14px;font-size:17px;font-weight:800;color:var(--green)}
-.hint{color:var(--muted);font-size:12.5px}
-.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.field label{display:block;font-size:11.5px;color:var(--muted);margin-bottom:5px;font-weight:800;text-transform:uppercase}
-.field label.required:after{content:" *";color:#dc2626}
-.field input,.field textarea,.field select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:10px;font:inherit;background:#fff;color:var(--dark);-webkit-appearance:none}
-.field input:focus,.field textarea:focus,.field select:focus{outline:none;border-color:var(--green)}
+.app { max-width: 1320px; margin: auto; padding: 18px; }
 
-.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table{width:100%;border-collapse:collapse;min-width:850px}
-th,td{border:1px solid #d7dfd3;padding:8px 8px;text-align:left;vertical-align:middle;font-size:12.5px}
-th{background:var(--light);color:#274320;font-size:11px;text-transform:uppercase;font-weight:800}
-td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius:7px;background:#fff;font:inherit}
-.num{text-align:right}.center{text-align:center}
-.totals{margin-left:auto;max-width:380px}
-.total-line{display:flex;justify-content:space-between;padding:6px 0;font-size:13px}
-.total-line.grand{font-size:18px;font-weight:900;border-top:2px solid var(--green);margin-top:6px;padding-top:10px;color:#17351f}
+/* Sticky Header */
+.top {
+  position: sticky; top: 0; z-index: 50; display: flex; justify-content: space-between; align-items: center; gap: 12px;
+  padding: 12px 18px; border: 1px solid rgba(30,58,138,.12); border-radius: 16px;
+  background: rgba(255,255,255,.96); backdrop-filter: blur(10px); box-shadow: 0 4px 20px rgba(15,23,42,.04); margin-bottom: 16px;
+}
+.brand { position: relative; padding-left: 14px; }
+.brand::before { content: ""; position: absolute; left: 0; top: 2px; bottom: 2px; width: 4px; border-radius: 999px; background: linear-gradient(180deg, var(--navy), var(--gold)); }
+.brand h1 { margin: 0; font-size: 22px; color: var(--navy-dark); font-weight: 900; }
+.brand p { margin: 2px 0 0; color: var(--text-muted); font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
 
-.catalog-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr auto;gap:10px;align-items:end}
-.customer-form-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1.2fr;gap:10px;align-items:end}
+.cloud-status-group { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.sync-pill { font-size: 11px; font-weight: 800; padding: 5px 10px; border-radius: 20px; display: inline-flex; align-items: center; gap: 5px; }
+.sync-ok { background: var(--success-light); color: var(--success); }
+.sync-pending { background: var(--gold-light); color: var(--gold); }
 
-.page-panel{display:none}
-.page-panel.active{display:block}
-.page-back{margin-bottom:14px}
+button { border: 0; border-radius: 10px; padding: 9px 14px; cursor: pointer; font-weight: 700; font-size: 13px; transition: all .15s; }
+button:active { transform: scale(.97); }
+.btn-primary { background: var(--navy); color: #fff; }
+.btn-primary:hover { background: #172554; }
+.btn-secondary { background: var(--navy-light); color: var(--navy); border: 1px solid #bfdbfe; }
+.btn-secondary:hover { background: #dbeafe; }
+.btn-gold { background: var(--gold); color: #fff; }
+.btn-whatsapp { background: #25d366; color: #fff; }
+.btn-danger { background: var(--danger-light); color: var(--danger); }
 
-/* Dashboard Styles */
-.dashboard-wrap{display:grid;grid-template-columns:1.6fr .9fr;gap:16px;align-items:stretch}
-.dashboard-graph{background:linear-gradient(145deg,#163826,#2f6f4e);color:#fff;border-radius:18px;padding:20px;box-shadow:0 12px 30px rgba(22,56,38,.15)}
-.dashboard-graph h3{margin:0 0 4px;font-size:17px}
-.graph-chart{height:180px;display:flex;align-items:flex-end;gap:10px;margin-top:18px;padding-bottom:14px;border-bottom:1px solid rgba(255,255,255,.2)}
-.graph-bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
-.graph-bar{width:100%;max-width:38px;min-height:4px;border-radius:6px 6px 2px 2px;background:linear-gradient(180deg,#d9bb72,#f7e7bd)}
-.dashboard-side{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.dash-stat{background:#fff;border:1px solid #dfe8dc;border-radius:14px;padding:14px;cursor:pointer;box-shadow:0 4px 14px rgba(0,0,0,.03)}
-.dash-stat .k{font-size:10px;text-transform:uppercase;color:var(--muted);font-weight:800}
-.dash-stat .v{font-size:20px;font-weight:900;color:var(--green);margin-top:4px}
-.dashboard-quick{margin-top:16px;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.dash-btn{display:flex;align-items:center;gap:10px;text-align:left;min-height:76px;padding:12px 14px;border:1px solid #d8e2d2;background:#fff;border-radius:14px}
-.dash-btn strong{display:block;font-size:13.5px}
-.dash-btn small{display:block;color:var(--muted);font-size:11px}
+.card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 18px; margin-bottom: 16px; box-shadow: 0 4px 16px rgba(0,0,0,.02); }
+.section-title { margin: 0 0 12px; font-size: 16px; font-weight: 800; color: var(--navy); }
+.hint { color: var(--text-muted); font-size: 12px; }
+
+/* Grid Layouts */
+.grid3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.field label { display: block; font-size: 11px; color: var(--text-muted); margin-bottom: 4px; font-weight: 800; text-transform: uppercase; }
+.field label.required::after { content: " *"; color: var(--danger); }
+.field input, .field textarea, .field select {
+  width: 100%; padding: 9px 11px; border: 1.5px solid var(--border); border-radius: 8px; font: inherit; background: #fff; color: var(--text-main);
+}
+.field input:focus, .field textarea:focus, .field select:focus { outline: none; border-color: var(--border-focus); }
+
+/* Table Wrap */
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; margin-bottom: 12px; }
+table { width: 100%; border-collapse: collapse; min-width: 820px; }
+th, td { border: 1px solid var(--border); padding: 7px 8px; text-align: left; vertical-align: middle; font-size: 12px; }
+th { background: var(--navy-light); color: var(--navy); font-size: 11px; text-transform: uppercase; font-weight: 800; }
+td input, td select { width: 100%; padding: 6px; border: 1px solid var(--border); border-radius: 6px; background: #fff; font: inherit; }
+.num { text-align: right; }
+.center { text-align: center; }
+
+.totals { margin-left: auto; max-width: 360px; }
+.total-line { display: flex; justify-content: space-between; padding: 5px 0; font-size: 12.5px; }
+.total-line.grand { font-size: 17px; font-weight: 900; border-top: 2px solid var(--navy); margin-top: 6px; padding-top: 8px; color: var(--navy-dark); }
+
+.page-panel { display: none; }
+.page-panel.active { display: block; }
+.page-back { margin-bottom: 14px; }
+
+/* DASHBOARD LAYOUT */
+.dashboard-container { display: flex; flex-direction: column; gap: 16px; }
+.dashboard-quick { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.dash-btn {
+  display: flex; align-items: center; gap: 10px; text-align: left; min-height: 72px; padding: 12px 14px;
+  border: 1px solid var(--border); background: #fff; border-radius: 12px; transition: transform .15s, box-shadow .15s;
+}
+.dash-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 16px rgba(0,0,0,.04); border-color: var(--navy); }
+.dash-btn strong { display: block; font-size: 13px; color: var(--navy-dark); }
+.dash-btn small { display: block; color: var(--text-muted); font-size: 11px; }
+
+.dash-stats-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.dash-stat { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 14px; box-shadow: 0 2px 8px rgba(0,0,0,.02); cursor: pointer; }
+.dash-stat .k { font-size: 10px; text-transform: uppercase; color: var(--text-muted); font-weight: 800; }
+.dash-stat .v { font-size: 19px; font-weight: 900; color: var(--navy); margin-top: 4px; }
+
+.dashboard-graph {
+  background: linear-gradient(145deg, var(--navy-dark), #1e293b); color: #fff; border-radius: 16px; padding: 18px;
+}
+.graph-chart { height: 160px; display: flex; align-items: flex-end; gap: 10px; margin-top: 14px; border-bottom: 1px solid rgba(255,255,255,.2); }
+.graph-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; height: 100%; justify-content: flex-end; }
+.graph-bar { width: 100%; max-width: 32px; min-height: 4px; border-radius: 6px 6px 0 0; background: linear-gradient(180deg, #60a5fa, #3b82f6); }
+
+.cloud-footer-box {
+  background: #fff; border: 1px dashed var(--border); border-radius: 12px; padding: 14px;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+}
 
 /* Modals */
-.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.6);backdrop-filter:blur(4px);z-index:3000;display:none;align-items:center;justify-content:center;padding:16px}
-.modal{width:min(720px,100%);max-height:88vh;overflow-y:auto;background:#fff;border-radius:20px;box-shadow:0 25px 50px -12px rgba(0,0,0,.25);padding:22px}
-.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.modal-backdrop {
+  position: fixed; inset: 0; background: rgba(15,23,42,.6); backdrop-filter: blur(4px); z-index: 3000;
+  display: none; align-items: center; justify-content: center; padding: 14px;
+}
+.modal {
+  width: min(740px, 100%); max-height: 88vh; overflow-y: auto; background: #fff; border-radius: 18px;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,.25); padding: 20px;
+}
+.modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; border-bottom: 1px solid var(--border); padding-bottom: 10px; }
 
 /* ============================================================
-   SINGLE PAGE A4 PRINT FIX (NO 2-PAGE OVERFLOW ON MOBILE/TAB/PC)
+   SINGLE-PAGE A4 TAX INVOICE PRINT SPEC (ZERO OVERFLOW ON ALL SIZES)
    ============================================================ */
-.print-only,.customer-print{display:none}
+.print-only, .customer-print { display: none; }
+
 @media print {
-  @page {
-    size: 210mm 297mm;
-    margin: 0 !important;
-  }
+  @page { size: 210mm 297mm; margin: 0 !important; }
   html, body {
-    width: 210mm !important;
-    height: 297mm !important;
-    max-width: 210mm !important;
-    max-height: 297mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    background: #fff !important;
-    overflow: hidden !important;
+    width: 210mm !important; height: 297mm !important; max-width: 210mm !important; max-height: 297mm !important;
+    margin: 0 !important; padding: 0 !important; background: #fff !important; overflow: hidden !important;
   }
-  .app {
-    width: 210mm !important;
-    max-width: 210mm !important;
-    height: 297mm !important;
-    padding: 0 !important;
-    margin: 0 !important;
-  }
-  .no-print, .top, .page-back, .actions, #productsPage, #customersPage, #reportsPage, #dashboardPage {
-    display: none !important;
-  }
-  #billingPage {
-    display: block !important;
-    width: 210mm !important;
-    height: 297mm !important;
-    max-height: 297mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    overflow: hidden !important;
-    page-break-after: avoid !important;
-    break-after: avoid !important;
-  }
+  .app { width: 210mm !important; max-width: 210mm !important; height: 297mm !important; margin: 0 !important; padding: 0 !important; }
+  .no-print, .top, .page-back, #productsPage, #customersPage, #reportsPage, #dashboardPage { display: none !important; }
+  
+  #billingPage { display: block !important; width: 210mm !important; height: 297mm !important; max-height: 297mm !important; margin: 0 !important; padding: 0 !important; overflow: hidden !important; }
+  
   .invoice-paper {
-    width: 210mm !important;
-    height: 297mm !important;
-    max-height: 297mm !important;
-    border: 1.2px solid #2f6f4e !important;
-    border-radius: 0 !important;
-    box-shadow: none !important;
-    display: flex !important;
-    flex-direction: column !important;
-    box-sizing: border-box !important;
-    padding: 0 !important;
-    margin: 0 !important;
-    overflow: hidden !important;
+    width: 210mm !important; height: 297mm !important; max-height: 297mm !important;
+    border: 1px solid var(--navy) !important; border-radius: 0 !important; box-shadow: none !important;
+    display: flex !important; flex-direction: column !important; box-sizing: border-box !important;
+    margin: 0 !important; padding: 0 !important; overflow: hidden !important;
   }
   .invoice-paper .topband {
-    background: #2f6f4e !important;
-    color: #fff !important;
-    padding: 2.5mm 8mm !important;
-    font-size: 8.5px !important;
-    display: flex !important;
-    justify-content: space-between !important;
-    font-weight: 800 !important;
-    -webkit-print-color-adjust: exact !important;
-    print-color-adjust: exact !important;
+    background: var(--navy) !important; color: #fff !important; padding: 2.5mm 8mm !important; font-size: 8.5px !important;
+    display: flex !important; justify-content: space-between !important; font-weight: 800 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important;
   }
   .invoice-paper .body {
-    flex: 1 1 auto !important;
-    padding: 5mm 8mm 4mm !important;
-    display: flex !important;
-    flex-direction: column !important;
-    box-sizing: border-box !important;
-    overflow: hidden !important;
+    flex: 1 1 auto !important; padding: 5mm 8mm 4mm !important; display: flex !important; flex-direction: column !important;
+    box-sizing: border-box !important; overflow: hidden !important;
   }
+  
   .print-only, .customer-print { display: block !important; }
   .customer-form { display: none !important; }
   
-  .invoice-head {
-    display: grid !important;
-    grid-template-columns: 1.6fr 0.9fr !important;
-    margin-bottom: 3mm !important;
-    gap: 4mm !important;
-  }
-  .company-box strong { font-size: 17px !important; color: #2f6f4e !important; }
-  .company-box .hint { font-size: 8.5px !important; line-height: 1.35 !important; }
-  .invoice-meta { font-size: 8.5px !important; line-height: 1.45 !important; text-align: right !important; }
-  .invoice-number { font-size: 16px !important; color: #17351f !important; }
+  .invoice-head { display: grid !important; grid-template-columns: 1.6fr 0.9fr !important; margin-bottom: 3mm !important; gap: 4mm !important; }
+  .company-box strong { font-size: 16px !important; color: var(--navy) !important; }
+  .company-box .hint { font-size: 8px !important; line-height: 1.3 !important; }
+  .invoice-meta { font-size: 8px !important; line-height: 1.35 !important; text-align: right !important; }
+  .invoice-number { font-size: 15px !important; color: var(--navy-dark) !important; }
 
-  .bill-grid {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    border: 1px solid #cbd8c5 !important;
-    margin: 0 0 3mm !important;
-  }
+  .bill-grid { display: grid !important; grid-template-columns: 1fr 1fr !important; border: 1px solid var(--border) !important; margin: 0 0 3mm !important; }
   .bill-box { padding: 2.5mm 3.5mm !important; }
-  .bill-box + .bill-box { border-left: 1px solid #cbd8c5 !important; }
-  .customer-print div { font-size: 8.5px !important; line-height: 1.35 !important; }
+  .bill-box + .bill-box { border-left: 1px solid var(--border) !important; }
+  .customer-print div { font-size: 8px !important; line-height: 1.3 !important; }
 
-  .table-wrap { width: 100% !important; margin-bottom: 3mm !important; overflow: hidden !important; }
-  #itemsTable { width: 100% !important; min-width: 0 !important; font-size: 8px !important; table-layout: fixed !important; }
-  #itemsTable th, #itemsTable td { padding: 1.6mm 1.2mm !important; line-height: 1.2 !important; border: 1px solid #cbd8c5 !important; }
-  #itemsTable th { font-size: 7.5px !important; background: #edf6ee !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  .table-wrap { width: 100% !important; margin-bottom: 2.5mm !important; overflow: hidden !important; }
+  #itemsTable { width: 100% !important; min-width: 0 !important; font-size: 7.5px !important; table-layout: fixed !important; }
+  #itemsTable th, #itemsTable td { padding: 1.4mm 1mm !important; line-height: 1.15 !important; border: 1px solid var(--border) !important; }
+  #itemsTable th { font-size: 7.2px !important; background: var(--navy-light) !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   #itemsTable td input, #itemsTable td select, #itemsTable .remove-col { display: none !important; }
   #itemsTable .print-cell { display: inline !important; }
 
-  .summary-grid {
-    display: grid !important;
-    grid-template-columns: 1.3fr 0.9fr !important;
-    gap: 4mm !important;
-    margin-bottom: 3mm !important;
-  }
-  .totals { padding: 2mm 3mm !important; border: 1px solid #cbd8c5 !important; }
-  .total-line { font-size: 8.5px !important; padding: 1mm 0 !important; }
-  .total-line.grand { font-size: 13px !important; padding-top: 2mm !important; border-top: 1.5px solid #2f6f4e !important; }
+  .summary-grid { display: grid !important; grid-template-columns: 1.3fr 0.9fr !important; gap: 4mm !important; margin-bottom: 2.5mm !important; }
+  .totals { padding: 1.8mm 2.8mm !important; border: 1px solid var(--border) !important; }
+  .total-line { font-size: 8px !important; padding: 0.8mm 0 !important; }
+  .total-line.grand { font-size: 12px !important; padding-top: 1.5mm !important; border-top: 1.5px solid var(--navy) !important; }
 
-  .tax-summary { margin-bottom: 3mm !important; border: 1px solid #cbd8c5 !important; }
-  .tax-summary th, .tax-summary td { font-size: 7.5px !important; padding: 1.4mm 1mm !important; }
+  /* Fully Contained Rigid Tax Table */
+  .tax-summary { width: 100% !important; table-layout: fixed !important; margin-bottom: 2.5mm !important; border: 1px solid var(--border) !important; }
+  .tax-summary th, .tax-summary td { font-size: 7.2px !important; padding: 1.2mm 0.8mm !important; word-break: break-all !important; }
 
   .signature { display: flex !important; justify-content: flex-end !important; margin-top: auto !important; }
-  .signature-box {
-    width: 60mm !important; min-height: 22mm !important; border: 1px dashed #cbd8c5 !important;
-    text-align: center !important; padding-top: 11mm !important; font-size: 8px !important;
-  }
-  .footer-note { font-size: 7.5px !important; text-align: center !important; margin-top: 2mm !important; }
+  .signature-box { width: 55mm !important; min-height: 20mm !important; border: 1px dashed var(--border) !important; text-align: center !important; padding-top: 10mm !important; font-size: 7.5px !important; }
+  .footer-note { font-size: 7px !important; text-align: center !important; margin-top: 1.5mm !important; }
 }
 
-@media(max-width:700px){
-  .app{padding:10px}
-  .top{flex-direction:column;align-items:stretch;padding:10px}
-  .cloud-bar{justify-content:space-between}
-  .grid3,.catalog-grid,.customer-form-grid{grid-template-columns:1fr}
-  .dashboard-wrap{grid-template-columns:1fr}
-  .dashboard-side{grid-template-columns:1fr 1fr}
-  .dashboard-quick{grid-template-columns:1fr 1fr}
+/* Mobile View Adjustments */
+@media (max-width: 700px) {
+  .app { padding: 10px; }
+  .top { flex-direction: column; align-items: stretch; padding: 10px; }
+  .cloud-status-group { justify-content: space-between; }
+  .grid3 { grid-template-columns: 1fr; }
+  
+  /* Mobile Order Hierarchy: Quick Actions -> Stats -> Chart -> Cloud info */
+  .dashboard-container { display: flex; flex-direction: column; }
+  .dashboard-quick { order: 1; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .dash-stats-grid { order: 2; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 8px; }
+  .dashboard-graph { order: 3; margin-top: 8px; }
+  .cloud-footer-box { order: 4; margin-top: 8px; }
 }
 </style>
 </head>
 <body>
+
 <datalist id="productDatalist"></datalist>
 <datalist id="customerDatalist"></datalist>
 
 <div class="app">
+  <!-- Header Bar -->
   <div class="top no-print">
     <div class="brand">
       <h1>SRI SIDDHAN ESSENTIAL</h1>
-      <p>Cloud GST Billing & Invoice Engine</p>
+      <p>Executive Cloud Billing & GST Suite</p>
     </div>
-    <div class="cloud-bar">
+    <div class="cloud-status-group">
       <span id="cloudStatusBadge" class="sync-pill sync-pending">● Initializing Sync</span>
-      <button class="secondary" onclick="openModal('cloudSettingsModal')">⚙️ Cloud Sync</button>
-      <button class="primary" onclick="showPage('billing'); newInvoice(true);">+ New Bill</button>
+      <button class="btn-secondary" onclick="openModal('cloudSettingsModal')">⚙️ Cloud Sync</button>
     </div>
   </div>
 
-  <!-- DASHBOARD -->
+  <!-- DASHBOARD PAGE (ORDERED PER INSTRUCTIONS) -->
   <div id="dashboardPage" class="page-panel active no-print">
-    <div class="card">
-      <div class="dashboard-wrap">
-        <div class="dashboard-graph">
-          <h3>Sales Overview</h3>
-          <p id="dashboardGraphMeta" class="hint" style="color:#d8ebe0;">Last 7 days performance</p>
-          <div id="dashboardGraph" class="graph-chart"></div>
-        </div>
-        <div class="dashboard-side">
-          <div class="dash-stat" onclick="showPage('reports')"><div class="k">Today's Sales</div><div class="v" id="dashTodaySales">₹0.00</div></div>
-          <div class="dash-stat" onclick="showPage('reports')"><div class="k">This Month</div><div class="v" id="dashMonthSales">₹0.00</div></div>
-          <div class="dash-stat" onclick="openPreviousBills()"><div class="k">Saved Invoices</div><div class="v" id="dashInvoiceCount">0</div></div>
-          <div class="dash-stat" onclick="showPage('reports')"><div class="k">GST Collected</div><div class="v" id="dashGstCollected">₹0.00</div></div>
-        </div>
-      </div>
+    <div class="dashboard-container">
+      
+      <!-- 1. Quick Tabs (Buttons) -->
       <div class="dashboard-quick">
-        <button class="dash-btn" onclick="showPage('billing'); newInvoice(true);"><span>➕</span><span><strong>Create Invoice</strong><small>New GST bill</small></span></button>
-        <button class="dash-btn" onclick="showPage('products')"><span>📦</span><span><strong>Products Master</strong><small>Bulk upload & rates</small></span></button>
-        <button class="dash-btn" onclick="showPage('customers')"><span>👥</span><span><strong>Customer Ledger</strong><small>Bulk upload & details</small></span></button>
-        <button class="dash-btn" onclick="showPage('reports')"><span>📊</span><span><strong>GST Filing</strong><small>Monthly Reports</small></span></button>
-        <button class="dash-btn" onclick="openPreviousBills()"><span>🧾</span><span><strong>Previous Bills</strong><small>Open & Edit</small></span></button>
-        <button class="dash-btn" onclick="openModal('gstCalcModal')"><span>🧮</span><span><strong>GST Calculator</strong><small>Quick computation</small></span></button>
-        <button class="dash-btn" onclick="exportAllDataExcel()"><span>📥</span><span><strong>Backup to Excel</strong><small>Offline copy</small></span></button>
-        <button class="dash-btn" onclick="pullCloudData(true)"><span>🔄</span><span><strong>Sync All Devices</strong><small>Force pull latest</small></span></button>
+        <button class="dash-btn" onclick="startFreshInvoiceFromDash()"><span>➕</span><span><strong>Create Invoice</strong><small>New GST Tax Bill</small></span></button>
+        <button class="dash-btn" onclick="showPage('products')"><span>📦</span><span><strong>Products Master</strong><small>Bulk Upload & Rates</small></span></button>
+        <button class="dash-btn" onclick="showPage('customers')"><span>👥</span><span><strong>Customer Ledger</strong><small>Bulk Upload & Directory</small></span></button>
+        <button class="dash-btn" onclick="showPage('reports')"><span>📊</span><span><strong>GST Filing</strong><small>Daily & Monthly GSTR-1</small></span></button>
+        <button class="dash-btn" onclick="openPreviousBills()"><span>🧾</span><span><strong>Previous Bills</strong><small>Browse & Edit Invoices</small></span></button>
+        <button class="dash-btn" onclick="openModal('gstCalcModal')"><span>🧮</span><span><strong>GST Calculator</strong><small>Forward & Reverse Tax</small></span></button>
+        <button class="dash-btn" onclick="exportAllDataExcel()"><span>📥</span><span><strong>Backup to Excel</strong><small>Download Offline Copy</small></span></button>
+        <button class="dash-btn" onclick="pullCloudData(true)"><span>🔄</span><span><strong>Sync Devices</strong><small>Force Cloud Refresh</small></span></button>
       </div>
+
+      <!-- 2. The 4 Total Stats Boxes -->
+      <div class="dash-stats-grid">
+        <div class="dash-stat" onclick="showPage('reports')"><div class="k">Today's Sales</div><div class="v" id="dashTodaySales">₹0.00</div></div>
+        <div class="dash-stat" onclick="showPage('reports')"><div class="k">This Month Sales</div><div class="v" id="dashMonthSales">₹0.00</div></div>
+        <div class="dash-stat" onclick="openPreviousBills()"><div class="k">Total Invoices</div><div class="v" id="dashInvoiceCount">0</div></div>
+        <div class="dash-stat" onclick="showPage('reports')"><div class="k">GST Collected</div><div class="v" id="dashGstCollected">₹0.00</div></div>
+      </div>
+
+      <!-- 3. Sales Graph -->
+      <div class="dashboard-graph">
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <h3 style="font-size:16px;">Sales Overview</h3>
+          <span style="font-size:11px; color:#93c5fd;">Last 7 Days</span>
+        </div>
+        <div id="dashboardGraph" class="graph-chart"></div>
+      </div>
+
+      <!-- 4. Sync & Cloud Storage Meta Box -->
+      <div class="cloud-footer-box">
+        <div>
+          <strong style="font-size:13px; color:var(--navy-dark);">Cloud Storage: GitHub Private Workspace</strong>
+          <p style="font-size:11.5px; color:var(--text-muted); margin-top:2px;">All products, customers, and invoice records sync automatically across every device.</p>
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-secondary" onclick="openModal('cloudSettingsModal')">Cloud Settings</button>
+          <button class="btn-primary" onclick="pullCloudData(true)">Pull from Cloud</button>
+        </div>
+      </div>
+
     </div>
   </div>
 
   <!-- BILLING SCREEN -->
   <div id="billingPage" class="page-panel">
-    <div class="page-back no-print"><button class="secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
-    <div class="card invoice-paper">
+    <div class="page-back no-print"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
+    
+    <div class="card invoice-paper" id="printableInvoiceArea">
       <div class="topband print-only"><span>TAX INVOICE</span><span>ORIGINAL FOR RECIPIENT</span></div>
       <div class="body">
+        
         <div class="invoice-head">
           <div class="company-box">
-            <div class="hint">SUPPLIER</div>
-            <strong id="printBusinessName">SRI SIDDHAN ESSENTIAL</strong>
-            <div id="printBusinessAddress" class="hint">SF4/1 BPC COLONY, FCI ROAD, GANAPATHY, COIMBATORE 641006</div>
-            <div id="printBusinessPhone" class="hint">+91 96583 99991 · SRISIDDHANESSENTIAL@GMAIL.COM</div>
-            <div id="printBusinessGstin" class="hint">GSTIN: 33DQFPS0107C1ZF</div>
+            <div class="hint">SUPPLIER (FROM)</div>
+            <strong>SRI SIDDHAN ESSENTIAL</strong>
+            <div class="hint">SF4/1 BPC COLONY, FCI ROAD, GANAPATHY, COIMBATORE 641006</div>
+            <div class="hint">+91 96583 99991 · SRISIDDHANESSENTIAL@GMAIL.COM</div>
+            <div class="hint">GSTIN: 33DQFPS0107C1ZF</div>
           </div>
           <div class="invoice-meta">
-            <div class="invoice-badge">INVOICE NO.</div>
+            <div class="invoice-badge">TAX INVOICE</div>
             <div class="invoice-number" id="invoiceNoView">INV-2026-1001</div>
             <div><strong>Date:</strong> <span id="invoiceDateView"></span></div>
-            <div><strong>Payment:</strong> <span id="paymentView">Cash</span></div>
+            <div><strong>Payment Mode:</strong> <span id="paymentView">Cash</span></div>
           </div>
         </div>
 
         <div class="bill-grid">
           <div class="bill-box">
-            <div class="section-title" style="font-size:12px;margin-bottom:4px">BILL TO (RECIPIENT)</div>
+            <div class="section-title" style="font-size:11px; margin-bottom:4px;">RECIPIENT (BILL TO)</div>
             <div class="customer-print">
               <div><strong>Name:</strong> <span id="printCustomerName">-</span></div>
               <div><strong>Phone:</strong> <span id="printCustomerPhone">-</span></div>
@@ -291,13 +313,14 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
               <div class="grid3">
                 <div class="field"><label class="required">Customer Name</label><input id="customerName" list="customerDatalist" placeholder="Type customer name" oninput="applyCustomerSelect(this)"></div>
                 <div class="field"><label>Phone Number</label><input id="customerPhone" placeholder="Mobile / WhatsApp"></div>
-                <div class="field"><label>GSTIN</label><input id="customerGstin" placeholder="Optional"></div>
-                <div class="field" style="grid-column:1/-1"><label>Address</label><textarea id="customerAddress" rows="2" placeholder="Address & City"></textarea></div>
+                <div class="field"><label>GSTIN</label><input id="customerGstin" placeholder="Customer GSTIN"></div>
+                <div class="field" style="grid-column:1/-1;"><label>Address</label><textarea id="customerAddress" rows="2" placeholder="Billing Address"></textarea></div>
               </div>
             </div>
           </div>
+          
           <div class="bill-box">
-            <div class="section-title" style="font-size:12px;margin-bottom:4px">PAYMENT & DETAILS</div>
+            <div class="section-title" style="font-size:11px; margin-bottom:4px;">INVOICE DETAILS</div>
             <div class="customer-print">
               <div><strong>Mode:</strong> <span id="printPaymentMethod">Cash</span></div>
               <div><strong>Notes:</strong> <span id="printNotes">Thank you for choosing SRI SIDDHAN ESSENTIAL.</span></div>
@@ -307,7 +330,7 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
                 <div class="field"><label>Payment Mode</label><select id="paymentMethod"><option>Cash</option><option>UPI</option><option>Card</option><option>Bank Transfer</option><option>Credit</option></select></div>
                 <div class="field"><label>Invoice No</label><input id="invoiceNo" value="INV-2026-1001"></div>
                 <div class="field"><label>Date</label><input type="date" id="invoiceDate"></div>
-                <div class="field" style="grid-column:1/-1"><label>Notes</label><textarea id="notes" rows="2">We appreciate your business. Thank you for choosing SRI SIDDHAN ESSENTIAL!</textarea></div>
+                <div class="field" style="grid-column:1/-1;"><label>Notes / Terms</label><textarea id="notes" rows="2">We appreciate your business. Thank you for choosing SRI SIDDHAN ESSENTIAL!</textarea></div>
               </div>
             </div>
           </div>
@@ -317,37 +340,39 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
           <table id="itemsTable">
             <thead>
               <tr>
-                <th class="center" style="width:40px">#</th>
-                <th>Item / Product Description</th>
-                <th style="width:105px">HSN/SAC</th>
-                <th class="center" style="width:75px">Qty</th>
-                <th class="num" style="width:95px">Rate</th>
-                <th class="num" style="width:85px">GST %</th>
-                <th class="num" style="width:95px">GST Amt</th>
-                <th class="num" style="width:75px">Disc %</th>
-                <th class="num" style="width:105px">Total Amount</th>
-                <th class="remove-col" style="width:36px"></th>
+                <th class="center" style="width:38px;">#</th>
+                <th>Item Description</th>
+                <th style="width:100px;">HSN/SAC</th>
+                <th class="center" style="width:70px;">Qty</th>
+                <th class="num" style="width:90px;">Rate</th>
+                <th class="num" style="width:80px;">GST %</th>
+                <th class="num" style="width:90px;">GST Amt</th>
+                <th class="num" style="width:70px;">Disc %</th>
+                <th class="num" style="width:100px;">Total Amount</th>
+                <th class="remove-col" style="width:36px;"></th>
               </tr>
             </thead>
             <tbody id="itemsBody"></tbody>
           </table>
         </div>
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px" class="no-print">
-          <button class="secondary" onclick="addItem()">+ Add Item</button>
-          <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="primary" style="background:#25d366" onclick="shareWhatsApp()">📲 WhatsApp Share</button>
-            <button class="primary" style="background:#15803d" onclick="saveInvoice()">💾 Save to Cloud</button>
-            <button class="primary" onclick="printInvoice()">🖨️ Print Single-Page A4 / PDF</button>
+
+        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;" class="no-print">
+          <button class="btn-secondary" onclick="addItem()">+ Add Line Item</button>
+          <div style="display:flex; gap:8px; flex-wrap:wrap;">
+            <!-- Real PDF Attachment WhatsApp Share -->
+            <button class="btn-whatsapp" onclick="sharePdfToWhatsApp()">📲 WhatsApp Share (PDF)</button>
+            <button class="btn-primary" onclick="saveInvoice()">💾 Save & Push Cloud</button>
+            <button class="btn-gold" onclick="printInvoice()">🖨️ Print Single-Page A4</button>
           </div>
         </div>
 
-        <div class="summary-grid" style="margin-top:12px">
+        <div class="summary-grid" style="margin-top:12px;">
           <div>
-            <div style="background:#f8faf7;border:1px solid #dfe7db;border-radius:10px;padding:8px 10px;font-size:11.5px">
+            <div style="background:#f8fafc; border:1px solid var(--border); border-radius:10px; padding:8px 10px; font-size:11.5px;">
               <strong>Amount in Words:</strong> <span id="amountWords">Zero Rupees Only</span>
             </div>
-            <div class="print-only" style="margin-top:6px;font-size:8px;color:var(--muted)">
-              <strong>Terms:</strong> Goods once sold will not be returned unless agreed. Discrepancies must be reported promptly.
+            <div class="print-only" style="margin-top:6px; font-size:7.5px; color:var(--text-muted); line-height:1.3;">
+              <strong>Terms:</strong> Goods once sold will not be returned unless agreed. Discrepancies must be reported promptly upon delivery.
             </div>
           </div>
           <div>
@@ -361,95 +386,154 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
           </div>
         </div>
 
-        <div class="tax-summary print-only">
-          <table style="width:100%;font-size:8px">
-            <thead><tr><th>HSN/SAC</th><th>Taxable</th><th>CGST %</th><th>CGST Amt</th><th>SGST %</th><th>SGST Amt</th><th>Total Tax</th></tr></thead>
-            <tbody id="taxSummaryBody"></tbody>
-          </table>
-        </div>
+        <!-- Fully Contained Tax Breakdown Table -->
+        <table class="tax-summary print-only">
+          <thead>
+            <tr>
+              <th style="width:20%;">HSN/SAC</th>
+              <th style="width:20%;">Taxable Val</th>
+              <th style="width:12%;">CGST %</th>
+              <th style="width:15%;">CGST Amt</th>
+              <th style="width:12%;">SGST %</th>
+              <th style="width:15%;">SGST Amt</th>
+              <th style="width:16%;">Total Tax</th>
+            </tr>
+          </thead>
+          <tbody id="taxSummaryBody"></tbody>
+        </table>
 
         <div class="signature print-only">
           <div class="signature-box">For <strong>SRI SIDDHAN ESSENTIAL</strong><br><br>Authorized Signatory</div>
         </div>
-        <div class="footer-note print-only">Thank you for choosing SRI SIDDHAN ESSENTIAL • Computer Generated Invoice</div>
+        <div class="footer-note print-only">Thank you for choosing SRI SIDDHAN ESSENTIAL • Computer Generated Tax Invoice</div>
       </div>
     </div>
   </div>
 
   <!-- PRODUCTS MASTER -->
   <div id="productsPage" class="page-panel no-print">
-    <div class="page-back"><button class="secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
+    <div class="page-back"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <h2 class="section-title" style="margin:0">Product Catalog</h2>
-        <div style="display:flex;gap:8px">
-          <button class="secondary" onclick="downloadTemplate('products')">📥 Download Template</button>
-          <button class="secondary" onclick="openBulkModal('products')">📤 Bulk Import</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <h2 class="section-title" style="margin:0;">Product Catalog</h2>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-secondary" onclick="downloadTemplate('products')">📥 Template</button>
+          <button class="btn-secondary" onclick="openBulkModal('products')">📤 Bulk Upload</button>
           <span id="productCount" class="sync-pill sync-ok">0 Products</span>
         </div>
       </div>
-      <div class="catalog-grid" style="margin-bottom:14px">
-        <div class="field"><label class="required">Product Name</label><input id="productName" placeholder="e.g. Waffle Premix 1 KG"></div>
+      <div class="grid3" style="grid-template-columns: 2fr 1fr 1fr 1fr 1fr auto; align-items:end; margin-bottom:14px;">
+        <div class="field"><label class="required">Product Name</label><input id="productName" placeholder="e.g. Vanilla Waffle Premix 1 KG"></div>
         <div class="field"><label class="required">HSN/SAC</label><input id="productHsn" placeholder="4, 6 or 8 digits" maxlength="8"></div>
         <div class="field"><label class="required">Rate (₹)</label><input id="productRate" type="number" min="0" step="0.01" placeholder="0.00"></div>
         <div class="field"><label>GST %</label><select id="productGst"><option value="0">0%</option><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></div>
-        <div class="field"><label>Unit</label><select id="productUqc"><option value="NOS" selected>NOS</option><option value="KGS">KGS</option><option value="LTR">LTR</option><option value="BOX">BOX</option><option value="PAC">PAC</option></select></div>
-        <button class="primary" onclick="saveProduct()">+ Save Product</button>
+        <div class="field"><label>Unit</label><select id="productUqc"><option value="NOS">NOS</option><option value="KGS" selected>KGS</option><option value="LTR">LTR</option><option value="BOX">BOX</option><option value="PAC">PAC</option></select></div>
+        <button class="btn-primary" onclick="saveProduct()">+ Save</button>
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Product Name</th><th>HSN/SAC</th><th>Rate</th><th>GST %</th><th>Unit</th><th style="width:60px">Action</th></tr></thead>
+          <thead><tr><th>Product Name</th><th>HSN/SAC</th><th>Rate</th><th>GST %</th><th>Unit</th><th style="width:60px;">Action</th></tr></thead>
           <tbody id="productListBody"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- CUSTOMERS MASTER -->
+  <!-- CUSTOMER DIRECTORY -->
   <div id="customersPage" class="page-panel no-print">
-    <div class="page-back"><button class="secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
+    <div class="page-back"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">
-        <h2 class="section-title" style="margin:0">Customer Ledger</h2>
-        <div style="display:flex;gap:8px">
-          <button class="secondary" onclick="downloadTemplate('customers')">📥 Download Template</button>
-          <button class="secondary" onclick="openBulkModal('customers')">📤 Bulk Import</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <h2 class="section-title" style="margin:0;">Customer Ledger</h2>
+        <div style="display:flex; gap:8px;">
+          <button class="btn-secondary" onclick="downloadTemplate('customers')">📥 Template</button>
+          <button class="btn-secondary" onclick="openBulkModal('customers')">📤 Bulk Upload</button>
           <span id="customerCount" class="sync-pill sync-ok">0 Customers</span>
         </div>
       </div>
-      <div class="customer-form-grid" style="margin-bottom:14px">
+      <div class="grid3" style="grid-template-columns: 2fr 1fr 1fr 1.2fr; align-items:end; margin-bottom:14px;">
         <div class="field"><label>Customer Name</label><input id="catalogCustomerName" placeholder="Name"></div>
-        <div class="field"><label>Phone</label><input id="catalogCustomerPhone" placeholder="Mobile number"></div>
+        <div class="field"><label>Phone</label><input id="catalogCustomerPhone" placeholder="Mobile Number"></div>
         <div class="field"><label>GSTIN</label><input id="catalogCustomerGstin" placeholder="Customer GSTIN"></div>
-        <div class="field"><label>City / State Code</label><input id="catalogCustomerStateCode" value="33"></div>
-        <div class="field" style="grid-column:1/-1"><label>Address</label><textarea id="catalogCustomerAddress" rows="2" placeholder="Full address"></textarea></div>
-        <button class="primary" onclick="saveCustomer()">+ Save Customer</button>
+        <div class="field"><label>State Code</label><input id="catalogCustomerStateCode" value="33"></div>
+        <div class="field" style="grid-column:1/-1;"><label>Address</label><textarea id="catalogCustomerAddress" rows="2" placeholder="Full Billing Address"></textarea></div>
+        <button class="btn-primary" onclick="saveCustomer()">+ Save Customer</button>
       </div>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Name</th><th>Phone</th><th>GSTIN</th><th>POS</th><th>Address</th><th style="width:110px">Action</th></tr></thead>
+          <thead><tr><th>Name</th><th>Phone</th><th>GSTIN</th><th>POS</th><th>Address</th><th style="width:110px;">Action</th></tr></thead>
           <tbody id="customerListBody"></tbody>
         </table>
       </div>
     </div>
   </div>
 
-  <!-- REPORTS -->
+  <!-- COMPREHENSIVE GST FILING SUITE -->
   <div id="reportsPage" class="page-panel no-print">
-    <div class="page-back"><button class="secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
+    <div class="page-back"><button class="btn-secondary" onclick="showPage('dashboard')">← Back to Dashboard</button></div>
     <div class="card">
-      <h2 class="section-title">GST Filing & Outward Supply Reports</h2>
-      <div style="display:flex;gap:10px;align-items:end;flex-wrap:wrap;margin-bottom:14px">
-        <div class="field"><label>Month</label><input type="month" id="reportMonth" onchange="renderReports()"></div>
-        <button class="primary" onclick="renderReports()">Generate Report</button>
-        <button class="secondary" onclick="exportGSTExcel()">Export GST Excel</button>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+        <h2 class="section-title" style="margin:0;">GST Filing & Outward Supply Reports</h2>
+        <div style="display:flex; gap:6px; flex-wrap:wrap;">
+          <button class="btn-secondary" onclick="printGstReport()">🖨️ Print Report</button>
+          <button class="btn-secondary" onclick="exportGstReportPdf()">📄 Export PDF</button>
+          <button class="btn-secondary" onclick="exportGstExcel()">📊 Export Excel (.xls)</button>
+          <button class="btn-secondary" onclick="exportGstCsv()">📑 Export CSV</button>
+        </div>
       </div>
+
+      <div class="grid3" style="grid-template-columns: 1fr 1.2fr auto; align-items:end; margin-bottom:14px;">
+        <div class="field">
+          <label>Report Frequency</label>
+          <select id="reportFreq" onchange="toggleReportFreqUI()">
+            <option value="monthly" selected>Monthly GSTR-1 Summary</option>
+            <option value="daily">Daily Outward Report</option>
+          </select>
+        </div>
+        <div class="field" id="reportMonthField"><label>Select Month</label><input type="month" id="reportMonth" onchange="renderReports()"></div>
+        <div class="field" id="reportDateField" style="display:none;"><label>Select Date</label><input type="date" id="reportDate" onchange="renderReports()"></div>
+        <button class="btn-primary" onclick="renderReports()">Run Report</button>
+      </div>
+
       <div class="table-wrap">
-        <table>
-          <thead><tr><th>Date</th><th>Invoice</th><th>Customer</th><th>GSTIN</th><th>Taxable</th><th>CGST</th><th>SGST</th><th>IGST</th><th>Total GST</th><th>Grand Total</th></tr></thead>
+        <table id="gstReportTable">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Invoice No</th>
+              <th>Customer</th>
+              <th>GSTIN</th>
+              <th class="num">Taxable Value</th>
+              <th class="num">CGST</th>
+              <th class="num">SGST</th>
+              <th class="num">Total GST</th>
+              <th class="num">Invoice Value</th>
+            </tr>
+          </thead>
           <tbody id="reportListBody"></tbody>
         </table>
       </div>
+    </div>
+  </div>
+</div>
+
+<!-- ADVANCED GST CALCULATOR (WITH PERCENTAGE COLUMN & REVERSE MODE) -->
+<div id="gstCalcModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('gstCalcModal')">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 style="margin:0; color:var(--navy);">🧮 GST Quick Calculator</h3>
+      <button class="btn-secondary" onclick="closeModal('gstCalcModal')">✕</button>
+    </div>
+    <div class="grid3" style="grid-template-columns: 1.2fr 1fr 1fr; margin-bottom:12px;">
+      <div class="field"><label>Base Taxable Amount (₹)</label><input type="number" id="calcBase" value="1000" oninput="runGstCalc()"></div>
+      <div class="field"><label>GST Slab %</label><select id="calcPresetRate" onchange="updateCalcRateFromPreset()"><option value="0">0%</option><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option><option value="custom">Custom %</option></select></div>
+      <div class="field"><label>GST % (Editable)</label><input type="number" id="calcRateInput" value="18" min="0" max="100" step="0.1" oninput="runGstCalc()"></div>
+    </div>
+    <div class="grid3">
+      <div class="field"><label>CGST (Half)</label><input id="calcCgst" readonly></div>
+      <div class="field"><label>SGST (Half)</label><input id="calcSgst" readonly></div>
+      <div class="field"><label>Total GST Tax</label><input id="calcTax" readonly style="font-weight:700; color:var(--navy);"></div>
+      <div class="field" style="grid-column:1/-1;"><label>Grand Total (Gross Payable)</label><input id="calcTotal" readonly style="font-size:16px; font-weight:900; color:var(--navy); background:var(--navy-light);"></div>
     </div>
   </div>
 </div>
@@ -458,43 +542,39 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
 <div id="bulkModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('bulkModal')">
   <div class="modal">
     <div class="modal-head">
-      <h3 style="margin:0;color:var(--green)" id="bulkModalTitle">Bulk Import</h3>
-      <button class="secondary" onclick="closeModal('bulkModal')">✕</button>
+      <h3 style="margin:0; color:var(--navy);" id="bulkModalTitle">Bulk Import Master</h3>
+      <button class="btn-secondary" onclick="closeModal('bulkModal')">✕</button>
     </div>
-    <p class="hint">Upload a spreadsheet (.xlsx, .xls, .csv) or paste rows directly from Excel.</p>
     <input type="hidden" id="bulkTargetType" value="products">
-    
-    <div style="display:flex;gap:10px;margin-bottom:12px;align-items:center;flex-wrap:wrap">
+    <div style="display:flex; gap:8px; margin-bottom:12px; align-items:center; flex-wrap:wrap;">
       <input type="file" id="bulkUploadFileInput" accept=".xlsx,.xls,.csv,.tsv" onchange="handleBulkFileUpload(this)">
-      <button class="secondary" onclick="downloadTemplate(document.getElementById('bulkTargetType').value)">Download Blank Template</button>
+      <button class="btn-secondary" onclick="downloadTemplate(document.getElementById('bulkTargetType').value)">Download Blank Template</button>
     </div>
-    
     <div class="field">
-      <label>OR PASTE EXCEL ROWS (TAB-SEPARATED)</label>
-      <textarea id="bulkPasteText" rows="6" placeholder="Paste data copied from Excel here..."></textarea>
+      <label>Paste Excel Rows (Tab/Comma Separated)</label>
+      <textarea id="bulkPasteText" rows="6" placeholder="Paste data copied directly from your spreadsheet here..."></textarea>
     </div>
-    
-    <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:14px">
-      <button class="secondary" onclick="closeModal('bulkModal')">Cancel</button>
-      <button class="primary" onclick="executeBulkImport()">Process Import</button>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:12px;">
+      <button class="btn-secondary" onclick="closeModal('bulkModal')">Cancel</button>
+      <button class="btn-primary" onclick="executeBulkImport()">Process Import</button>
     </div>
   </div>
 </div>
 
-<!-- CLOUD SYNC MODAL -->
+<!-- CLOUD SYNC CONFIGURATION -->
 <div id="cloudSettingsModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('cloudSettingsModal')">
   <div class="modal">
     <div class="modal-head">
-      <h3 style="margin:0;color:var(--green)">☁️ GitHub Multi-Device Cloud Sync</h3>
-      <button class="secondary" onclick="closeModal('cloudSettingsModal')">✕</button>
+      <h3 style="margin:0; color:var(--navy);">☁️ GitHub Multi-Device Synchronization</h3>
+      <button class="btn-secondary" onclick="closeModal('cloudSettingsModal')">✕</button>
     </div>
-    <p class="hint">Connect your billing engine to your private <code>workspace-data</code> repo to share products, customers, and invoices across all your computers and phones.</p>
+    <p class="hint">Synced directly to your private <code>workspace-data</code> repository for automatic backup across all phones, tablets, and PCs.</p>
     <div class="field"><label>GitHub Username</label><input id="ghUser" placeholder="e.g. sreehp92"></div>
     <div class="field"><label>Storage Repository</label><input id="ghRepo" placeholder="workspace-data"></div>
     <div class="field"><label>Personal Access Token (PAT)</label><input type="password" id="ghToken" placeholder="ghp_..."></div>
-    <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:14px">
-      <button class="secondary" onclick="pullCloudData(true)">Pull from Cloud</button>
-      <button class="primary" onclick="saveCloudConfig()">Save & Connect</button>
+    <div style="display:flex; justify-content:flex-end; gap:8px; margin-top:14px;">
+      <button class="btn-secondary" onclick="pullCloudData(true)">Pull Latest</button>
+      <button class="btn-primary" onclick="saveCloudConfig()">Save & Connect</button>
     </div>
   </div>
 </div>
@@ -503,34 +583,18 @@ td input,td select{width:100%;padding:7px;border:1px solid #d6ddd2;border-radius
 <div id="previousBillsModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('previousBillsModal')">
   <div class="modal">
     <div class="modal-head">
-      <h3 style="margin:0">Saved Invoices Ledger</h3>
-      <button class="secondary" onclick="closeModal('previousBillsModal')">✕</button>
+      <h3 style="margin:0;">Saved Invoices Ledger</h3>
+      <button class="btn-secondary" onclick="closeModal('previousBillsModal')">✕</button>
     </div>
-    <div id="previousBillsBody" style="display:flex;flex-direction:column;gap:8px"></div>
-  </div>
-</div>
-
-<!-- QUICK GST CALCULATOR MODAL -->
-<div id="gstCalcModal" class="modal-backdrop" onclick="if(event.target===this)closeModal('gstCalcModal')">
-  <div class="modal">
-    <div class="modal-head">
-      <h3 style="margin:0">GST Quick Calculator</h3>
-      <button class="secondary" onclick="closeModal('gstCalcModal')">✕</button>
-    </div>
-    <div class="grid3">
-      <div class="field"><label>Base Amount (₹)</label><input type="number" id="calcBase" value="1000" oninput="runGstCalc()"></div>
-      <div class="field"><label>GST %</label><select id="calcRate" onchange="runGstCalc()"><option value="5">5%</option><option value="12">12%</option><option value="18" selected>18%</option><option value="28">28%</option></select></div>
-      <div class="field"><label>Tax Amount</label><input id="calcTax" readonly></div>
-      <div class="field" style="grid-column:1/-1"><label>Total Payable</label><input id="calcTotal" readonly style="font-weight:900;color:var(--green)"></div>
-    </div>
+    <div id="previousBillsBody" style="display:flex; flex-direction:column; gap:8px;"></div>
   </div>
 </div>
 
 <script>
-const money=n=>new Intl.NumberFormat('en-IN',{style:'currency',currency:'INR'}).format(Number(n)||0);
-const $=id=>document.getElementById(id);
-const today=()=>new Date().toISOString().slice(0,10);
-const esc=s=>String(s??'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const money = n => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' }).format(Number(n) || 0);
+const $ = id => document.getElementById(id);
+const today = () => new Date().toISOString().slice(0, 10);
+const esc = s => String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 
 let CLOUD_CONFIG = { owner: "sreehp92", repo: "workspace-data", token: "", path: "billing-data.json", sha: "" };
 const CLOUD_CFG_KEY = "SSE_BILLING_CLOUD_CFG";
@@ -538,7 +602,7 @@ const CLOUD_CFG_KEY = "SSE_BILLING_CLOUD_CFG";
 let db = {
   products: [
     { name: "Vanilla Waffle Premix 1 KG", hsn: "19012000", rate: 240, gst: 18, uqc: "KGS" },
-    { name: "Chocolate Filling Compound 1 KG", hsn: "18069090", rate: 320, gst: 18, uqc: "KGS" }
+    { name: "Chocolate Dip Compound 1 KG", hsn: "18069090", rate: 320, gst: 18, uqc: "KGS" }
   ],
   customers: [
     { name: "Walk-in Retail Customer", phone: "", gstin: "", stateCode: "33", address: "Coimbatore" }
@@ -546,19 +610,19 @@ let db = {
   invoices: []
 };
 
-function initApp(){
-  const commandDeskCfg = localStorage.getItem("CORP_GH_CONFIG");
-  if(commandDeskCfg){
-    try{
-      const parsed = JSON.parse(commandDeskCfg);
-      if(parsed.token) CLOUD_CONFIG.token = parsed.token;
-      if(parsed.owner) CLOUD_CONFIG.owner = parsed.owner;
-    }catch(e){}
+function initApp() {
+  const deskCfg = localStorage.getItem("CORP_GH_CONFIG");
+  if (deskCfg) {
+    try {
+      const p = JSON.parse(deskCfg);
+      if (p.token) CLOUD_CONFIG.token = p.token;
+      if (p.owner) CLOUD_CONFIG.owner = p.owner;
+    } catch (e) {}
   }
 
   const savedCfg = localStorage.getItem(CLOUD_CFG_KEY);
-  if(savedCfg){
-    try{ CLOUD_CONFIG = { ...CLOUD_CONFIG, ...JSON.parse(savedCfg) }; }catch(e){}
+  if (savedCfg) {
+    try { CLOUD_CONFIG = { ...CLOUD_CONFIG, ...JSON.parse(savedCfg) }; } catch (e) {}
   }
 
   $('ghUser').value = CLOUD_CONFIG.owner || "";
@@ -566,43 +630,71 @@ function initApp(){
   $('ghToken').value = CLOUD_CONFIG.token || "";
 
   const localDb = localStorage.getItem("SSE_LOCAL_DB");
-  if(localDb){
-    try{ db = JSON.parse(localDb); }catch(e){}
+  if (localDb) {
+    try { db = JSON.parse(localDb); } catch (e) {}
   }
 
   refreshAllData();
   $('invoiceDate').value = today();
-  $('reportMonth').value = today().slice(0,7);
+  $('reportMonth').value = today().slice(0, 7);
+  $('reportDate').value = today();
   runGstCalc();
 
-  if(CLOUD_CONFIG.owner && CLOUD_CONFIG.repo && CLOUD_CONFIG.token){
+  if (CLOUD_CONFIG.owner && CLOUD_CONFIG.repo && CLOUD_CONFIG.token) {
     pullCloudData(false);
   } else {
-    setCloudStatus("Saved Locally (Configure Sync)", "pending");
+    setCloudStatus("Saved Locally", "pending");
   }
 }
 
-function setCloudStatus(text, status){
+function setCloudStatus(text, status) {
   const el = $('cloudStatusBadge');
-  if(!el) return;
+  if (!el) return;
   el.textContent = "● " + text;
   el.className = "sync-pill " + (status === "ok" ? "sync-ok" : "sync-pending");
 }
 
-async function pushCloudData(){
+/* ============================================================
+   STRICT CANCEL WORKFLOW (PREVENTS ACCIDENTAL NAVIGATION)
+   ============================================================ */
+function startFreshInvoiceFromDash() {
+  const proceed = confirm("Start a fresh invoice? Unsaved form entries will be reset.");
+  if (!proceed) {
+    return; // Remains strictly on the dashboard view
+  }
+  showPage('billing');
+  newInvoice();
+}
+
+function newInvoice() {
+  const nextNo = db.invoices.length + 1001;
+  $('invoiceNo').value = "INV-2026-" + nextNo;
+  $('invoiceDate').value = today();
+  $('customerName').value = "";
+  $('customerPhone').value = "";
+  $('customerGstin').value = "";
+  $('customerAddress').value = "";
+  $('itemsBody').innerHTML = "";
+  addItem();
+}
+
+/* ============================================================
+   CLOUD GITHUB SYNCHRONIZATION
+   ============================================================ */
+async function pushCloudData() {
   localStorage.setItem("SSE_LOCAL_DB", JSON.stringify(db));
-  if(!CLOUD_CONFIG.token || !CLOUD_CONFIG.owner || !CLOUD_CONFIG.repo){
+  if (!CLOUD_CONFIG.token || !CLOUD_CONFIG.owner || !CLOUD_CONFIG.repo) {
     setCloudStatus("Saved Locally", "pending");
     return;
   }
-  setCloudStatus("Pushing to GitHub...", "pending");
+  setCloudStatus("Pushing...", "pending");
 
-  try{
-    if(!CLOUD_CONFIG.sha){
+  try {
+    if (!CLOUD_CONFIG.sha) {
       const getRes = await fetch(`https://api.github.com/repos/${CLOUD_CONFIG.owner}/${CLOUD_CONFIG.repo}/contents/${CLOUD_CONFIG.path}`, {
         headers: { "Authorization": `Bearer ${CLOUD_CONFIG.token}`, "Accept": "application/vnd.github.v3+json" }
       });
-      if(getRes.ok){
+      if (getRes.ok) {
         const info = await getRes.json();
         CLOUD_CONFIG.sha = info.sha;
       }
@@ -620,7 +712,7 @@ async function pushCloudData(){
       body: JSON.stringify(payload)
     });
 
-    if(putRes.ok){
+    if (putRes.ok) {
       const data = await putRes.json();
       CLOUD_CONFIG.sha = data.content.sha;
       localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify(CLOUD_CONFIG));
@@ -628,40 +720,40 @@ async function pushCloudData(){
     } else {
       setCloudStatus("Cloud Conflict", "pending");
     }
-  }catch(e){
+  } catch (e) {
     setCloudStatus("Offline Mode", "pending");
   }
 }
 
-async function pullCloudData(showAlert=false){
-  if(!CLOUD_CONFIG.token || !CLOUD_CONFIG.owner || !CLOUD_CONFIG.repo) return;
-  setCloudStatus("Pulling Cloud...", "pending");
+async function pullCloudData(showAlert = false) {
+  if (!CLOUD_CONFIG.token || !CLOUD_CONFIG.owner || !CLOUD_CONFIG.repo) return;
+  setCloudStatus("Pulling...", "pending");
 
-  try{
+  try {
     const res = await fetch(`https://api.github.com/repos/${CLOUD_CONFIG.owner}/${CLOUD_CONFIG.repo}/contents/${CLOUD_CONFIG.path}?t=${Date.now()}`, {
       headers: { "Authorization": `Bearer ${CLOUD_CONFIG.token}`, "Accept": "application/vnd.github.v3+json" }
     });
-    if(res.ok){
+    if (res.ok) {
       const fileData = await res.json();
       CLOUD_CONFIG.sha = fileData.sha;
       localStorage.setItem(CLOUD_CFG_KEY, JSON.stringify(CLOUD_CONFIG));
       const parsed = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-      if(parsed.products || parsed.invoices){
+      if (parsed.products || parsed.invoices) {
         db = parsed;
         localStorage.setItem("SSE_LOCAL_DB", JSON.stringify(db));
         refreshAllData();
       }
       setCloudStatus("GitHub Synced", "ok");
-      if(showAlert) alert("Data refreshed from GitHub Cloud!");
+      if (showAlert) alert("Data successfully pulled from GitHub Cloud!");
     } else {
       setCloudStatus("Ready to Push", "ok");
     }
-  }catch(e){
-    setCloudStatus("Cloud Sync Error", "pending");
+  } catch (e) {
+    setCloudStatus("Sync Error", "pending");
   }
 }
 
-function saveCloudConfig(){
+function saveCloudConfig() {
   CLOUD_CONFIG.owner = $('ghUser').value.trim();
   CLOUD_CONFIG.repo = $('ghRepo').value.trim();
   CLOUD_CONFIG.token = $('ghToken').value.trim();
@@ -672,7 +764,7 @@ function saveCloudConfig(){
   pullCloudData(true);
 }
 
-function refreshAllData(){
+function refreshAllData() {
   renderProducts();
   renderCustomers();
   renderDashboard();
@@ -680,47 +772,49 @@ function refreshAllData(){
   refreshDatalists();
 }
 
-function refreshDatalists(){
-  $('productDatalist').innerHTML = db.products.map(p=>`<option value="${esc(p.name)}"></option>`).join('');
-  $('customerDatalist').innerHTML = db.customers.map(c=>`<option value="${esc(c.name)}"></option>`).join('');
+function refreshDatalists() {
+  $('productDatalist').innerHTML = db.products.map(p => `<option value="${esc(p.name)}"></option>`).join('');
+  $('customerDatalist').innerHTML = db.customers.map(c => `<option value="${esc(c.name)}"></option>`).join('');
 }
 
-function showPage(pageId){
-  document.querySelectorAll('.page-panel').forEach(p=>p.classList.remove('active'));
-  const target = $(pageId==='billing' ? 'billingPage' : pageId+'Page');
-  if(target) target.classList.add('active');
-  window.scrollTo(0,0);
+function showPage(pageId) {
+  document.querySelectorAll('.page-panel').forEach(p => p.classList.remove('active'));
+  const target = $(pageId === 'billing' ? 'billingPage' : pageId + 'Page');
+  if (target) target.classList.add('active');
+  window.scrollTo(0, 0);
 }
 
-// INVOICE CALCULATION & ENGINE
-function addItem(data={}){
+/* ============================================================
+   INVOICE ENGINE & TAX CALCULATOR
+   ============================================================ */
+function addItem(data = {}) {
   const tr = document.createElement('tr');
   const idx = document.querySelectorAll('#itemsBody tr').length + 1;
   const gst = data.gst ?? 18;
   tr.innerHTML = `
     <td class="center sno">${idx}</td>
-    <td><input class="product-select" list="productDatalist" value="${esc(data.item||'')}" placeholder="Type product name" oninput="applyProductSelect(this)"><span class="print-cell item-print"></span></td>
-    <td><input class="hsn" value="${esc(data.hsn||'')}" placeholder="HSN"><span class="print-cell hsn-print"></span></td>
-    <td class="center"><input class="qty" type="number" min="0" step="0.01" value="${data.qty||1}" oninput="calculate()"><span class="print-cell qty-print"></span></td>
-    <td class="num"><input class="rate" type="number" min="0" step="0.01" value="${data.rate||0}" oninput="calculate()"><span class="print-cell rate-print"></span></td>
-    <td class="num"><select class="gst" onchange="calculate()"><option value="0" ${gst===0?'selected':''}>0%</option><option value="5" ${gst===5?'selected':''}>5%</option><option value="12" ${gst===12?'selected':''}>12%</option><option value="18" ${gst===18?'selected':''}>18%</option><option value="28" ${gst===28?'selected':''}>28%</option></select><span class="print-cell gst-print"></span></td>
+    <td><input class="product-select" list="productDatalist" value="${esc(data.item || '')}" placeholder="Type product name" oninput="applyProductSelect(this)"><span class="print-cell item-print"></span></td>
+    <td><input class="hsn" value="${esc(data.hsn || '')}" placeholder="HSN" maxlength="8"><span class="print-cell hsn-print"></span></td>
+    <td class="center"><input class="qty" type="number" min="0" step="0.01" value="${data.qty || 1}" oninput="calculate()"><span class="print-cell qty-print"></span></td>
+    <td class="num"><input class="rate" type="number" min="0" step="0.01" value="${data.rate || 0}" oninput="calculate()"><span class="print-cell rate-print"></span></td>
+    <td class="num"><select class="gst" onchange="calculate()"><option value="0" ${gst === 0 ? 'selected' : ''}>0%</option><option value="5" ${gst === 5 ? 'selected' : ''}>5%</option><option value="12" ${gst === 12 ? 'selected' : ''}>12%</option><option value="18" ${gst === 18 ? 'selected' : ''}>18%</option><option value="28" ${gst === 28 ? 'selected' : ''}>28%</option></select><span class="print-cell gst-print"></span></td>
     <td class="num gst-amount">₹0.00</td>
-    <td class="num"><input class="disc" type="number" min="0" step="0.01" value="${data.disc||0}" oninput="calculate()"><span class="print-cell disc-print"></span></td>
+    <td class="num"><input class="disc" type="number" min="0" step="0.01" value="${data.disc || 0}" oninput="calculate()"><span class="print-cell disc-print"></span></td>
     <td class="num amount">₹0.00</td>
-    <td class="remove-col center"><button class="danger" style="padding:4px 8px" onclick="this.closest('tr').remove(); renumber(); calculate();">×</button></td>
+    <td class="remove-col center"><button class="btn-danger" style="padding:4px 8px;" onclick="this.closest('tr').remove(); renumber(); calculate();">×</button></td>
   `;
   $('itemsBody').appendChild(tr);
   calculate();
 }
 
-function renumber(){
-  document.querySelectorAll('#itemsBody tr .sno').forEach((el,i)=>el.textContent=i+1);
+function renumber() {
+  document.querySelectorAll('#itemsBody tr .sno').forEach((el, i) => el.textContent = i + 1);
 }
 
-function applyProductSelect(input){
+function applyProductSelect(input) {
   const typed = input.value.trim().toLowerCase();
-  const p = db.products.find(x=>x.name.toLowerCase()===typed);
-  if(!p) return;
+  const p = db.products.find(x => x.name.toLowerCase() === typed);
+  if (!p) return;
   const tr = input.closest('tr');
   tr.querySelector('.hsn').value = p.hsn || '';
   tr.querySelector('.rate').value = p.rate || 0;
@@ -728,20 +822,20 @@ function applyProductSelect(input){
   calculate();
 }
 
-function applyCustomerSelect(input){
+function applyCustomerSelect(input) {
   const typed = input.value.trim().toLowerCase();
-  const c = db.customers.find(x=>x.name.toLowerCase()===typed);
-  if(!c) return;
+  const c = db.customers.find(x => x.name.toLowerCase() === typed);
+  if (!c) return;
   $('customerPhone').value = c.phone || '';
   $('customerGstin').value = c.gstin || '';
   $('customerAddress').value = c.address || '';
 }
 
-function calculate(){
-  let sub=0, disc=0, gst=0, taxableTotal=0;
-  const taxGroups={};
+function calculate() {
+  let sub = 0, disc = 0, gst = 0, taxableTotal = 0;
+  const taxGroups = {};
 
-  document.querySelectorAll('#itemsBody tr').forEach(tr=>{
+  document.querySelectorAll('#itemsBody tr').forEach(tr => {
     const q = +tr.querySelector('.qty').value || 0;
     const r = +tr.querySelector('.rate').value || 0;
     const g = +tr.querySelector('.gst').value || 0;
@@ -762,10 +856,10 @@ function calculate(){
     tr.querySelector('.qty-print').textContent = q;
     tr.querySelector('.rate-print').textContent = money(r);
     tr.querySelector('.gst-print').textContent = g + '%';
-    tr.querySelector('.disc-print').textContent = d ? d+'%' : '-';
+    tr.querySelector('.disc-print').textContent = d ? d + '%' : '-';
 
     const hsn = tr.querySelector('.hsn').value.trim() || '—';
-    if(!taxGroups[hsn]) taxGroups[hsn] = { hsn, taxable: 0, gst: 0, rate: g };
+    if (!taxGroups[hsn]) taxGroups[hsn] = { hsn, taxable: 0, gst: 0, rate: g };
     taxGroups[hsn].taxable += taxable;
     taxGroups[hsn].gst += tax;
   });
@@ -778,14 +872,15 @@ function calculate(){
   $('grandTotal').textContent = money(grand);
   $('amountWords').textContent = numberToWords(Math.round(grand));
 
-  $('taxSummaryBody').innerHTML = Object.values(taxGroups).map(x=>`
+  // Render Tax Summary inside strictly bound percentage widths
+  $('taxSummaryBody').innerHTML = Object.values(taxGroups).map(x => `
     <tr>
       <td>${esc(x.hsn)}</td>
       <td>${money(x.taxable)}</td>
-      <td>${(x.rate/2).toFixed(1)}%</td>
-      <td>${money(x.gst/2)}</td>
-      <td>${(x.rate/2).toFixed(1)}%</td>
-      <td>${money(x.gst/2)}</td>
+      <td>${(x.rate / 2).toFixed(1)}%</td>
+      <td>${money(x.gst / 2)}</td>
+      <td>${(x.rate / 2).toFixed(1)}%</td>
+      <td>${money(x.gst / 2)}</td>
       <td>${money(x.gst)}</td>
     </tr>
   `).join('');
@@ -801,12 +896,12 @@ function calculate(){
   $('printNotes').textContent = $('notes').value;
 }
 
-function saveInvoice(){
+function saveInvoice() {
   const invoiceNo = $('invoiceNo').value.trim();
-  if(!invoiceNo) return alert("Invoice Number is required.");
+  if (!invoiceNo) return alert("Invoice Number is required.");
 
   const items = [];
-  document.querySelectorAll('#itemsBody tr').forEach(tr=>{
+  document.querySelectorAll('#itemsBody tr').forEach(tr => {
     items.push({
       item: tr.querySelector('.product-select').value,
       hsn: tr.querySelector('.hsn').value,
@@ -817,7 +912,7 @@ function saveInvoice(){
     });
   });
 
-  if(items.length === 0) return alert("Add at least one item.");
+  if (items.length === 0) return alert("Add at least one line item.");
 
   const invoice = {
     invoiceNo,
@@ -829,78 +924,223 @@ function saveInvoice(){
     paymentMethod: $('paymentMethod').value,
     notes: $('notes').value,
     items,
-    taxable: +$('taxableTotal').textContent.replace(/[^0-9.]/g,'') || 0,
-    gst: +$('gstTotal').textContent.replace(/[^0-9.]/g,'') || 0,
-    grand: +$('grandTotal').textContent.replace(/[^0-9.]/g,'') || 0
+    taxable: +$('taxableTotal').textContent.replace(/[^0-9.]/g, '') || 0,
+    gst: +$('gstTotal').textContent.replace(/[^0-9.]/g, '') || 0,
+    grand: +$('grandTotal').textContent.replace(/[^0-9.]/g, '') || 0
   };
 
-  const existingIdx = db.invoices.findIndex(i=>i.invoiceNo === invoiceNo);
-  if(existingIdx >= 0) db.invoices[existingIdx] = invoice;
+  const existingIdx = db.invoices.findIndex(i => i.invoiceNo === invoiceNo);
+  if (existingIdx >= 0) db.invoices[existingIdx] = invoice;
   else db.invoices.push(invoice);
 
-  if(invoice.customerName){
-    const cExists = db.customers.some(c=>c.name.toLowerCase()===invoice.customerName.toLowerCase());
-    if(!cExists){
+  if (invoice.customerName) {
+    const cExists = db.customers.some(c => c.name.toLowerCase() === invoice.customerName.toLowerCase());
+    if (!cExists) {
       db.customers.push({ name: invoice.customerName, phone: invoice.customerPhone, gstin: invoice.customerGstin, address: invoice.customerAddress });
     }
   }
 
   refreshAllData();
   pushCloudData();
-  alert("Invoice saved and pushed to Cloud!");
+  alert("Invoice successfully saved and synchronized!");
 }
 
-function printInvoice(){
+function printInvoice() {
   calculate();
   window.print();
 }
 
-// 1-CLICK WHATSAPP SHARE
-function shareWhatsApp(){
+/* ============================================================
+   TRUE BINARY PDF FILE SHARE OVER WHATSAPP
+   ============================================================ */
+async function sharePdfToWhatsApp() {
   calculate();
-  const cName = $('customerName').value.trim() || 'Valued Customer';
+  const cName = $('customerName').value.trim() || 'Valued Client';
   const phone = $('customerPhone').value.trim().replace(/\D/g, '');
   const invNo = $('invoiceNo').value;
-  const invDate = $('invoiceDate').value;
-  const total = $('grandTotal').textContent;
+  const fileName = `Invoice-${invNo}.pdf`;
 
-  const msg = 
-`*SRI SIDDHAN ESSENTIAL - TAX INVOICE*
-----------------------------------------
-Dear ${cName},
-Thank you for your valued purchase! Here are your invoice details:
+  // Professional deal-closing wording with no redundant totals/bill numbers
+  const dealClosingMessage = 
+`Dear ${cName},
 
-📄 *Invoice No:* ${invNo}
-📅 *Date:* ${invDate}
-💰 *Total Amount Payable:* ${total}
-🏢 *Supplier:* SRI SIDDHAN ESSENTIAL
-📍 *Location:* Coimbatore, Tamil Nadu
+It was a pleasure doing business with you! Please find your official Tax Invoice attached as a PDF file.
 
-We appreciate your business and look forward to serving you again. Please let us know if you need any further assistance!`;
+We truly appreciate your valued trust in SRI SIDDHAN ESSENTIAL. Everything is documented inside your bill for your records.
 
-  const cleanPhone = phone.length === 10 ? ('91' + phone) : phone;
-  const url = cleanPhone 
-    ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(msg)}`
-    : `https://wa.me/?text=${encodeURIComponent(msg)}`;
+Please let us know once received, and we look forward to a long and successful partnership!
 
-  window.open(url, '_blank');
+Warm regards,
+SRI SIDDHAN ESSENTIAL
+Ganapathy, Coimbatore | +91 96583 99991`;
+
+  const invoiceElement = $('printableInvoiceArea');
+
+  const opt = {
+    margin: [0, 0, 0, 0],
+    filename: fileName,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2, useCORS: true },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+  };
+
+  try {
+    // Generate actual PDF Blob
+    const pdfBlob = await html2pdf().set(opt).from(invoiceElement).outputPdf('blob');
+    const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+    // Check if device supports Web Share API with files (Android Chrome, iOS Safari)
+    if (navigator.canShare && navigator.canShare({ files: [pdfFile] })) {
+      await navigator.share({
+        title: `Tax Invoice - ${invNo}`,
+        text: dealClosingMessage,
+        files: [pdfFile]
+      });
+    } else {
+      // Fallback for Desktop Browsers: Download PDF and open WhatsApp Web with message
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(pdfBlob);
+      link.download = fileName;
+      link.click();
+
+      const cleanPhone = phone.length === 10 ? ('91' + phone) : phone;
+      const waUrl = cleanPhone 
+        ? `https://wa.me/${cleanPhone}?text=${encodeURIComponent(dealClosingMessage)}`
+        : `https://wa.me/?text=${encodeURIComponent(dealClosingMessage)}`;
+
+      alert("The invoice PDF has been downloaded. Opening WhatsApp to attach and send your bill!");
+      window.open(waUrl, '_blank');
+    }
+  } catch (err) {
+    alert("Could not generate PDF attachment: " + err.message);
+  }
 }
 
-function newInvoice(confirmPrompt=false){
-  if(confirmPrompt && !confirm("Create a fresh invoice?")) return;
-  const nextNo = db.invoices.length + 1001;
-  $('invoiceNo').value = "INV-2026-" + nextNo;
-  $('invoiceDate').value = today();
-  $('customerName').value = "";
-  $('customerPhone').value = "";
-  $('customerGstin').value = "";
-  $('customerAddress').value = "";
-  $('itemsBody').innerHTML = "";
-  addItem();
+/* ============================================================
+   ADVANCED GST CALCULATOR WITH PERCENTAGE INPUT & MODES
+   ============================================================ */
+function updateCalcRateFromPreset() {
+  const preset = $('calcPresetRate').value;
+  if (preset !== 'custom') {
+    $('calcRateInput').value = preset;
+  }
+  runGstCalc();
 }
 
-// BULK DATA UPLOAD & TEMPLATE DOWNLOADS
-function openBulkModal(type){
+function runGstCalc() {
+  const base = +$('calcBase').value || 0;
+  const rate = +$('calcRateInput').value || 0;
+  const tax = base * (rate / 100);
+  const total = base + tax;
+
+  $('calcCgst').value = money(tax / 2);
+  $('calcSgst').value = money(tax / 2);
+  $('calcTax').value = money(tax);
+  $('calcTotal').value = money(total);
+}
+
+/* ============================================================
+   GST REPORTS & EXPORT ENGINE (PDF, EXCEL, CSV, PRINT)
+   ============================================================ */
+function toggleReportFreqUI() {
+  const freq = $('reportFreq').value;
+  $('reportMonthField').style.display = freq === 'monthly' ? 'block' : 'none';
+  $('reportDateField').style.display = freq === 'daily' ? 'block' : 'none';
+  renderReports();
+}
+
+function getFilteredReportInvoices() {
+  const freq = $('reportFreq').value;
+  if (freq === 'daily') {
+    const d = $('reportDate').value || today();
+    return db.invoices.filter(i => (i.invoiceDate || '') === d);
+  } else {
+    const m = $('reportMonth').value || today().slice(0, 7);
+    return db.invoices.filter(i => (i.invoiceDate || '').startsWith(m));
+  }
+}
+
+function renderReports() {
+  const filtered = getFilteredReportInvoices();
+  $('reportListBody').innerHTML = filtered.length ? filtered.map(i => `
+    <tr>
+      <td>${esc(i.invoiceDate)}</td>
+      <td><b>${esc(i.invoiceNo)}</b></td>
+      <td>${esc(i.customerName || 'Walk-in')}</td>
+      <td>${esc(i.customerGstin || '-')}</td>
+      <td class="num">${money(i.taxable)}</td>
+      <td class="num">${money(i.gst / 2)}</td>
+      <td class="num">${money(i.gst / 2)}</td>
+      <td class="num">${money(i.gst)}</td>
+      <td class="num"><b>${money(i.grand)}</b></td>
+    </tr>
+  `).join('') : `<tr><td colspan="9" style="text-align:center; padding:20px; color:var(--text-muted);">No invoices for the selected period.</td></tr>`;
+}
+
+function exportGstReportPdf() {
+  const element = $('gstReportTable');
+  const opt = {
+    margin: [10, 10, 10, 10],
+    filename: `GST-Report-${$('reportFreq').value}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
+  };
+  html2pdf().set(opt).from(element).save();
+}
+
+function printGstReport() {
+  window.print();
+}
+
+function exportGstExcel() {
+  const invoices = getFilteredReportInvoices();
+  let html = `<html><head><meta charset="utf-8"></head><body><h2>SRI SIDDHAN ESSENTIAL - GST OUTWARD SUPPLY</h2><table border="1">
+  <tr><th>Date</th><th>Invoice No</th><th>Customer</th><th>GSTIN</th><th>Taxable Val</th><th>CGST</th><th>SGST</th><th>Total GST</th><th>Invoice Value</th></tr>`;
+  invoices.forEach(i => {
+    html += `<tr><td>${esc(i.invoiceDate)}</td><td>${esc(i.invoiceNo)}</td><td>${esc(i.customerName)}</td><td>${esc(i.customerGstin)}</td><td>${i.taxable}</td><td>${i.gst / 2}</td><td>${i.gst / 2}</td><td>${i.gst}</td><td>${i.grand}</td></tr>`;
+  });
+  html += `</table></body></html>`;
+
+  const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `GST-Report-${today()}.xls`;
+  a.click();
+}
+
+function exportGstCsv() {
+  const invoices = getFilteredReportInvoices();
+  let csv = "Date,Invoice No,Customer,GSTIN,Taxable,CGST,SGST,Total GST,Invoice Value\n";
+  invoices.forEach(i => {
+    csv += `"${i.invoiceDate}","${i.invoiceNo}","${i.customerName}","${i.customerGstin}",${i.taxable},${i.gst / 2},${i.gst / 2},${i.gst},${i.grand}\n`;
+  });
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `GST-Report-${today()}.csv`;
+  a.click();
+}
+
+function exportAllDataExcel() {
+  let html = `<html><head><meta charset="utf-8"></head><body><h2>SRI SIDDHAN ESSENTIAL - MASTER SYSTEM BACKUP</h2>`;
+  html += `<h3>Product Catalog</h3><table border="1"><tr><th>Product</th><th>HSN</th><th>Rate</th><th>GST%</th></tr>`;
+  db.products.forEach(p => { html += `<tr><td>${esc(p.name)}</td><td>${esc(p.hsn)}</td><td>${p.rate}</td><td>${p.gst}</td></tr>`; });
+  html += `</table><h3>Invoice Records</h3><table border="1"><tr><th>Invoice No</th><th>Date</th><th>Customer</th><th>Taxable</th><th>GST</th><th>Grand Total</th></tr>`;
+  db.invoices.forEach(i => { html += `<tr><td>${esc(i.invoiceNo)}</td><td>${esc(i.invoiceDate)}</td><td>${esc(i.customerName)}</td><td>${i.taxable}</td><td>${i.gst}</td><td>${i.grand}</td></tr>`; });
+  html += `</table></body></html>`;
+
+  const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `Master-Backup-${today()}.xls`;
+  a.click();
+}
+
+/* ============================================================
+   BULK UPLOAD & TEMPLATES
+   ============================================================ */
+function openBulkModal(type) {
   $('bulkTargetType').value = type;
   $('bulkModalTitle').textContent = type === 'products' ? "Bulk Import Products" : "Bulk Import Customers";
   $('bulkPasteText').value = "";
@@ -908,68 +1148,49 @@ function openBulkModal(type){
   openModal('bulkModal');
 }
 
-function downloadTemplate(type){
-  let csvContent = "";
-  let fileName = "";
-  if(type === 'products'){
-    csvContent = "Product Name,HSN,Rate,GST %,Unit\nVanilla Waffle Premix 1 KG,19012000,240,18,KGS\nChocolate Dip 1 KG,18069090,320,18,KGS";
-    fileName = "products_template.csv";
-  } else {
-    csvContent = "Customer Name,Phone,GSTIN,State Code,Address\nABC Bakery,9876543210,33AAAAA0000A1Z5,33,Gandhipuram Coimbatore";
-    fileName = "customers_template.csv";
-  }
-  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+function downloadTemplate(type) {
+  let csv = type === 'products'
+    ? "Product Name,HSN,Rate,GST %,Unit\nVanilla Waffle Premix 1 KG,19012000,240,18,KGS\nChocolate Dip 1 KG,18069090,320,18,KGS"
+    : "Customer Name,Phone,GSTIN,State Code,Address\nABC Cafe,9876543210,33AAAAA0000A1Z5,33,Gandhipuram Coimbatore";
+
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = fileName;
+  a.download = `${type}_template.csv`;
   a.click();
 }
 
-function handleBulkFileUpload(input){
+function handleBulkFileUpload(input) {
   const file = input.files[0];
-  if(!file) return;
+  if (!file) return;
   const reader = new FileReader();
-  reader.onload = function(e){
-    $('bulkPasteText').value = e.target.result;
-  };
+  reader.onload = e => $('bulkPasteText').value = e.target.result;
   reader.readAsText(file);
 }
 
-function executeBulkImport(){
+function executeBulkImport() {
   const text = $('bulkPasteText').value.trim();
   const type = $('bulkTargetType').value;
-  if(!text) return alert("Please select a file or paste data.");
+  if (!text) return alert("Please select a file or paste data.");
 
   const lines = text.split(/\r?\n/).filter(l => l.trim().length > 0);
-  if(lines.length < 2) return alert("Data must have a header row and at least 1 record row.");
+  if (lines.length < 2) return alert("Must contain a header row and at least 1 record.");
 
   let count = 0;
-  for(let i = 1; i < lines.length; i++){
+  for (let i = 1; i < lines.length; i++) {
     const delim = lines[i].includes('\t') ? '\t' : ',';
     const cols = lines[i].split(delim).map(c => c.trim().replace(/^["']|["']$/g, ''));
 
-    if(type === 'products'){
+    if (type === 'products') {
       const [name, hsn, rate, gst, uqc] = cols;
-      if(name){
-        db.products.push({
-          name,
-          hsn: hsn || '',
-          rate: parseFloat(rate) || 0,
-          gst: parseInt(gst) || 18,
-          uqc: uqc || 'NOS'
-        });
+      if (name) {
+        db.products.push({ name, hsn: hsn || '', rate: parseFloat(rate) || 0, gst: parseInt(gst) || 18, uqc: uqc || 'KGS' });
         count++;
       }
     } else {
       const [name, phone, gstin, stateCode, address] = cols;
-      if(name){
-        db.customers.push({
-          name,
-          phone: phone || '',
-          gstin: gstin || '',
-          stateCode: stateCode || '33',
-          address: address || ''
-        });
+      if (name) {
+        db.customers.push({ name, phone: phone || '', gstin: gstin || '', stateCode: stateCode || '33', address: address || '' });
         count++;
       }
     }
@@ -978,67 +1199,68 @@ function executeBulkImport(){
   closeModal('bulkModal');
   refreshAllData();
   pushCloudData();
-  alert(`Imported ${count} ${type} successfully!`);
+  alert(`Imported ${count} ${type} records successfully!`);
 }
 
-// PRODUCTS
-function renderProducts(){
-  $('productListBody').innerHTML = db.products.map((p,idx)=>`
+/* ============================================================
+   PRODUCT CATALOG & CUSTOMER LEDGER CRUD
+   ============================================================ */
+function renderProducts() {
+  $('productListBody').innerHTML = db.products.map((p, idx) => `
     <tr>
       <td><b>${esc(p.name)}</b></td>
       <td>${esc(p.hsn)}</td>
       <td>${money(p.rate)}</td>
       <td>${p.gst}%</td>
-      <td>${esc(p.uqc||'NOS')}</td>
-      <td><button class="danger" style="padding:4px 8px" onclick="deleteProduct(${idx})">🗑️</button></td>
+      <td>${esc(p.uqc || 'NOS')}</td>
+      <td><button class="btn-danger" style="padding:4px 8px;" onclick="deleteProduct(${idx})">🗑️</button></td>
     </tr>
   `).join('');
   $('productCount').textContent = db.products.length + " Products";
 }
 
-function saveProduct(){
+function saveProduct() {
   const name = $('productName').value.trim();
   const hsn = $('productHsn').value.trim();
   const rate = +$('productRate').value || 0;
   const gst = +$('productGst').value || 18;
   const uqc = $('productUqc').value;
 
-  if(!name) return alert("Product name required.");
+  if (!name) return alert("Product name required.");
   db.products.push({ name, hsn, rate, gst, uqc });
   $('productName').value = ""; $('productHsn').value = ""; $('productRate').value = "";
   refreshAllData();
   pushCloudData();
 }
 
-function deleteProduct(idx){
-  if(confirm("Delete this product?")){
+function deleteProduct(idx) {
+  if (confirm("Delete this product?")) {
     db.products.splice(idx, 1);
     refreshAllData();
     pushCloudData();
   }
 }
 
-// CUSTOMERS
-function renderCustomers(){
-  $('customerListBody').innerHTML = db.customers.map((c,idx)=>`
+function renderCustomers() {
+  $('customerListBody').innerHTML = db.customers.map((c, idx) => `
     <tr>
       <td><b>${esc(c.name)}</b></td>
-      <td>${esc(c.phone||'-')}</td>
-      <td>${esc(c.gstin||'-')}</td>
-      <td>${esc(c.stateCode||'33')}</td>
-      <td>${esc(c.address||'-')}</td>
+      <td>${esc(c.phone || '-')}</td>
+      <td>${esc(c.gstin || '-')}</td>
+      <td>${esc(c.stateCode || '33')}</td>
+      <td>${esc(c.address || '-')}</td>
       <td>
-        <button class="secondary" style="padding:4px 8px" onclick="useCustomer(${idx})">Select</button>
-        <button class="danger" style="padding:4px 8px" onclick="deleteCustomer(${idx})">🗑️</button>
+        <button class="btn-secondary" style="padding:4px 8px;" onclick="useCustomer(${idx})">Select</button>
+        <button class="btn-danger" style="padding:4px 8px;" onclick="deleteCustomer(${idx})">🗑️</button>
       </td>
     </tr>
   `).join('');
   $('customerCount').textContent = db.customers.length + " Customers";
 }
 
-function saveCustomer(){
+function saveCustomer() {
   const name = $('catalogCustomerName').value.trim();
-  if(!name) return alert("Customer name required.");
+  if (!name) return alert("Customer name required.");
   db.customers.push({
     name,
     phone: $('catalogCustomerPhone').value.trim(),
@@ -1046,15 +1268,14 @@ function saveCustomer(){
     stateCode: $('catalogCustomerStateCode').value.trim() || "33",
     address: $('catalogCustomerAddress').value.trim()
   });
-  $('catalogCustomerName').value = ""; $('catalogCustomerPhone').value = "";
-  $('catalogCustomerGstin').value = ""; $('catalogCustomerAddress').value = "";
+  $('catalogCustomerName').value = ""; $('catalogCustomerPhone').value = ""; $('catalogCustomerGstin').value = ""; $('catalogCustomerAddress').value = "";
   refreshAllData();
   pushCloudData();
 }
 
-function useCustomer(idx){
+function useCustomer(idx) {
   const c = db.customers[idx];
-  if(!c) return;
+  if (!c) return;
   $('customerName').value = c.name;
   $('customerPhone').value = c.phone || '';
   $('customerGstin').value = c.gstin || '';
@@ -1063,29 +1284,31 @@ function useCustomer(idx){
   calculate();
 }
 
-function deleteCustomer(idx){
-  if(confirm("Delete this customer?")){
+function deleteCustomer(idx) {
+  if (confirm("Delete this customer?")) {
     db.customers.splice(idx, 1);
     refreshAllData();
     pushCloudData();
   }
 }
 
-// PREVIOUS INVOICES
-function openPreviousBills(){
+/* ============================================================
+   PREVIOUS INVOICES & DASHBOARD GRAPH
+   ============================================================ */
+function openPreviousBills() {
   const list = $('previousBillsBody');
-  if(!db.invoices.length){
-    list.innerHTML = `<p class="hint" style="text-align:center;padding:20px">No bills generated yet.</p>`;
+  if (!db.invoices.length) {
+    list.innerHTML = `<p class="hint" style="text-align:center; padding:20px;">No bills saved yet.</p>`;
   } else {
-    list.innerHTML = db.invoices.slice().reverse().map((inv,idx)=>`
-      <div style="display:flex;justify-content:space-between;align-items:center;background:#f8faf7;border:1px solid #dfe7db;padding:12px 14px;border-radius:12px">
+    list.innerHTML = db.invoices.slice().reverse().map(inv => `
+      <div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; border:1px solid var(--border); padding:10px 14px; border-radius:10px;">
         <div>
-          <strong style="font-size:14px;color:var(--green)">${esc(inv.invoiceNo)}</strong>
-          <div style="font-size:11.5px;color:var(--muted)">${esc(inv.invoiceDate)} • ${esc(inv.customerName||'Walk-in')}</div>
+          <strong style="font-size:13.5px; color:var(--navy);">${esc(inv.invoiceNo)}</strong>
+          <div style="font-size:11.5px; color:var(--text-muted);">${esc(inv.invoiceDate)} • ${esc(inv.customerName || 'Walk-in')}</div>
         </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <strong>${money(inv.grand)}</strong>
-          <button class="secondary" onclick="loadInvoiceDirect('${esc(inv.invoiceNo)}')">Open Bill</button>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <strong style="font-size:13px;">${money(inv.grand)}</strong>
+          <button class="btn-secondary" onclick="loadInvoiceDirect('${esc(inv.invoiceNo)}')">Open</button>
         </div>
       </div>
     `).join('');
@@ -1093,9 +1316,9 @@ function openPreviousBills(){
   openModal('previousBillsModal');
 }
 
-function loadInvoiceDirect(no){
-  const inv = db.invoices.find(i=>i.invoiceNo===no);
-  if(!inv) return;
+function loadInvoiceDirect(no) {
+  const inv = db.invoices.find(i => i.invoiceNo === no);
+  if (!inv) return;
   $('invoiceNo').value = inv.invoiceNo;
   $('invoiceDate').value = inv.invoiceDate;
   $('customerName').value = inv.customerName || '';
@@ -1106,24 +1329,23 @@ function loadInvoiceDirect(no){
   $('notes').value = inv.notes || '';
 
   $('itemsBody').innerHTML = "";
-  (inv.items||[]).forEach(it=>addItem(it));
+  (inv.items || []).forEach(it => addItem(it));
   closeModal('previousBillsModal');
   showPage('billing');
   calculate();
 }
 
-// DASHBOARD & REPORTS
-function renderDashboard(){
+function renderDashboard() {
   const todayStr = today();
-  const curMonth = todayStr.slice(0,7);
+  const curMonth = todayStr.slice(0, 7);
 
   let todaySales = 0, monthSales = 0, gstMonth = 0;
   const byDate = {};
 
-  db.invoices.forEach(inv=>{
+  db.invoices.forEach(inv => {
     const d = inv.invoiceDate || '';
-    if(d === todayStr) todaySales += inv.grand;
-    if(d.startsWith(curMonth)){
+    if (d === todayStr) todaySales += inv.grand;
+    if (d.startsWith(curMonth)) {
       monthSales += inv.grand;
       gstMonth += inv.gst;
     }
@@ -1138,101 +1360,44 @@ function renderDashboard(){
   const chart = $('dashboardGraph');
   const days = [];
   const base = new Date();
-  for(let i=6; i>=0; i--){
+  for (let i = 6; i >= 0; i--) {
     const d = new Date(base);
-    d.setDate(base.getDate()-i);
-    days.push(d.toISOString().slice(0,10));
+    d.setDate(base.getDate() - i);
+    days.push(d.toISOString().slice(0, 10));
   }
 
-  const vals = days.map(d=>byDate[d]||0);
+  const vals = days.map(d => byDate[d] || 0);
   const max = Math.max(...vals, 1);
 
-  chart.innerHTML = days.map((d,i)=>{
-    const h = Math.max(6, (vals[i]/max)*130);
+  chart.innerHTML = days.map((d, i) => {
+    const h = Math.max(6, (vals[i] / max) * 115);
     return `
       <div class="graph-bar-wrap">
-        <div style="font-size:9.5px;color:#fff">${vals[i]?money(vals[i]):'0'}</div>
-        <div class="graph-bar" style="height:${h}px"></div>
-        <div style="font-size:9.5px;color:#d8ebe0">${d.slice(5).replace('-','/')}</div>
+        <div style="font-size:9px; color:#fff;">${vals[i] ? money(vals[i]) : '0'}</div>
+        <div class="graph-bar" style="height:${h}px;"></div>
+        <div style="font-size:9px; color:#93c5fd;">${d.slice(5).replace('-', '/')}</div>
       </div>
     `;
   }).join('');
 }
 
-function renderReports(){
-  const m = $('reportMonth').value || today().slice(0,7);
-  const filtered = db.invoices.filter(i=>(i.invoiceDate||'').startsWith(m));
-
-  $('reportListBody').innerHTML = filtered.length ? filtered.map(i=>`
-    <tr>
-      <td>${esc(i.invoiceDate)}</td>
-      <td><b>${esc(i.invoiceNo)}</b></td>
-      <td>${esc(i.customerName||'Walk-in')}</td>
-      <td>${esc(i.customerGstin||'-')}</td>
-      <td>${money(i.taxable)}</td>
-      <td>${money(i.gst/2)}</td>
-      <td>${money(i.gst/2)}</td>
-      <td>₹0.00</td>
-      <td>${money(i.gst)}</td>
-      <td><b>${money(i.grand)}</b></td>
-    </tr>
-  `).join('') : `<tr><td colspan="10" style="text-align:center;padding:20px;color:var(--muted)">No invoices for ${m}</td></tr>`;
-}
-
-function exportAllDataExcel(){
-  let html = `<html><head><meta charset="utf-8"></head><body><h2>SRI SIDDHAN ESSENTIAL - COMPLETE BACKUP</h2>`;
-  html += `<h3>Products</h3><table border="1"><tr><th>Product</th><th>HSN</th><th>Rate</th><th>GST%</th></tr>`;
-  db.products.forEach(p=>{ html += `<tr><td>${esc(p.name)}</td><td>${esc(p.hsn)}</td><td>${p.rate}</td><td>${p.gst}</td></tr>`; });
-  html += `</table><h3>Invoices</h3><table border="1"><tr><th>Invoice No</th><th>Date</th><th>Customer</th><th>Taxable</th><th>GST</th><th>Grand Total</th></tr>`;
-  db.invoices.forEach(i=>{ html += `<tr><td>${esc(i.invoiceNo)}</td><td>${esc(i.invoiceDate)}</td><td>${esc(i.customerName)}</td><td>${i.taxable}</td><td>${i.gst}</td><td>${i.grand}</td></tr>`; });
-  html += `</table></body></html>`;
-
-  const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `sri-siddhan-essential-backup-${today()}.xls`;
-  a.click();
-}
-
-function exportGSTExcel(){
-  const m = $('reportMonth').value || today().slice(0,7);
-  const filtered = db.invoices.filter(i=>(i.invoiceDate||'').startsWith(m));
-  let html = `<html><head><meta charset="utf-8"></head><body><h2>GST Outward Supplies - ${m}</h2><table border="1"><tr><th>Date</th><th>Invoice No</th><th>Customer</th><th>GSTIN</th><th>Taxable</th><th>GST</th><th>Total</th></tr>`;
-  filtered.forEach(i=>{ html += `<tr><td>${esc(i.invoiceDate)}</td><td>${esc(i.invoiceNo)}</td><td>${esc(i.customerName)}</td><td>${esc(i.customerGstin)}</td><td>${i.taxable}</td><td>${i.gst}</td><td>${i.grand}</td></tr>`; });
-  html += `</table></body></html>`;
-
-  const blob = new Blob([html], { type: 'application/vnd.ms-excel' });
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `GST-Report-${m}.xls`;
-  a.click();
-}
-
-function runGstCalc(){
-  const base = +$('calcBase').value || 0;
-  const rate = +$('calcRate').value || 18;
-  const tax = base * (rate / 100);
-  $('calcTax').value = tax.toFixed(2);
-  $('calcTotal').value = (base + tax).toFixed(2);
-}
-
-function numberToWords(n){
-  n = Math.max(0, Math.floor(Number(n)||0));
-  if(n === 0) return 'Zero Rupees Only';
-  const ones=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten','Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
-  const tens=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
-  const two=x=>x<20?ones[x]:tens[Math.floor(x/10)]+(x%10?' '+ones[x%10]:'');
-  const three=x=>x<100?two(x):ones[Math.floor(x/100)]+' Hundred'+(x%100?' '+two(x%100):'');
-  let parts=[];
-  if(Math.floor(n/10000000)){parts.push(three(Math.floor(n/10000000))+' Crore'); n%=10000000;}
-  if(Math.floor(n/100000)){parts.push(three(Math.floor(n/100000))+' Lakh'); n%=100000;}
-  if(Math.floor(n/1000)){parts.push(three(Math.floor(n/1000))+' Thousand'); n%=1000;}
-  if(n) parts.push(three(n));
+function numberToWords(n) {
+  n = Math.max(0, Math.floor(Number(n) || 0));
+  if (n === 0) return 'Zero Rupees Only';
+  const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+  const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+  const two = x => x < 20 ? ones[x] : tens[Math.floor(x / 10)] + (x % 10 ? ' ' + ones[x % 10] : '');
+  const three = x => x < 100 ? two(x) : ones[Math.floor(x / 100)] + ' Hundred' + (x % 100 ? ' ' + two(x % 100) : '');
+  let parts = [];
+  if (Math.floor(n / 10000000)) { parts.push(three(Math.floor(n / 10000000)) + ' Crore'); n %= 10000000; }
+  if (Math.floor(n / 100000)) { parts.push(three(Math.floor(n / 100000)) + ' Lakh'); n %= 100000; }
+  if (Math.floor(n / 1000)) { parts.push(three(Math.floor(n / 1000)) + ' Thousand'); n %= 1000; }
+  if (n) parts.push(three(n));
   return parts.join(' ') + ' Rupees Only';
 }
 
-function openModal(id){ const el=$(id); if(el) el.style.display='flex'; }
-function closeModal(id){ const el=$(id); if(el) el.style.display='none'; }
+function openModal(id) { const el = $(id); if (el) el.style.display = 'flex'; }
+function closeModal(id) { const el = $(id); if (el) el.style.display = 'none'; }
 
 initApp();
 </script>
