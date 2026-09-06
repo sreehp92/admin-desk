@@ -26,7 +26,7 @@
       --magenta-light: #fdf4ff;
       --emerald: #059669;
       --emerald-light: #ecfdf5;
-      --sidebar-w: 275px;
+      --sidebar-w: 280px;
       --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
       --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
     }
@@ -38,18 +38,16 @@
       overflow-x: hidden; -webkit-font-smoothing: antialiased;
     }
 
-    /* Freezes background scrolling whenever any modal or drawer is active */
     body.body-frozen {
       overflow: hidden !important;
       touch-action: none !important;
     }
 
-    /* Universal Top Clearance */
     #appLayout {
       display: flex; width: 100%; min-height: 100vh; position: relative;
     }
 
-    /* Floating Navigation Button (Universal Mobile, iPad & Desktop) */
+    /* Floating Navigation Button */
     #floatMenuBtn {
       position: fixed;
       top: max(14px, env(safe-area-inset-top));
@@ -71,14 +69,14 @@
     }
     #floatMenuBtn:active { transform: scale(0.92); }
 
-    /* Universal Backdrop for Sidebar Drawer */
+    /* Drawer Backdrop */
     #sidebarBackdrop {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.45); backdrop-filter: blur(3px);
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.5); backdrop-filter: blur(4px);
       z-index: 1250; opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
     }
     #sidebarBackdrop.active { opacity: 1; pointer-events: auto; }
 
-    /* Slide-out Sidebar Drawer */
+    /* Sidebar Drawer */
     .sidebar {
       position: fixed; top: 0; left: 0; bottom: 0; width: var(--sidebar-w);
       background: #ffffff; z-index: 1300; border-right: 1px solid var(--border);
@@ -115,14 +113,13 @@
     .nav-btn-kiosk { background: var(--emerald-light); color: var(--emerald); font-weight: 700; }
     .lock-indicator { margin-left: auto; font-size: 11px; opacity: 0.7; }
 
-    /* Main Content Area */
+    /* Content Area */
     .content-area {
       flex-grow: 1; width: 100%;
       padding: max(20px, env(safe-area-inset-top)) 20px 40px 72px;
       overflow-y: auto; max-height: 100vh; -webkit-overflow-scrolling: touch;
     }
 
-    /* Page Navigation Headers */
     .page-nav-bar {
       display: flex; align-items: center; gap: 10px; margin-bottom: 18px;
     }
@@ -147,7 +144,15 @@
     }
     .h1-title { font-size: 21px; font-weight: 800; color: var(--text-main); }
     .sub-lead { font-size: 12px; color: var(--text-muted); margin-top: 3px; }
-    .icon-pencil-heading { font-size: 13px; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
+
+    /* Drag & Drop Area (Fixed for Mobile & iPad) */
+    .drop-target {
+      border: 2px dashed #94a3b8 !important; border-radius: 16px; background: #ffffff;
+      padding: 24px 16px; text-align: center; cursor: pointer; margin-bottom: 22px;
+      display: block !important; visibility: visible !important; width: 100%; min-height: 110px;
+      transition: all 0.2s ease;
+    }
+    .drop-target:hover, .drop-target:active { border-color: var(--indigo-core) !important; background: var(--indigo-light); }
 
     /* Form Controls */
     input, select, textarea {
@@ -168,11 +173,16 @@
     .btn-subtle { background: #ffffff; color: var(--text-main); border: 1px solid var(--border); }
     .btn-ghost-danger { background: transparent; color: var(--red-primary); border: none; padding: 4px 6px; font-size: 13px; cursor: pointer; }
 
-    /* Standard Grids */
     .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .dash-card {
       background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
       padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px;
+    }
+
+    /* Fixed Credentials Password Container */
+    .cred-password-container {
+      font-size: 12px; margin-top: 6px; padding: 6px 10px; background: #f1f5f9;
+      border-radius: 8px; border: 1px solid #e2e8f0; word-break: break-all; overflow-wrap: anywhere;
     }
 
     .folder-card {
@@ -181,10 +191,9 @@
       padding: 18px; cursor: pointer; box-shadow: 0 4px 12px rgba(220, 38, 38, 0.04);
       transition: all 0.2s;
     }
-    .folder-card:hover { transform: translateY(-2px); }
 
     /* ============================================================
-       RESPONSIVE FRONT CARDS (CLEAN 2x2 MOBILE, 3-4 COL ON TABLET/PC)
+       REDESIGNED FRONT CARDS (NO OVERLAPPING TEXT OR BADGES)
        ============================================================ */
     .kiosk-grid {
       display: grid;
@@ -196,25 +205,20 @@
     .kiosk-card {
       position: relative;
       background: #ffffff;
-      border-radius: 20px;
+      border-radius: 22px;
       padding: 16px 14px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      min-height: 180px;
-      cursor: pointer;
-      border: 1px solid #e2e8f0;
+      min-height: 195px;
+      border: 1.5px solid #e2e8f0;
       box-shadow: 0 4px 16px -2px rgba(15, 23, 42, 0.04);
       transition: all 0.25s var(--ease-spring);
       overflow: hidden;
-      word-break: break-word;
-      overflow-wrap: anywhere;
     }
     .kiosk-card::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 4px;
-      border-radius: 20px 20px 0 0;
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
     }
-    .kiosk-card:active { transform: scale(0.97); }
 
     .kiosk-emerald::before { background: #059669; }
     .kiosk-emerald .card-badge { background: #ecfdf5; color: #059669; }
@@ -236,35 +240,46 @@
     .kiosk-slate .card-badge { background: #f1f5f9; color: #0f172a; }
     .kiosk-slate .kiosk-btn { background: #0f172a; color: #ffffff; }
 
-    .card-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-    .kiosk-icon-box {
-      width: 40px; height: 40px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0;
-      display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0;
+    /* Non-overlapping Card Controls Header */
+    .card-top-controls {
+      display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; width: 100%;
     }
     .card-badge {
       font-size: 9.5px; font-weight: 800; padding: 2px 7px; border-radius: 12px;
-      display: flex; align-items: center; gap: 4px; text-transform: uppercase;
+      display: inline-flex; align-items: center; gap: 4px; text-transform: uppercase;
     }
-    .status-pulse { width: 4px; height: 4px; border-radius: 50%; background: currentColor; }
+    .status-pulse { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+    
+    .card-action-icons { display: flex; gap: 4px; }
+    .card-action-icons button {
+      background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px;
+      padding: 3px 6px; font-size: 11px; cursor: pointer;
+    }
+
+    .card-body-block {
+      display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px;
+    }
+    .kiosk-icon-box {
+      width: 42px; height: 42px; border-radius: 12px; background: #f8fafc; border: 1px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: center; font-size: 22px; margin-bottom: 4px;
+    }
 
     .kiosk-title {
-      font-size: 15.5px; font-weight: 800; color: var(--text-main); margin-bottom: 2px;
-      line-height: 1.25; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      font-size: 15px; font-weight: 800; color: var(--text-main); line-height: 1.3;
+      word-break: break-word; overflow-wrap: anywhere;
     }
     .kiosk-sub {
-      font-size: 11.5px; color: var(--text-muted); line-height: 1.35; margin-bottom: 12px;
-      overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+      font-size: 11.5px; color: var(--text-muted); line-height: 1.4;
+      word-break: break-word; overflow-wrap: anywhere;
     }
     
     .kiosk-btn {
-      width: 100%; padding: 9px 10px; border-radius: 12px; font-weight: 700; font-size: 12px;
-      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 4px;
+      width: 100%; padding: 10px 12px; border-radius: 12px; font-weight: 700; font-size: 12.5px;
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
       white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
     }
 
-    .kiosk-edit-bar { position: absolute; top: 10px; right: 10px; display: flex; gap: 4px; }
-
-    /* Modal Architecture */
+    /* Modals */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(6px);
       display: flex; justify-content: center; align-items: center; z-index: 2000; padding: 14px;
@@ -305,34 +320,32 @@
     .pill-indigo { background: var(--indigo-light); color: var(--indigo-core); }
     .pill-magenta { background: var(--magenta-light); color: var(--magenta); }
 
+    .cfg-help-text { font-size: 11px; color: var(--text-muted); margin-top: -8px; margin-bottom: 10px; }
+
     .hidden { display: none !important; }
 
-    /* ============================================================
-       MOBILE & TABLET BREAKPOINTS (2x2 CARD GRID ON PHONES)
-       ============================================================ */
+    /* Mobile 2x2 Clean Layout */
     @media (max-width: 600px) {
       .content-area { padding: max(16px, env(safe-area-inset-top)) 12px 40px 12px; }
       
-      /* Pure 2x2 Clean Mobile Grid */
       .kiosk-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 10px;
       }
       .kiosk-card {
         padding: 12px 10px;
-        min-height: 165px;
-        border-radius: 16px;
+        min-height: 175px;
+        border-radius: 18px;
       }
-      .kiosk-icon-box { width: 34px; height: 34px; font-size: 17px; }
+      .kiosk-icon-box { width: 34px; height: 34px; font-size: 18px; }
       .kiosk-title { font-size: 13.5px; }
-      .kiosk-sub { font-size: 10.5px; margin-bottom: 8px; }
-      .kiosk-btn { padding: 8px 6px; font-size: 11px; border-radius: 10px; }
+      .kiosk-sub { font-size: 10.5px; }
+      .kiosk-btn { padding: 8px 6px; font-size: 11.5px; border-radius: 10px; }
 
       .grid { grid-template-columns: 1fr; }
       .view-header { flex-direction: column; align-items: flex-start; }
       .view-header button { width: 100%; }
 
-      /* Reposition Floating Button on Mobile to Avoid Any Conflict */
       #floatMenuBtn {
         top: max(10px, env(safe-area-inset-top));
         right: 12px;
@@ -341,7 +354,6 @@
     }
 
     @media (min-width: 601px) and (max-width: 1024px) {
-      /* iPad and Android Tablet Viewport Frame */
       .content-area { padding: 24px 20px 40px 72px; }
       .kiosk-grid { grid-template-columns: repeat(3, 1fr); gap: 14px; }
     }
@@ -349,28 +361,28 @@
 </head>
 <body>
 
-<!-- Universal Fixed Floating Drawer Button -->
+<div id="toastMsg" style="position:fixed; bottom:24px; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; padding:10px 18px; border-radius:24px; font-size:12.5px; z-index:99999; opacity:0; pointer-events:none; transition:opacity 0.25s;">
+  Press back again to exit
+</div>
+
 <button id="floatMenuBtn" onclick="toggleSidebarDrawer(event)" title="Open Command Sidebar">
   ☰
 </button>
 
-<!-- Backdrop that freezes interactions outside the sidebar drawer -->
 <div id="sidebarBackdrop" onclick="closeSidebarDrawer()"></div>
 
-<!-- Gatekeeper Authenticator (No default: admin hint text) -->
 <div id="gatekeeper">
   <div class="gate-box">
     <div style="font-size: 34px; margin-bottom: 8px;">🔐</div>
     <h2 style="font-size: 19px; font-weight: 800; margin-bottom: 6px;">Enterprise Command Hub</h2>
     <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 18px;">Enter Admin Authorization Code</p>
-    <input type="password" id="gateKey" placeholder="Enter Access Code" style="text-align: center;" autofocus>
+    <input type="password" id="gateKey" placeholder="Enter Access Code" style="text-align: center;" autofocus onkeydown="handleGateKeydown(event)">
     <button class="btn btn-red" style="width: 100%; padding: 11px;" onclick="verifyGate()">Authenticate Session</button>
     <div id="gateErr" style="color: var(--red-primary); font-size: 12px; margin-top: 8px; display: none;">Invalid passkey.</div>
   </div>
 </div>
 
 <div id="appLayout">
-  <!-- Off-Canvas Slide Drawer -->
   <aside class="sidebar" id="mainSidebar">
     <div>
       <div class="brand-container">
@@ -420,7 +432,6 @@
 
   <main class="content-area" id="mainContentArea">
 
-    <!-- TAB 0: PRESENTATION DECK (DEFAULT FRONT PAGE) -->
     <section id="pane-kiosk" class="tab-pane active">
       <div class="view-header">
         <div>
@@ -435,7 +446,6 @@
       <div class="kiosk-grid" id="kioskGrid"></div>
     </section>
 
-    <!-- TAB 1: CENTRAL COMMAND FOLDERS (PROTECTED) -->
     <section id="pane-folders" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -453,7 +463,6 @@
       <div class="grid" id="foldersGrid"></div>
     </section>
 
-    <!-- TAB 2: MISSION PORTALS -->
     <section id="pane-portals" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -469,7 +478,6 @@
       <div class="grid" id="linksGrid"></div>
     </section>
 
-    <!-- TAB 3: SECURED CREDENTIALS -->
     <section id="pane-credentials" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -484,7 +492,6 @@
       <div class="grid" id="credsGrid"></div>
     </section>
 
-    <!-- TAB 4: HTML RUNTIME -->
     <section id="pane-htmlEngine" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -498,16 +505,15 @@
       </div>
 
       <div class="drop-target" id="dropArea" onclick="document.getElementById('filePicker').click()">
-        <div style="font-size: 26px; margin-bottom: 4px;">📄</div>
-        <strong style="font-size: 14px;">Drop HTML file here or click to browse</strong>
-        <p style="font-size: 11.5px; color: var(--text-muted); margin-top: 3px;">Supports standalone .html, .htm, or web script files</p>
+        <div style="font-size: 28px; margin-bottom: 6px;">📄</div>
+        <strong style="font-size: 14.5px; color: var(--text-main); display:block;">Drop HTML file here or tap to upload</strong>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports standalone .html, .htm, or web scripts</p>
         <input type="file" id="filePicker" accept=".html,.htm,.txt" style="display: none;" onchange="handleFileDrop(event)">
       </div>
 
       <div class="grid" id="htmlGrid"></div>
     </section>
 
-    <!-- TAB 5: EXECUTIVE MEMOS -->
     <section id="pane-memos" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -522,7 +528,6 @@
       <div class="grid" id="memosGrid"></div>
     </section>
 
-    <!-- TAB 6: GLOBAL NAMES & BUTTONS -->
     <section id="pane-labels" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -537,36 +542,47 @@
       <div style="max-width: 600px; display:flex; flex-direction:column; gap:16px;">
         <div class="dash-card">
           <h3 style="font-size: 15px; margin-bottom: 12px;">🔘 Action Button Labels</h3>
-          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">FRONT CARD BUTTON LABEL</label>
+          
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">FRONT CARD ACTION BUTTON</label>
           <input type="text" id="cfgCardBtnText" placeholder="e.g. Launch Page ➔">
+          <p class="cfg-help-text">This label appears on all cards on the front Presentation Deck.</p>
 
-          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">FOLDER OPEN BUTTON LABEL</label>
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">FOLDER OPEN BUTTON</label>
           <input type="text" id="cfgFolderBtnText" placeholder="e.g. Open Folder ➔">
+          <p class="cfg-help-text">This label appears at the bottom of each folder in Central Command Folders.</p>
         </div>
 
         <div class="dash-card">
           <h3 style="font-size: 15px; margin-bottom: 12px;">📑 Category & Module Titles</h3>
+          
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">PRESENTATION DECK TITLE</label>
           <input type="text" id="cfgKioskTitle">
+          <p class="cfg-help-text">Title shown at the top of the main front page.</p>
 
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">CENTRAL COMMAND FOLDERS TITLE</label>
           <input type="text" id="cfgFoldersTitle">
+          <p class="cfg-help-text">Title shown on the main folders directory.</p>
 
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">MISSION PORTALS TITLE</label>
           <input type="text" id="cfgPortalsTitle">
+          <p class="cfg-help-text">Title shown on your web portals management page.</p>
 
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">SECURED CREDENTIALS TITLE</label>
           <input type="text" id="cfgCredentialsTitle">
+          <p class="cfg-help-text">Title shown for your passwords & tokens vault.</p>
 
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">HTML RUNTIME TITLE</label>
           <input type="text" id="cfgHtmlEngineTitle">
+          <p class="cfg-help-text">Title shown on your interactive single-page app runtime.</p>
 
           <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">EXECUTIVE MEMOS TITLE</label>
           <input type="text" id="cfgMemosTitle">
+          <p class="cfg-help-text">Title shown on the memos and documentation page.</p>
         </div>
 
         <div class="dash-card">
           <h3 style="font-size: 15px; margin-bottom: 8px;">📁 Rename Individual Folders</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Rename any of your active folders directly:</p>
           <div id="cfgFolderInputsList" style="display:flex; flex-direction:column; gap:8px;"></div>
         </div>
 
@@ -574,7 +590,6 @@
       </div>
     </section>
 
-    <!-- TAB 7: CLOUD SYNC -->
     <section id="pane-cloud" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -604,7 +619,6 @@
       </div>
     </section>
 
-    <!-- TAB 8: MASTER PASSCODE -->
     <section id="pane-security" class="tab-pane">
       <div class="page-nav-bar">
         <button class="btn-page-back" onclick="switchView('kiosk')">← Back to Presentation Deck</button>
@@ -628,7 +642,6 @@
   </main>
 </div>
 
-<!-- FOLDER VAULT POPUP -->
 <div id="modalFolderPopup" class="modal-backdrop hidden">
   <div class="folder-popup-window">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
@@ -642,7 +655,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT FRONT CARD -->
 <div id="modalKioskItem" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalKioskHeading">Add Presentation Card</h3>
@@ -704,7 +716,6 @@
   </div>
 </div>
 
-<!-- MODAL: UNIVERSAL FAST CREATE -->
 <div id="modalFastCreate" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size:17px; margin-bottom:12px;">Universal Quick Create</h3>
@@ -721,7 +732,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT PORTAL -->
 <div id="modalLink" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalLinkHeading">Mission Portal</h3>
@@ -747,7 +757,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT CREDENTIAL -->
 <div id="modalCred" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalCredHeading">Secured Credential</h3>
@@ -781,7 +790,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT HTML -->
 <div id="modalHtml" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalHtmlHeading">HTML Runtime Application</h3>
@@ -807,7 +815,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT MEMO -->
 <div id="modalMemo" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 id="memoModalTitle" style="font-size: 17px; margin-bottom: 12px;">Executive Memo</h3>
@@ -911,7 +918,7 @@ function init() {
   }
 }
 
-// Universal Drawer Engine
+// Drawer Toggle Engine
 function toggleSidebarDrawer(e) {
   if (e) e.stopPropagation();
   const sidebar = document.getElementById("mainSidebar");
@@ -924,6 +931,7 @@ function toggleSidebarDrawer(e) {
     sidebar.classList.add("open");
     backdrop.classList.add("active");
     document.body.classList.add("body-frozen");
+    window.history.pushState({ drawerOpen: true }, "", "");
   }
 }
 
@@ -955,6 +963,11 @@ function switchView(tabKey) {
   const tabs = ['kiosk', 'folders', 'portals', 'credentials', 'htmlEngine', 'memos', 'labels', 'cloud', 'security'];
   const idx = tabs.indexOf(tabKey);
   if (idx !== -1) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
+
+  const prevTab = sessionStorage.getItem(CURRENT_TAB_KEY);
+  if (prevTab !== tabKey && tabKey !== 'kiosk') {
+    window.history.pushState({ activeTab: tabKey }, "", "");
+  }
 
   sessionStorage.setItem(CURRENT_TAB_KEY, tabKey);
   closeSidebarDrawer();
@@ -999,10 +1012,11 @@ function populateGlobalLabelsUI() {
     listContainer.innerHTML = "";
     store.folders.forEach((f, idx) => {
       const row = document.createElement("div");
-      row.style.display = "flex"; row.style.gap = "8px"; row.style.alignItems = "center";
+      row.style.display = "flex"; row.style.flexDirection = "column"; row.style.gap = "2px";
       row.innerHTML = `
-        <span style="font-size:12px; font-weight:700; width:70px; color:var(--text-muted);">Folder ${idx + 1}:</span>
-        <input type="text" class="cfg-folder-name-input" data-index="${idx}" value="${escapeHtml(f)}" style="margin:0;">
+        <label style="font-size:11px; font-weight:700; color:var(--text-muted);">FOLDER ${idx + 1} NAME</label>
+        <input type="text" class="cfg-folder-name-input" data-index="${idx}" value="${escapeHtml(f)}" style="margin-bottom:2px;">
+        <p class="cfg-help-text">Controls the display name for folder slot ${idx + 1}.</p>
       `;
       listContainer.appendChild(row);
     });
@@ -1044,6 +1058,12 @@ function saveUnifiedLabels() {
   alert("All settings saved!");
 }
 
+function handleGateKeydown(event) {
+  if (event.key === "Enter" || event.keyCode === 13) {
+    verifyGate();
+  }
+}
+
 function verifyGate() {
   const val = document.getElementById("gateKey").value.trim();
   if (val === store.masterKey || val === "admin") {
@@ -1071,7 +1091,7 @@ function confirmAdminAction(actionName) {
   return false;
 }
 
-// 0. KIOSK FRONT CARDS
+// FRONT CARDS RENDERER (NO OVERLAPS)
 function renderKioskDeck() {
   const grid = document.getElementById("kioskGrid");
   grid.innerHTML = "";
@@ -1091,17 +1111,19 @@ function renderKioskDeck() {
     const el = document.createElement("div");
     el.className = `kiosk-card ${colorClass}`;
     el.innerHTML = `
-      <div class="kiosk-edit-bar">
-        <button class="btn-subtle" style="padding:2px 6px; font-size:11px;" onclick="event.stopPropagation(); editKioskCard(${idx})">✎</button>
-        <button class="btn-ghost-danger" onclick="event.stopPropagation(); deleteKioskCard(${idx})">🗑️</button>
-      </div>
       <div>
-        <div class="card-top-row">
-          <div class="kiosk-icon-box">${card.icon || '🚀'}</div>
+        <div class="card-top-controls">
           <div class="card-badge"><span class="status-pulse"></span> Active</div>
+          <div class="card-action-icons">
+            <button onclick="event.stopPropagation(); editKioskCard(${idx})">✎</button>
+            <button onclick="event.stopPropagation(); deleteKioskCard(${idx})">🗑️</button>
+          </div>
         </div>
-        <div class="kiosk-title">${escapeHtml(card.title)}</div>
-        <div class="kiosk-sub">${escapeHtml(card.sub || '')}</div>
+        <div class="card-body-block">
+          <div class="kiosk-icon-box">${card.icon || '🚀'}</div>
+          <div class="kiosk-title">${escapeHtml(card.title)}</div>
+          <div class="kiosk-sub">${escapeHtml(card.sub || '')}</div>
+        </div>
       </div>
       <button class="kiosk-btn" onclick="launchKioskItem(${idx})">${escapeHtml(btnText)}</button>
     `;
@@ -1524,7 +1546,7 @@ function deleteLink(idx) {
   }
 }
 
-// 3. SECURED CREDENTIALS
+// 3. SECURED CREDENTIALS (WRAPPING CONTAINER FOR LONG PASSWORDS)
 function renderCredentials() {
   const grid = document.getElementById("credsGrid");
   grid.innerHTML = "";
@@ -1545,7 +1567,10 @@ function renderCredentials() {
           <span class="pill pill-magenta">${escapeHtml(c.folder)}</span>
         </div>
         <div style="font-size:12px; margin:4px 0;"><b>Account:</b> ${escapeHtml(c.email)}</div>
-        <div style="font-size:12px;"><b>Key:</b> <span id="passSpan-${idx}" style="letter-spacing:1px;">••••••••••••</span></div>
+        <div style="font-size:12px;"><b>Key:</b></div>
+        <div class="cred-password-container">
+          <span id="passSpan-${idx}" style="letter-spacing:1px;">••••••••••••</span>
+        </div>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
         <button class="btn btn-subtle" onclick="editCred(${idx})">✎ Edit</button>
@@ -1633,10 +1658,10 @@ function setupDragAndDrop() {
   if (!dropArea) return;
 
   ['dragenter', 'dragover'].forEach(evt => {
-    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.add('dragover'); }, false);
+    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.style.borderColor = "var(--indigo-core)"; }, false);
   });
   ['dragleave', 'drop'].forEach(evt => {
-    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); }, false);
+    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.style.borderColor = "#94a3b8"; }, false);
   });
   dropArea.addEventListener('drop', (e) => {
     if (e.dataTransfer.files.length > 0) processHtmlFile(e.dataTransfer.files[0]);
@@ -1848,7 +1873,7 @@ function updateMasterKey() {
   syncToGitHub();
 }
 
-// Cloud REST API
+// CLOUD REST ENGINE
 async function syncToGitHub() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
   const badge = document.getElementById("syncStatus");
@@ -2016,33 +2041,54 @@ function validateCredForm() {
   btn.disabled = !(isValidEmail && passVal.length > 0);
 }
 
-let backPressedOnce = false;
+// STEP-BY-STEP BACK BUTTON ENGINE & DOUBLE-TAP EXIT
+let backPressCount = 0;
+let backPressTimer = null;
+
 function setupHistoryTrap() {
-  window.history.pushState({ page: 1 }, "", "");
+  window.history.pushState({ root: true }, "", "");
   window.addEventListener("popstate", function(event) {
+    // 1. Close open modal first
     const openModals = document.querySelectorAll(".modal-backdrop:not(.hidden)");
     if (openModals.length > 0) {
       openModals.forEach(m => closeModal(m.id));
-      window.history.pushState({ page: 1 }, "", "");
+      window.history.pushState({ root: true }, "", "");
       return;
     }
+
+    // 2. Close open sidebar drawer second
     const sidebar = document.getElementById("mainSidebar");
     if (sidebar.classList.contains("open")) {
       closeSidebarDrawer();
-      window.history.pushState({ page: 1 }, "", "");
+      window.history.pushState({ root: true }, "", "");
       return;
     }
-    if (!backPressedOnce) {
-      backPressedOnce = true;
-      setTimeout(() => { backPressedOnce = false; }, 2000);
-      window.history.pushState({ page: 1 }, "", "");
+
+    // 3. Navigate back to Kiosk front deck third
+    const currentTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'kiosk';
+    if (currentTab !== 'kiosk') {
+      switchView('kiosk');
+      window.history.pushState({ root: true }, "", "");
+      return;
+    }
+
+    // 4. Double tap within 2000ms to exit app
+    backPressCount++;
+    if (backPressCount === 1) {
+      const toast = document.getElementById("toastMsg");
+      toast.style.opacity = "1";
+      clearTimeout(backPressTimer);
+      backPressTimer = setTimeout(() => {
+        toast.style.opacity = "0";
+        backPressCount = 0;
+      }, 2000);
+      window.history.pushState({ root: true }, "", "");
     } else {
       window.history.back();
     }
   });
 }
 
-// Background Freeze Handler
 function openModal(id) {
   if (id === 'modalKioskItem' && currentEditingKioskIndex === -1) {
     document.getElementById("modalKioskHeading").textContent = "Add Presentation Card";
@@ -2088,9 +2134,9 @@ function openModal(id) {
     toggleLockField('fMemoPinWrap', false);
   }
 
-  // Freeze background
   document.body.classList.add("body-frozen");
   document.getElementById(id).classList.remove('hidden');
+  window.history.pushState({ modalOpen: id }, "", "");
 }
 
 function closeModal(id) {
@@ -2101,7 +2147,6 @@ function closeModal(id) {
   if (id === 'modalHtml') currentEditingHtmlIndex = -1;
   if (id === 'modalMemo') currentEditingMemoIndex = -1;
 
-  // Unfreeze background only if no other modals are open
   const remainingModals = document.querySelectorAll(".modal-backdrop:not(.hidden)");
   if (remainingModals.length === 0 && !document.getElementById("mainSidebar").classList.contains("open")) {
     document.body.classList.remove("body-frozen");
