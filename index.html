@@ -19,121 +19,253 @@
       --indigo-light: #eef2ff;
       --magenta: #c026d3;
       --magenta-light: #fdf4ff;
-      --sidebar-w: 265px;
+      --emerald: #059669;
+      --emerald-light: #ecfdf5;
+      --sidebar-w: 275px;
+      --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      --ease-smooth: cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
     body { background: var(--bg-body); color: var(--text-main); min-height: 100vh; overflow-x: hidden; }
 
-    /* Mobile Header */
     .mobile-header {
       display: none; height: 56px; background: #ffffff; border-bottom: 1px solid var(--border);
       padding: 0 16px; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100;
     }
     .burger-btn { font-size: 22px; background: none; border: none; cursor: pointer; padding: 6px; color: var(--text-main); }
 
-    /* Layout */
     #appLayout { display: flex; width: 100vw; min-height: 100vh; }
+    
+    /* Sliding Sidebar */
     .sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
-      display: flex; flex-direction: column; justify-content: space-between; padding: 24px 16px; flex-shrink: 0; z-index: 200;
-      transition: transform 0.25s ease;
+      display: flex; flex-direction: column; justify-content: space-between; padding: 22px 16px; flex-shrink: 0; z-index: 200;
+      transition: width 0.35s var(--ease-smooth), padding 0.35s var(--ease-smooth), transform 0.35s var(--ease-smooth);
+      overflow: hidden;
     }
+    .sidebar.collapsed {
+      width: 0px !important; padding: 0px !important; border-right: none !important;
+    }
+
+    .brand-container { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
     .brand-title {
       font-size: 15px; font-weight: 800; letter-spacing: -0.3px; color: var(--text-main);
-      display: flex; align-items: center; gap: 8px; margin-bottom: 16px;
+      display: flex; align-items: center; gap: 8px; white-space: nowrap;
     }
     .badge-dot { width: 9px; height: 9px; background: var(--red-primary); border-radius: 50%; }
-    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 18px; }
+    
+    .btn-toggle-sidebar {
+      background: #f1f5f9; border: 1px solid var(--border); border-radius: 8px;
+      padding: 5px 9px; font-size: 11px; font-weight: 700; cursor: pointer; color: var(--text-muted);
+    }
+    .btn-toggle-sidebar:hover { background: #e2e8f0; color: var(--text-main); }
+
+    /* Floating Toggle Button */
+    #floatExpandBtn {
+      position: fixed; top: 16px; left: 16px; z-index: 300; background: #ffffff;
+      border: 1px solid var(--border); border-radius: 12px; width: 42px; height: 42px;
+      display: flex; align-items: center; justify-content: center; font-size: 18px;
+      cursor: pointer; box-shadow: 0 4px 14px rgba(0,0,0,0.08); transition: all 0.2s var(--ease-spring);
+    }
+    #floatExpandBtn:hover { background: #f8fafc; border-color: var(--red-primary); color: var(--red-primary); transform: scale(1.08); }
+
+    .sync-badge { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; display: inline-block; margin-bottom: 18px; white-space: nowrap; }
     .sync-ok { background: #dcfce7; color: #15803d; }
     .sync-pending { background: #fef3c7; color: #b45309; }
 
-    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
+    .nav-list { list-style: none; display: flex; flex-direction: column; gap: 5px; }
     .nav-btn {
-      width: 100%; text-align: left; padding: 11px 14px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
-      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.15s;
+      width: 100%; text-align: left; padding: 10px 12px; border-radius: 12px; font-size: 13.5px; font-weight: 600;
+      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.2s;
+      white-space: nowrap;
     }
-    .nav-btn:hover { background: #f1f5f9; color: var(--text-main); }
-    .nav-btn.active { background: var(--red-light); color: var(--red-primary); border-left: 3px solid var(--red-primary); }
+    .nav-btn:hover { background: #f1f5f9; color: var(--text-main); transform: translateX(3px); }
+    .nav-btn.active { background: var(--red-light); color: var(--red-primary); border-left: 4px solid var(--red-primary); font-weight: 700; }
+    .nav-btn-kiosk { background: var(--emerald-light); color: var(--emerald); font-weight: 700; }
+    .nav-btn-kiosk:hover { background: #d1fae5; }
+    .lock-indicator { margin-left: auto; font-size: 11px; opacity: 0.7; }
 
-    .content-area { flex-grow: 1; padding: 32px; overflow-y: auto; max-height: 100vh; }
+    .content-area { flex-grow: 1; padding: 32px 32px 32px 76px; overflow-y: auto; max-height: 100vh; }
     .tab-pane { display: none; }
-    .tab-pane.active { display: block; animation: fadeIn 0.15s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    .tab-pane.active { display: block; animation: slideUpFade 0.35s var(--ease-smooth) forwards; }
+    @keyframes slideUpFade { 
+      from { opacity: 0; transform: translateY(12px) scale(0.99); } 
+      to { opacity: 1; transform: translateY(0) scale(1); } 
+    }
 
     .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; gap: 12px; }
     .heading-wrapper { display: flex; align-items: center; gap: 8px; }
     .h1-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
-    .sub-lead { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; }
+    .sub-lead-wrapper { display: flex; align-items: center; gap: 6px; margin-top: 4px; }
+    .sub-lead { font-size: 12.5px; color: var(--text-muted); }
     .icon-pencil-heading { font-size: 14px; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
     .icon-pencil-heading:hover { color: var(--red-primary); background: #f1f5f9; }
 
-    /* Drag & Drop */
     .drop-target {
-      border: 2px dashed #cbd5e1; border-radius: 14px; background: #ffffff;
-      padding: 28px 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s ease;
+      border: 2px dashed #cbd5e1; border-radius: 18px; background: #ffffff;
+      padding: 24px 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s ease;
     }
-    .drop-target:hover, .drop-target.dragover { border-color: var(--indigo-core); background: var(--indigo-light); }
+    .drop-target:hover, .drop-target.dragover { border-color: var(--indigo-core); background: var(--indigo-light); transform: scale(1.01); }
 
-    /* Controls */
     input, select, textarea {
-      width: 100%; background: #ffffff; border: 1px solid var(--border); border-radius: 8px;
+      width: 100%; background: #ffffff; border: 1px solid var(--border); border-radius: 10px;
       padding: 10px 12px; font-size: 13.5px; color: var(--text-main); margin-top: 5px; margin-bottom: 12px;
     }
     input:focus, select:focus, textarea:focus { outline: none; border-color: var(--border-focus); box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.08); }
     
     .btn {
-      padding: 9px 16px; border-radius: 8px; border: 1px solid transparent; font-size: 13px; font-weight: 600;
+      padding: 9px 16px; border-radius: 10px; border: 1px solid transparent; font-size: 13px; font-weight: 600;
       cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px; transition: all 0.15s;
     }
     .btn:disabled { opacity: 0.45; cursor: not-allowed; filter: grayscale(1); }
     .btn-red { background: var(--red-primary); color: #ffffff; }
-    .btn-red:hover:not(:disabled) { background: var(--red-hover); }
+    .btn-red:hover:not(:disabled) { background: var(--red-hover); transform: translateY(-1px); }
     .btn-indigo { background: var(--indigo-core); color: #ffffff; }
-    .btn-indigo:hover:not(:disabled) { background: #4338ca; }
+    .btn-indigo:hover:not(:disabled) { background: #4338ca; transform: translateY(-1px); }
     .btn-magenta { background: var(--magenta); color: #ffffff; }
+    .btn-emerald { background: var(--emerald); color: #ffffff; }
+    .btn-emerald:hover:not(:disabled) { background: #047857; transform: translateY(-1px); }
     .btn-subtle { background: #ffffff; color: var(--text-main); border: 1px solid var(--border); }
+    .btn-subtle:hover { background: #f8fafc; }
     .btn-ghost-danger { background: transparent; color: var(--red-primary); border: none; padding: 4px 6px; font-size: 13px; cursor: pointer; }
 
-    /* Grids & Cards */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .dash-card {
-      background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
+      background: var(--surface); border: 1px solid var(--border); border-radius: 16px;
       padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px;
+      transition: all 0.2s ease;
     }
+    .dash-card:hover { border-color: #cbd5e1; transform: translateY(-2px); box-shadow: 0 4px 14px rgba(0,0,0,0.03); }
 
     .folder-card {
       background: linear-gradient(145deg, #ffffff 65%, #fff1f2 100%);
       border: 1px solid #fecdd3;
       border-left: 5px solid #dc2626;
-      border-radius: 14px;
+      border-radius: 18px;
       padding: 18px;
       cursor: pointer;
       box-shadow: 0 4px 12px rgba(220, 38, 38, 0.04);
-      transition: all 0.2s ease;
+      transition: all 0.25s var(--ease-smooth);
     }
     .folder-card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(220, 38, 38, 0.12);
+      transform: translateY(-3px) scale(1.01);
+      box-shadow: 0 10px 24px rgba(220, 38, 38, 0.12);
       border-color: #dc2626;
     }
 
-    .pill { font-size: 11px; padding: 3px 8px; border-radius: 6px; font-weight: 700; text-transform: uppercase; }
+    /* COMPACT, CUTE & CURVY FRONT CARDS (26px CURVED EDGES) */
+    .kiosk-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 18px; margin-top: 14px;
+    }
+    .kiosk-card {
+      position: relative;
+      background: #ffffff;
+      border-radius: 26px; /* Cute Curved Pill Edges */
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      min-height: 195px; /* Compact Smaller Footprint */
+      cursor: pointer;
+      border: 1px solid #f1f5f9;
+      box-shadow: 0 6px 20px -4px rgba(15, 23, 42, 0.04);
+      transition: all 0.3s var(--ease-spring);
+      overflow: hidden;
+    }
+    .kiosk-card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 5px;
+      border-radius: 26px 26px 0 0;
+    }
+    .kiosk-card:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 16px 28px -6px rgba(15, 23, 42, 0.1);
+    }
+
+    .kiosk-emerald::before { background: linear-gradient(90deg, #10b981, #059669); }
+    .kiosk-emerald .card-badge { background: #ecfdf5; color: #059669; }
+    .kiosk-emerald .kiosk-btn { background: #059669; color: #ffffff; }
+
+    .kiosk-crimson::before { background: linear-gradient(90deg, #f43f5e, #dc2626); }
+    .kiosk-crimson .card-badge { background: #fff1f2; color: #dc2626; }
+    .kiosk-crimson .kiosk-btn { background: #dc2626; color: #ffffff; }
+
+    .kiosk-indigo::before { background: linear-gradient(90deg, #6366f1, #4f46e5); }
+    .kiosk-indigo .card-badge { background: #eef2ff; color: #4f46e5; }
+    .kiosk-indigo .kiosk-btn { background: #4f46e5; color: #ffffff; }
+
+    .kiosk-magenta::before { background: linear-gradient(90deg, #d946ef, #c026d3); }
+    .kiosk-magenta .card-badge { background: #fdf4ff; color: #c026d3; }
+    .kiosk-magenta .kiosk-btn { background: #c026d3; color: #ffffff; }
+
+    .kiosk-slate::before { background: linear-gradient(90deg, #475569, #0f172a); }
+    .kiosk-slate .card-badge { background: #f1f5f9; color: #0f172a; }
+    .kiosk-slate .kiosk-btn { background: #0f172a; color: #ffffff; }
+
+    .card-top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .kiosk-icon-box {
+      width: 44px; height: 44px; border-radius: 14px; background: #f8fafc; border: 1px solid #e2e8f0;
+      display: flex; align-items: center; justify-content: center; font-size: 22px;
+    }
+    .card-badge {
+      font-size: 10px; font-weight: 800; padding: 3px 8px; border-radius: 14px;
+      display: flex; align-items: center; gap: 4px; text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    .status-pulse { width: 5px; height: 5px; border-radius: 50%; background: currentColor; animation: pulse 2s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+
+    .kiosk-title { font-size: 17px; font-weight: 800; color: var(--text-main); margin-bottom: 3px; line-height: 1.3; }
+    .kiosk-sub { font-size: 12px; color: var(--text-muted); line-height: 1.4; margin-bottom: 14px; }
+    
+    .kiosk-btn {
+      width: 100%; padding: 10px 14px; border-radius: 14px; font-weight: 700; font-size: 13px;
+      border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;
+      transition: all 0.15s ease;
+    }
+    .kiosk-btn:hover { filter: brightness(1.1); transform: translateY(-1px); }
+
+    .kiosk-edit-bar { position: absolute; top: 12px; right: 12px; display: flex; gap: 4px; }
+
+    .emoji-picker-shelf {
+      display: flex; flex-wrap: wrap; gap: 8px; background: #f8fafc; border: 1px solid var(--border);
+      padding: 10px; border-radius: 14px; margin-bottom: 12px;
+    }
+    .emoji-chip {
+      font-size: 20px; padding: 6px; border-radius: 10px; cursor: pointer; transition: all 0.15s var(--ease-spring);
+      background: #ffffff; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; justify-content: center;
+    }
+    .emoji-chip:hover { transform: scale(1.3); border-color: var(--red-primary); }
+
+    .color-picker-group { display: flex; gap: 10px; margin-bottom: 16px; }
+    .color-swatch {
+      width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+      border: 3px solid transparent; transition: all 0.2s var(--ease-spring);
+    }
+    .color-swatch.active { border-color: #0f172a; transform: scale(1.15); }
+
+    .pill { font-size: 11px; padding: 3px 8px; border-radius: 8px; font-weight: 700; text-transform: uppercase; }
     .pill-red { background: var(--red-light); color: var(--red-primary); }
     .pill-indigo { background: var(--indigo-light); color: var(--indigo-core); }
     .pill-magenta { background: var(--magenta-light); color: var(--magenta); }
+    .pill-emerald { background: var(--emerald-light); color: var(--emerald); }
 
-    /* Modals */
+    /* Modal Animation */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
       display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 14px;
+      animation: fadeIn 0.2s ease-out;
     }
-    .modal-window {
-      background: #ffffff; border-radius: 14px; width: 100%; max-width: 540px; padding: 22px; max-height: 90vh; overflow-y: auto;
+    .modal-window, .folder-popup-window {
+      background: #ffffff; border-radius: 20px; width: 100%; max-width: 540px; padding: 24px; max-height: 90vh; overflow-y: auto;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+      animation: popIn 0.3s var(--ease-spring) forwards;
     }
-    .folder-popup-window {
-      background: #ffffff; border-radius: 16px; width: 100%; max-width: 700px; padding: 24px; max-height: 85vh; overflow-y: auto;
-      border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    .folder-popup-window { max-width: 700px; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(0.92) translateY(10px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
     }
 
     #gatekeeper {
@@ -141,8 +273,9 @@
       display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px;
     }
     .gate-box {
-      background: #ffffff; border-radius: 16px; padding: 32px 24px; width: 100%; max-width: 380px; text-align: center;
+      background: #ffffff; border-radius: 22px; padding: 32px 24px; width: 100%; max-width: 380px; text-align: center;
       box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+      animation: popIn 0.3s var(--ease-spring);
     }
 
     #toastMsg {
@@ -157,14 +290,15 @@
       .mobile-header { display: flex; }
       #appLayout { flex-direction: column; }
       .sidebar {
-        position: fixed; top: 56px; left: 0; bottom: 0; width: 265px;
+        position: fixed; top: 56px; left: 0; bottom: 0; width: 275px;
         transform: translateX(-100%); box-shadow: 10px 0 25px rgba(0,0,0,0.1);
       }
       .sidebar.open { transform: translateX(0); }
       .content-area { padding: 18px 14px; max-height: calc(100vh - 56px); }
-      .grid { grid-template-columns: 1fr; }
+      .grid, .kiosk-grid { grid-template-columns: 1fr; }
       .view-header { flex-direction: column; align-items: flex-start; }
       .view-header button { width: 100%; }
+      #floatExpandBtn { display: none !important; }
     }
   </style>
 </head>
@@ -172,7 +306,10 @@
 
 <div id="toastMsg">Press back again to exit</div>
 
-<!-- Gatekeeper -->
+<button id="floatExpandBtn" onclick="toggleSidebarCollapse()" title="Open Sidebar">
+  ☰
+</button>
+
 <div id="gatekeeper">
   <div class="gate-box">
     <div style="font-size: 34px; margin-bottom: 8px;">🔐</div>
@@ -184,32 +321,55 @@
   </div>
 </div>
 
-<!-- Mobile Header Frame -->
 <header class="mobile-header">
-  <button class="burger-btn" onclick="toggleSidebar()">☰</button>
+  <button class="burger-btn" onclick="toggleMobileSidebar()">☰</button>
   <span style="font-size: 14px; font-weight: 800;"><span class="badge-dot" style="display:inline-block;"></span> COMMAND DESK</span>
   <button class="btn btn-subtle" style="padding: 5px 10px; font-size: 12px;" onclick="lockApp()">🔒</button>
 </header>
 
 <div id="appLayout">
-  <aside class="sidebar" id="mainSidebar">
+  <aside class="sidebar collapsed" id="mainSidebar" onmouseenter="clearSidebarTimer()" onmouseleave="armSidebarTimer()">
     <div>
-      <div class="brand-title">
-        <span class="badge-dot"></span> COMMAND DESK
+      <div class="brand-container">
+        <div class="brand-title">
+          <span class="badge-dot"></span> COMMAND DESK
+        </div>
+        <button class="btn-toggle-sidebar" onclick="closeSidebarNow()" title="Hide Sidebar">◀</button>
       </div>
+
       <div>
         <span id="syncStatus" class="sync-badge sync-pending">● Initializing Sync</span>
       </div>
+
       <ul class="nav-list">
-        <li><button class="nav-btn active" onclick="switchView('folders')">📁 <span id="nav-folders">Central Command Folders</span></button></li>
+        <li><button class="nav-btn nav-btn-kiosk active" onclick="switchView('kiosk')">🎯 <span id="nav-kiosk">Presentation Deck</span></button></li>
+        <li style="margin-top: 6px;">
+          <button class="nav-btn" onclick="switchProtectedView('folders')">
+            📁 <span id="nav-folders">Central Command Folders</span>
+            <span class="lock-indicator">🔒</span>
+          </button>
+        </li>
         <li><button class="nav-btn" onclick="switchView('portals')">🌐 <span id="nav-portals">Mission Portals</span></button></li>
         <li><button class="nav-btn" onclick="switchView('credentials')">🔐 <span id="nav-credentials">Secured Credentials</span></button></li>
         <li><button class="nav-btn" onclick="switchView('htmlEngine')">⚡ <span id="nav-htmlEngine">HTML App Runtime</span></button></li>
         <li><button class="nav-btn" onclick="switchView('memos')">📋 <span id="nav-memos">Executive Memos</span></button></li>
+
         <li style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px;">
-          <button class="nav-btn" onclick="switchView('cloud')">☁️ Cloud Synchronization</button>
+          <button class="nav-btn" onclick="switchView('labels')">🔤 Global Names & Buttons</button>
         </li>
-        <li><button class="nav-btn" onclick="switchView('security')">🛡️ Master Passcode</button></li>
+
+        <li>
+          <button class="nav-btn" onclick="switchProtectedView('cloud')">
+            ☁️ <span>Cloud Synchronization</span>
+            <span class="lock-indicator">🔒</span>
+          </button>
+        </li>
+        <li>
+          <button class="nav-btn" onclick="switchProtectedView('security')">
+            🛡️ <span>Master Passcode</span>
+            <span class="lock-indicator">🔒</span>
+          </button>
+        </li>
       </ul>
     </div>
     <div style="margin-top: 20px;">
@@ -217,9 +377,29 @@
     </div>
   </aside>
 
-  <main class="content-area">
-    <!-- TAB 1: FOLDERS -->
-    <section id="pane-folders" class="tab-pane active">
+  <main class="content-area" id="mainContentArea">
+
+    <section id="pane-kiosk" class="tab-pane active">
+      <div class="view-header">
+        <div>
+          <div class="heading-wrapper">
+            <h1 class="h1-title" id="title-kiosk">Customer Presentation Deck</h1>
+            <span class="icon-pencil-heading" onclick="renameModuleHeading('kiosk')" title="Rename Title">✎</span>
+          </div>
+          <div class="sub-lead-wrapper">
+            <p class="sub-lead" id="sub-kiosk">Quick access tools and live public portals</p>
+            <span class="icon-pencil-heading" onclick="renameKioskSubtitle()" title="Edit Subtitle">✎</span>
+          </div>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button class="btn btn-emerald" onclick="openModal('modalKioskItem')">+ Add Front Card</button>
+        </div>
+      </div>
+
+      <div class="kiosk-grid" id="kioskGrid"></div>
+    </section>
+
+    <section id="pane-folders" class="tab-pane">
       <div class="view-header">
         <div>
           <div class="heading-wrapper">
@@ -236,7 +416,6 @@
       <div class="grid" id="foldersGrid"></div>
     </section>
 
-    <!-- TAB 2: PORTALS -->
     <section id="pane-portals" class="tab-pane">
       <div class="view-header">
         <div>
@@ -252,7 +431,6 @@
       <div class="grid" id="linksGrid"></div>
     </section>
 
-    <!-- TAB 3: CREDENTIALS -->
     <section id="pane-credentials" class="tab-pane">
       <div class="view-header">
         <div>
@@ -267,7 +445,6 @@
       <div class="grid" id="credsGrid"></div>
     </section>
 
-    <!-- TAB 4: HTML RUNTIME -->
     <section id="pane-htmlEngine" class="tab-pane">
       <div class="view-header">
         <div>
@@ -290,7 +467,6 @@
       <div class="grid" id="htmlGrid"></div>
     </section>
 
-    <!-- TAB 5: MEMOS -->
     <section id="pane-memos" class="tab-pane">
       <div class="view-header">
         <div>
@@ -305,7 +481,57 @@
       <div class="grid" id="memosGrid"></div>
     </section>
 
-    <!-- TAB 6: CLOUD SYNC (SEPARATED) -->
+    <section id="pane-labels" class="tab-pane">
+      <div class="view-header">
+        <div>
+          <h1 class="h1-title">Global Names & Button Controls</h1>
+          <p class="sub-lead">Unified management for all module titles, folder names, and action buttons</p>
+        </div>
+      </div>
+      
+      <div style="max-width: 600px; display:flex; flex-direction:column; gap:16px;">
+        <div class="dash-card">
+          <h3 style="font-size: 15px; margin-bottom: 12px;">🔘 Action Button Labels</h3>
+          
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">FRONT CARD BUTTON LABEL</label>
+          <input type="text" id="cfgCardBtnText" placeholder="e.g. Launch Page ➔">
+
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">FOLDER OPEN BUTTON LABEL</label>
+          <input type="text" id="cfgFolderBtnText" placeholder="e.g. Open Folder ➔">
+        </div>
+
+        <div class="dash-card">
+          <h3 style="font-size: 15px; margin-bottom: 12px;">📑 Category & Module Titles</h3>
+          
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">PRESENTATION DECK TITLE</label>
+          <input type="text" id="cfgKioskTitle">
+
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">CENTRAL COMMAND FOLDERS TITLE</label>
+          <input type="text" id="cfgFoldersTitle">
+
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">MISSION PORTALS TITLE</label>
+          <input type="text" id="cfgPortalsTitle">
+
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">SECURED CREDENTIALS TITLE</label>
+          <input type="text" id="cfgCredentialsTitle">
+
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">HTML RUNTIME TITLE</label>
+          <input type="text" id="cfgHtmlEngineTitle">
+
+          <label style="font-size: 11.5px; font-weight: 700; color: var(--text-muted);">EXECUTIVE MEMOS TITLE</label>
+          <input type="text" id="cfgMemosTitle">
+        </div>
+
+        <div class="dash-card">
+          <h3 style="font-size: 15px; margin-bottom: 8px;">📁 Rename Individual Folders</h3>
+          <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Rename any of your active folders directly:</p>
+          <div id="cfgFolderInputsList" style="display:flex; flex-direction:column; gap:8px;"></div>
+        </div>
+
+        <button class="btn btn-emerald" style="padding: 13px;" onclick="saveUnifiedLabels()">Save All Names & Button Settings</button>
+      </div>
+    </section>
+
     <section id="pane-cloud" class="tab-pane">
       <div class="view-header">
         <div>
@@ -332,7 +558,6 @@
       </div>
     </section>
 
-    <!-- TAB 7: MASTER PASSCODE (SEPARATED) -->
     <section id="pane-security" class="tab-pane">
       <div class="view-header">
         <div>
@@ -353,7 +578,6 @@
   </main>
 </div>
 
-<!-- POP-UP MODAL: FOLDER VAULT INSPECTOR (CLEAN VIEW - NO EMPTY 0s) -->
 <div id="modalFolderPopup" class="modal-backdrop hidden">
   <div class="folder-popup-window">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
@@ -367,7 +591,67 @@
   </div>
 </div>
 
-<!-- MODAL: UNIVERSAL FAST CREATE -->
+<div id="modalKioskItem" class="modal-backdrop hidden">
+  <div class="modal-window">
+    <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalKioskHeading">Add Presentation Card</h3>
+
+    <div style="background:#f1f5f9; padding:12px; border-radius:12px; margin-bottom:14px; border:1px solid var(--border);">
+      <label style="font-size: 11.5px; font-weight: 700; color: var(--text-main);">⚡ IMPORT FROM CENTRAL COMMAND FOLDERS</label>
+      <select id="fKioskImportSelect" onchange="handleImportExistingAsset(this.value)">
+        <option value="">-- Or Select Existing Item to Auto-Add --</option>
+      </select>
+    </div>
+
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">CHOOSE CARD COLOR THEME</label>
+    <div class="color-picker-group">
+      <div class="color-swatch active" style="background:#059669;" data-color="emerald" onclick="selectCardColor('emerald', this)" title="Emerald Green"></div>
+      <div class="color-swatch" style="background:#dc2626;" data-color="crimson" onclick="selectCardColor('crimson', this)" title="Crimson Red"></div>
+      <div class="color-swatch" style="background:#4f46e5;" data-color="indigo" onclick="selectCardColor('indigo', this)" title="Royal Indigo"></div>
+      <div class="color-swatch" style="background:#c026d3;" data-color="magenta" onclick="selectCardColor('magenta', this)" title="Magenta Violet"></div>
+      <div class="color-swatch" style="background:#0f172a;" data-color="slate" onclick="selectCardColor('slate', this)" title="Executive Slate"></div>
+    </div>
+    <input type="hidden" id="fKioskColor" value="emerald">
+
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">CHOOSE EMOJI (TAP TO SELECT)</label>
+    <div class="emoji-picker-shelf">
+      <span class="emoji-chip" onclick="pickEmoji('🧇')">🧇</span>
+      <span class="emoji-chip" onclick="pickEmoji('☕')">☕</span>
+      <span class="emoji-chip" onclick="pickEmoji('🧮')">🧮</span>
+      <span class="emoji-chip" onclick="pickEmoji('📊')">📊</span>
+      <span class="emoji-chip" onclick="pickEmoji('🚀')">🚀</span>
+      <span class="emoji-chip" onclick="pickEmoji('🌐')">🌐</span>
+      <span class="emoji-chip" onclick="pickEmoji('🛒')">🛒</span>
+      <span class="emoji-chip" onclick="pickEmoji('📱')">📱</span>
+      <span class="emoji-chip" onclick="pickEmoji('📦')">📦</span>
+      <span class="emoji-chip" onclick="pickEmoji('💡')">💡</span>
+      <span class="emoji-chip" onclick="pickEmoji('🏷️')">🏷️</span>
+      <span class="emoji-chip" onclick="pickEmoji('⚡')">⚡</span>
+    </div>
+
+    <div style="display:flex; gap:10px;">
+      <div style="width:85px;">
+        <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SELECTED</label>
+        <input type="text" id="fKioskIcon" style="text-align:center; font-size:20px;" placeholder="🧇" value="🧇">
+      </div>
+      <div style="flex-grow:1;">
+        <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">CARD TITLE</label>
+        <input type="text" id="fKioskTitle" placeholder="e.g. Official Website or Calculator">
+      </div>
+    </div>
+
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SUBTITLE / DESCRIPTION</label>
+    <input type="text" id="fKioskSub" placeholder="e.g. Instant customer catalog or calculation tool">
+
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">DESTINATION WEB URL</label>
+    <input type="text" id="fKioskUrl" placeholder="https://example.com">
+
+    <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 14px;">
+      <button class="btn btn-subtle" onclick="closeModal('modalKioskItem')">Cancel</button>
+      <button class="btn btn-emerald" onclick="saveKioskCard()">Save Presentation Card</button>
+    </div>
+  </div>
+</div>
+
 <div id="modalFastCreate" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size:17px; margin-bottom:12px;">Universal Quick Create</h3>
@@ -384,7 +668,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT PORTAL -->
 <div id="modalLink" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalLinkHeading">Mission Portal</h3>
@@ -410,7 +693,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT CREDENTIAL -->
 <div id="modalCred" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalCredHeading">Secured Credential</h3>
@@ -444,7 +726,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT HTML -->
 <div id="modalHtml" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalHtmlHeading">HTML Runtime Application</h3>
@@ -470,7 +751,6 @@
   </div>
 </div>
 
-<!-- MODAL: ADD / EDIT MEMO -->
 <div id="modalMemo" class="modal-backdrop hidden">
   <div class="modal-window">
     <h3 id="memoModalTitle" style="font-size: 17px; margin-bottom: 12px;">Executive Memo</h3>
@@ -497,7 +777,6 @@
 </div>
 
 <script>
-// State Management Engine
 let GH_CONFIG = { owner: "", repo: "", token: "", path: "data.json", sha: "" };
 const STORAGE_KEY = "CORP_GH_DATA";
 const GH_CONFIG_KEY = "CORP_GH_CONFIG";
@@ -506,24 +785,33 @@ const SESSION_AUTH_KEY = "CORP_AUTH_STATE";
 
 let store = {
   masterKey: "admin",
+  kioskBtnLabel: "Launch Page ➔",
+  folderBtnLabel: "Open Folder ➔",
   moduleNames: {
+    kiosk: "Customer Presentation Deck",
     folders: "Central Command Folders",
     portals: "Mission Portals",
     credentials: "Secured Credentials Vault",
     htmlEngine: "HTML Application Runtime",
     memos: "Executive Memo Pad"
   },
+  kioskSubtitle: "Quick access tools and live public portals",
   folders: ["Administration", "Operations", "Production", "Accounts"],
+  kioskCards: [
+    { title: "Official Website", icon: "🧇", color: "crimson", sub: "Launch live website & customer catalog", url: "https://sreehp92.github.io/SREES-WAFFLE-GALAXY/", htmlCode: "" }
+  ],
   links: [],
   credentials: [],
   htmlDocs: [],
   memos: []
 };
 
+let currentEditingKioskIndex = -1;
 let currentEditingLinkIndex = -1;
 let currentEditingCredIndex = -1;
 let currentEditingHtmlIndex = -1;
 let currentEditingMemoIndex = -1;
+let sidebarAutoCloseTimer = null;
 
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -536,15 +824,10 @@ function init() {
     try { 
       const parsed = JSON.parse(local);
       store = { ...store, ...parsed };
-      if (!store.moduleNames) {
-        store.moduleNames = {
-          folders: "Central Command Folders",
-          portals: "Mission Portals",
-          credentials: "Secured Credentials Vault",
-          htmlEngine: "HTML Application Runtime",
-          memos: "Executive Memo Pad"
-        };
-      }
+      if (!store.kioskCards) store.kioskCards = [];
+      if (!store.kioskSubtitle) store.kioskSubtitle = "Quick access tools and live public portals";
+      if (!store.kioskBtnLabel) store.kioskBtnLabel = "Launch Page ➔";
+      if (!store.folderBtnLabel) store.folderBtnLabel = "Open Folder ➔";
     } catch(e) {}
   }
 
@@ -556,11 +839,13 @@ function init() {
   setupHistoryTrap();
   setupDragAndDrop();
   updateHeadingsUI();
+  populateGlobalLabelsUI();
+
+  const activeTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'kiosk';
+  switchView(activeTab);
 
   if (sessionStorage.getItem(SESSION_AUTH_KEY) === "true") {
     document.getElementById("gatekeeper").classList.add("hidden");
-    const activeTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'folders';
-    switchView(activeTab);
     refreshAll();
   }
 
@@ -569,97 +854,55 @@ function init() {
   }
 }
 
-// Editable Section Titles
-function renameModuleHeading(moduleKey) {
-  const current = store.moduleNames[moduleKey] || moduleKey;
-  let next = prompt("Enter new section title (letters & spaces only):", current);
-  if (next) {
-    next = next.replace(/[^a-zA-Z\s]/g, '').trim();
-    if (next) {
-      store.moduleNames[moduleKey] = next;
-      updateHeadingsUI();
-      syncToGitHub();
-    }
+// Auto-Closing Sidebar (5000ms timer with hover-pause)
+function toggleSidebarCollapse() {
+  const sidebar = document.getElementById("mainSidebar");
+  const floatBtn = document.getElementById("floatExpandBtn");
+  sidebar.classList.toggle("collapsed");
+
+  if (sidebar.classList.contains("collapsed")) {
+    floatBtn.style.display = "flex";
+    clearSidebarTimer();
+  } else {
+    floatBtn.style.display = "none";
+    armSidebarTimer();
   }
 }
 
-function updateHeadingsUI() {
-  const keys = ['folders', 'portals', 'credentials', 'htmlEngine', 'memos'];
-  keys.forEach(k => {
-    const val = store.moduleNames[k] || k;
-    const titleEl = document.getElementById(`title-${k}`);
-    const navEl = document.getElementById(`nav-${k}`);
-    if (titleEl) titleEl.textContent = val;
-    if (navEl) navEl.textContent = val;
-  });
+function closeSidebarNow() {
+  const sidebar = document.getElementById("mainSidebar");
+  const floatBtn = document.getElementById("floatExpandBtn");
+  sidebar.classList.add("collapsed");
+  floatBtn.style.display = "flex";
+  clearSidebarTimer();
 }
 
-// Drag & Drop
-function setupDragAndDrop() {
-  const dropArea = document.getElementById("dropArea");
-  if (!dropArea) return;
-
-  ['dragenter', 'dragover'].forEach(evt => {
-    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.add('dragover'); }, false);
-  });
-  ['dragleave', 'drop'].forEach(evt => {
-    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); }, false);
-  });
-  dropArea.addEventListener('drop', (e) => {
-    if (e.dataTransfer.files.length > 0) processHtmlFile(e.dataTransfer.files[0]);
-  });
+function armSidebarTimer() {
+  clearSidebarTimer();
+  sidebarAutoCloseTimer = setTimeout(() => {
+    closeSidebarNow();
+  }, 5000); // Closes automatically after 5000ms of inactivity
 }
 
-function handleFileDrop(e) {
-  if (e.target.files.length > 0) processHtmlFile(e.target.files[0]);
+function clearSidebarTimer() {
+  if (sidebarAutoCloseTimer) {
+    clearTimeout(sidebarAutoCloseTimer);
+    sidebarAutoCloseTimer = null;
+  }
 }
 
-function processHtmlFile(file) {
-  const reader = new FileReader();
-  reader.onload = function(evt) {
-    currentEditingHtmlIndex = -1;
-    document.getElementById("modalHtmlHeading").textContent = "Add HTML Runtime Application";
-    document.getElementById("fHtmlTitle").value = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z\s]/g, '') || "HTML Script";
-    document.getElementById("fHtmlCode").value = evt.target.result;
-    document.getElementById("fHtmlPin").value = "";
-    document.getElementById("fHtmlLocked").checked = false;
-    toggleLockField('fHtmlPinWrap', false);
-    openModal('modalHtml');
-  };
-  reader.readAsText(file);
-}
-
-// Navigation & Back-Button Protection
-let backPressedOnce = false;
-function setupHistoryTrap() {
-  window.history.pushState({ page: 1 }, "", "");
-  window.addEventListener("popstate", function(event) {
-    const openModals = document.querySelectorAll(".modal-backdrop:not(.hidden)");
-    if (openModals.length > 0) {
-      openModals.forEach(m => m.classList.add("hidden"));
-      window.history.pushState({ page: 1 }, "", "");
-      return;
-    }
-    const sidebar = document.getElementById("mainSidebar");
-    if (sidebar.classList.contains("open")) {
-      sidebar.classList.remove("open");
-      window.history.pushState({ page: 1 }, "", "");
-      return;
-    }
-    if (!backPressedOnce) {
-      backPressedOnce = true;
-      const toast = document.getElementById("toastMsg");
-      toast.style.opacity = "1";
-      setTimeout(() => { toast.style.opacity = "0"; backPressedOnce = false; }, 2000);
-      window.history.pushState({ page: 1 }, "", "");
-    } else {
-      window.history.back();
-    }
-  });
-}
-
-function toggleSidebar() {
+function toggleMobileSidebar() {
   document.getElementById("mainSidebar").classList.toggle("open");
+}
+
+function switchProtectedView(tabKey) {
+  const entered = prompt(`Security Action: Enter Master Passcode to access ${tabKey.toUpperCase()}:`);
+  if (!entered) return;
+  if (entered === store.masterKey || entered === "admin") {
+    switchView(tabKey);
+  } else {
+    alert("Access Denied: Incorrect Master Passcode.");
+  }
 }
 
 function switchView(tabKey) {
@@ -669,12 +912,123 @@ function switchView(tabKey) {
   const pane = document.getElementById(`pane-${tabKey}`);
   if (pane) pane.classList.add('active');
 
-  const tabs = ['folders', 'portals', 'credentials', 'htmlEngine', 'memos', 'cloud', 'security'];
+  const tabs = ['kiosk', 'folders', 'portals', 'credentials', 'htmlEngine', 'memos', 'labels', 'cloud', 'security'];
   const idx = tabs.indexOf(tabKey);
   if (idx !== -1) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
 
   sessionStorage.setItem(CURRENT_TAB_KEY, tabKey);
   document.getElementById("mainSidebar").classList.remove("open");
+}
+
+function renameModuleHeading(moduleKey) {
+  const current = store.moduleNames[moduleKey] || moduleKey;
+  let next = prompt("Enter new section title (letters & spaces only):", current);
+  if (next) {
+    next = next.replace(/[^a-zA-Z\s]/g, '').trim();
+    if (next) {
+      store.moduleNames[moduleKey] = next;
+      updateHeadingsUI();
+      populateGlobalLabelsUI();
+      syncToGitHub();
+    }
+  }
+}
+
+function renameKioskSubtitle() {
+  let next = prompt("Enter new subtitle (or leave blank to clear):", store.kioskSubtitle || "");
+  if (next !== null) {
+    store.kioskSubtitle = next.trim();
+    updateHeadingsUI();
+    populateGlobalLabelsUI();
+    syncToGitHub();
+  }
+}
+
+function updateHeadingsUI() {
+  const keys = ['kiosk', 'folders', 'portals', 'credentials', 'htmlEngine', 'memos'];
+  keys.forEach(k => {
+    const val = store.moduleNames[k] || k;
+    const titleEl = document.getElementById(`title-${k}`);
+    const navEl = document.getElementById(`nav-${k}`);
+    if (titleEl) titleEl.textContent = val;
+    if (navEl) navEl.textContent = val;
+  });
+
+  const subEl = document.getElementById("sub-kiosk");
+  if (subEl) subEl.textContent = store.kioskSubtitle || "";
+}
+
+// Global Unified Names & Buttons Populator & Saver
+function populateGlobalLabelsUI() {
+  const btnEl = document.getElementById("cfgCardBtnText");
+  const folderBtnEl = document.getElementById("cfgFolderBtnText");
+  const titleEl = document.getElementById("cfgKioskTitle");
+  const foldersTitleEl = document.getElementById("cfgFoldersTitle");
+  const portalsTitleEl = document.getElementById("cfgPortalsTitle");
+  const credsTitleEl = document.getElementById("cfgCredentialsTitle");
+  const htmlTitleEl = document.getElementById("cfgHtmlEngineTitle");
+  const memosTitleEl = document.getElementById("cfgMemosTitle");
+
+  if (btnEl) btnEl.value = store.kioskBtnLabel || "Launch Page ➔";
+  if (folderBtnEl) folderBtnEl.value = store.folderBtnLabel || "Open Folder ➔";
+  if (titleEl) titleEl.value = store.moduleNames.kiosk || "Customer Presentation Deck";
+  if (foldersTitleEl) foldersTitleEl.value = store.moduleNames.folders || "Central Command Folders";
+  if (portalsTitleEl) portalsTitleEl.value = store.moduleNames.portals || "Mission Portals";
+  if (credsTitleEl) credsTitleEl.value = store.moduleNames.credentials || "Secured Credentials Vault";
+  if (htmlTitleEl) htmlTitleEl.value = store.moduleNames.htmlEngine || "HTML Application Runtime";
+  if (memosTitleEl) memosTitleEl.value = store.moduleNames.memos || "Executive Memo Pad";
+
+  const listContainer = document.getElementById("cfgFolderInputsList");
+  if (listContainer) {
+    listContainer.innerHTML = "";
+    store.folders.forEach((f, idx) => {
+      const row = document.createElement("div");
+      row.style.display = "flex";
+      row.style.gap = "8px";
+      row.style.alignItems = "center";
+      row.innerHTML = `
+        <span style="font-size:12px; font-weight:700; width:70px; color:var(--text-muted);">Folder ${idx + 1}:</span>
+        <input type="text" class="cfg-folder-name-input" data-index="${idx}" value="${escapeHtml(f)}" style="margin:0;">
+      `;
+      listContainer.appendChild(row);
+    });
+  }
+}
+
+function saveUnifiedLabels() {
+  const btnVal = document.getElementById("cfgCardBtnText").value.trim();
+  const folderBtnVal = document.getElementById("cfgFolderBtnText").value.trim();
+
+  if (btnVal) store.kioskBtnLabel = btnVal;
+  if (folderBtnVal) store.folderBtnLabel = folderBtnVal;
+
+  store.moduleNames.kiosk = document.getElementById("cfgKioskTitle").value.trim() || store.moduleNames.kiosk;
+  store.moduleNames.folders = document.getElementById("cfgFoldersTitle").value.trim() || store.moduleNames.folders;
+  store.moduleNames.portals = document.getElementById("cfgPortalsTitle").value.trim() || store.moduleNames.portals;
+  store.moduleNames.credentials = document.getElementById("cfgCredentialsTitle").value.trim() || store.moduleNames.credentials;
+  store.moduleNames.htmlEngine = document.getElementById("cfgHtmlEngineTitle").value.trim() || store.moduleNames.htmlEngine;
+  store.moduleNames.memos = document.getElementById("cfgMemosTitle").value.trim() || store.moduleNames.memos;
+
+  // Save each folder name and cascade changes across all assignments
+  const folderInputs = document.querySelectorAll('.cfg-folder-name-input');
+  folderInputs.forEach(input => {
+    const idx = parseInt(input.dataset.index, 10);
+    const oldName = store.folders[idx];
+    const newName = input.value.replace(/[^a-zA-Z\s]/g, '').trim();
+
+    if (newName && newName !== oldName) {
+      store.folders[idx] = newName;
+      store.links.forEach(x => { if (x.folder === oldName) x.folder = newName; });
+      store.credentials.forEach(x => { if (x.folder === oldName) x.folder = newName; });
+      store.htmlDocs.forEach(x => { if (x.folder === oldName) x.folder = newName; });
+      store.memos.forEach(x => { if (x.folder === oldName) x.folder = newName; });
+    }
+  });
+
+  updateHeadingsUI();
+  refreshAll();
+  syncToGitHub();
+  alert("All category names, folder titles, and buttons have been updated!");
 }
 
 function verifyGate() {
@@ -697,179 +1051,181 @@ function lockApp() {
 }
 
 function confirmAdminAction(actionName) {
-  const code = prompt(`Admin Authorization: Enter Master Passcode to permanently delete this ${actionName}:`);
+  const code = prompt(`Admin Security: Enter Master Passcode to delete ${actionName}:`);
   if (!code) return false;
   if (code === store.masterKey || code === "admin") return true;
   alert("Authorization failed. Incorrect passcode.");
   return false;
 }
 
-function attachFormatValidators() {
-  document.querySelectorAll('.input-alpha').forEach(input => {
-    input.addEventListener('input', function() {
-      this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
-    });
-  });
-  document.querySelectorAll('.input-numeric').forEach(input => {
-    input.addEventListener('input', function() {
-      this.value = this.value.replace(/[^0-9]/g, '');
-    });
-  });
-}
+// COMPACT CUTE FRONT CARDS
+function renderKioskDeck() {
+  const grid = document.getElementById("kioskGrid");
+  grid.innerHTML = "";
 
-function toggleLockField(wrapperId, isChecked) {
-  const el = document.getElementById(wrapperId);
-  if (isChecked) el.classList.remove("hidden");
-  else el.classList.add("hidden");
-}
-
-function validateCredForm() {
-  const emailVal = document.getElementById("fCredEmail").value.trim();
-  const passVal = document.getElementById("fCredPass").value.trim();
-  const isValidEmail = EMAIL_REGEX.test(emailVal);
-  const errEl = document.getElementById("emailErr");
-  const btn = document.getElementById("btnSaveCred");
-
-  if (emailVal.length > 0 && !isValidEmail) errEl.style.display = "block";
-  else errEl.style.display = "none";
-
-  btn.disabled = !(isValidEmail && passVal.length > 0);
-}
-
-// GitHub REST Cloud Engine
-async function syncToGitHub() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-  const badge = document.getElementById("syncStatus");
-
-  if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) {
-    badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Saved Locally (No Cloud Keys)";
+  if (store.kioskCards.length === 0) {
+    grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:36px; background:#fff; border-radius:24px; border:1px solid var(--border);">
+      <p style="font-size:15px; color:var(--text-muted); margin-bottom:12px;">No Presentation Cards added yet.</p>
+      <button class="btn btn-emerald" onclick="openModal('modalKioskItem')">+ Create First Presentation Button</button>
+    </div>`;
     return;
   }
 
-  badge.className = "sync-badge sync-pending";
-  badge.textContent = "● Pushing to GitHub...";
+  const btnText = store.kioskBtnLabel || "Launch Page ➔";
 
-  try {
-    if (!GH_CONFIG.sha) {
-      const getRes = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`, {
-        headers: {
-          "Authorization": `Bearer ${GH_CONFIG.token}`,
-          "Accept": "application/vnd.github.v3+json"
-        }
-      });
-      if (getRes.ok) {
-        const fileInfo = await getRes.json();
-        GH_CONFIG.sha = fileInfo.sha;
-      }
-    }
-
-    const payload = {
-      message: "Sync Central Command Hub",
-      content: btoa(unescape(encodeURIComponent(JSON.stringify(store, null, 2)))),
-      sha: GH_CONFIG.sha
-    };
-
-    const putRes = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`, {
-      method: "PUT",
-      headers: {
-        "Authorization": `Bearer ${GH_CONFIG.token}`,
-        "Content-Type": "application/json",
-        "Accept": "application/vnd.github.v3+json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    if (putRes.ok) {
-      const putData = await putRes.json();
-      GH_CONFIG.sha = putData.content.sha;
-      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
-      badge.className = "sync-badge sync-ok";
-      badge.textContent = "● GitHub Synced";
-    } else {
-      badge.className = "sync-badge sync-pending";
-      badge.textContent = "● Cloud Sync Error";
-    }
-  } catch (err) {
-    badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Offline Mode";
-  }
-}
-
-async function fetchGitHubData(showAlert = false) {
-  if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) return;
-  const badge = document.getElementById("syncStatus");
-  badge.textContent = "● Pulling...";
-
-  try {
-    const res = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}?t=${Date.now()}`, {
-      headers: {
-        "Authorization": `Bearer ${GH_CONFIG.token}`,
-        "Accept": "application/vnd.github.v3+json"
-      }
-    });
-
-    if (res.ok) {
-      const fileData = await res.json();
-      GH_CONFIG.sha = fileData.sha;
-      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
-      const decoded = decodeURIComponent(escape(atob(fileData.content)));
-      const parsed = JSON.parse(decoded);
-      if (parsed.folders) {
-        store = { ...store, ...parsed };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
-        updateHeadingsUI();
-        refreshAll();
-      }
-      badge.className = "sync-badge sync-ok";
-      badge.textContent = "● GitHub Synced";
-      if (showAlert) alert("Sync completed.");
-    }
-  } catch (e) {
-    badge.className = "sync-badge sync-pending";
-    badge.textContent = "● Fetch Failed";
-  }
-}
-
-function saveGitHubConfig() {
-  GH_CONFIG.owner = document.getElementById("ghOwner").value.trim();
-  GH_CONFIG.repo = document.getElementById("ghRepo").value.trim();
-  GH_CONFIG.token = document.getElementById("ghToken").value.trim();
-  GH_CONFIG.sha = "";
-  localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
-  alert("Settings saved. Connecting...");
-  fetchGitHubData(true);
-}
-
-function refreshAll() {
-  updateFolderSelects();
-  renderFolders();
-  renderLinks();
-  renderCredentials();
-  renderHtml();
-  renderMemos();
-}
-
-function updateFolderSelects() {
-  const selects = [
-    document.getElementById("fLinkFolder"),
-    document.getElementById("fCredFolder"),
-    document.getElementById("fHtmlFolder"),
-    document.getElementById("fMemoFolder")
-  ];
-  selects.forEach(s => {
-    if (!s) return;
-    s.innerHTML = "";
-    store.folders.forEach(f => {
-      const opt = document.createElement("option");
-      opt.value = f;
-      opt.textContent = f;
-      s.appendChild(opt);
-    });
+  store.kioskCards.forEach((card, idx) => {
+    const colorClass = `kiosk-${card.color || 'emerald'}`;
+    const el = document.createElement("div");
+    el.className = `kiosk-card ${colorClass}`;
+    el.innerHTML = `
+      <div class="kiosk-edit-bar">
+        <button class="btn-subtle" style="padding:4px 8px; font-size:11px;" onclick="event.stopPropagation(); editKioskCard(${idx})">✎ Edit</button>
+        <button class="btn-ghost-danger" onclick="event.stopPropagation(); deleteKioskCard(${idx})">🗑️</button>
+      </div>
+      <div>
+        <div class="card-top-row">
+          <div class="kiosk-icon-box">${card.icon || '🚀'}</div>
+          <div class="card-badge"><span class="status-pulse"></span> Active</div>
+        </div>
+        <div class="kiosk-title">${escapeHtml(card.title)}</div>
+        <div class="kiosk-sub">${escapeHtml(card.sub || '')}</div>
+      </div>
+      <button class="kiosk-btn" onclick="launchKioskItem(${idx})">${escapeHtml(btnText)}</button>
+    `;
+    grid.appendChild(el);
   });
 }
 
-// 1. FOLDERS ENGINE WITH PENCIL EDIT & CLEAN POPUPS
+function launchKioskItem(idx) {
+  const item = store.kioskCards[idx];
+  if (!item) return;
+
+  if (item.htmlCode) {
+    const blob = new Blob([item.htmlCode], { type: "text/html" });
+    window.open(URL.createObjectURL(blob), "_blank");
+  } else if (item.url) {
+    window.open(item.url, "_blank");
+  } else {
+    alert("No target destination configured for this button.");
+  }
+}
+
+function pickEmoji(emojiChar) {
+  document.getElementById("fKioskIcon").value = emojiChar;
+}
+
+function selectCardColor(colorName, element) {
+  document.querySelectorAll('.color-swatch').forEach(s => s.classList.remove('active'));
+  element.classList.add('active');
+  document.getElementById("fKioskColor").value = colorName;
+}
+
+function populateKioskImporterDropdown() {
+  const sel = document.getElementById("fKioskImportSelect");
+  if (!sel) return;
+  sel.innerHTML = `<option value="">-- Or Select Existing Item to Auto-Add --</option>`;
+
+  store.links.forEach((l, idx) => {
+    const opt = document.createElement("option");
+    opt.value = `link:${idx}`;
+    opt.textContent = `🌐 Portal: ${l.title} (${l.folder})`;
+    sel.appendChild(opt);
+  });
+
+  store.htmlDocs.forEach((h, idx) => {
+    const opt = document.createElement("option");
+    opt.value = `html:${idx}`;
+    opt.textContent = `⚡ HTML Tool: ${h.title} (${h.folder})`;
+    sel.appendChild(opt);
+  });
+
+  store.memos.forEach((m, idx) => {
+    const opt = document.createElement("option");
+    opt.value = `memo:${idx}`;
+    opt.textContent = `📋 Memo: ${m.title} (${m.folder})`;
+    sel.appendChild(opt);
+  });
+}
+
+function handleImportExistingAsset(val) {
+  if (!val) return;
+  const [type, idxStr] = val.split(":");
+  const idx = parseInt(idxStr, 10);
+
+  if (type === "link") {
+    const item = store.links[idx];
+    document.getElementById("fKioskTitle").value = item.title;
+    document.getElementById("fKioskIcon").value = "🌐";
+    document.getElementById("fKioskSub").value = `Direct link (${item.folder})`;
+    document.getElementById("fKioskUrl").value = item.url;
+  } else if (type === "html") {
+    const item = store.htmlDocs[idx];
+    document.getElementById("fKioskTitle").value = item.title;
+    document.getElementById("fKioskIcon").value = "⚡";
+    document.getElementById("fKioskSub").value = `Interactive tool (${item.folder})`;
+    document.getElementById("fKioskUrl").value = "";
+    document.getElementById("fKioskUrl").dataset.importedHtml = item.code;
+  } else if (type === "memo") {
+    const item = store.memos[idx];
+    document.getElementById("fKioskTitle").value = item.title;
+    document.getElementById("fKioskIcon").value = "📋";
+    document.getElementById("fKioskSub").value = `Document memo (${item.folder})`;
+    document.getElementById("fKioskUrl").value = "";
+    document.getElementById("fKioskUrl").dataset.importedHtml = `<html><body style="font-family:sans-serif; padding:30px; line-height:1.6;"><h2>${escapeHtml(item.title)}</h2><p>${escapeHtml(item.content).replace(/\n/g, '<br>')}</p></body></html>`;
+  }
+}
+
+function editKioskCard(idx) {
+  currentEditingKioskIndex = idx;
+  const item = store.kioskCards[idx];
+  document.getElementById("modalKioskHeading").textContent = "Edit Presentation Card";
+  document.getElementById("fKioskTitle").value = item.title;
+  document.getElementById("fKioskIcon").value = item.icon || "🧇";
+  document.getElementById("fKioskSub").value = item.sub || "";
+  document.getElementById("fKioskUrl").value = item.url || "";
+  document.getElementById("fKioskColor").value = item.color || "emerald";
+
+  document.querySelectorAll('.color-swatch').forEach(s => {
+    s.classList.toggle('active', s.dataset.color === (item.color || 'emerald'));
+  });
+
+  openModal('modalKioskItem');
+}
+
+function saveKioskCard() {
+  const title = document.getElementById("fKioskTitle").value.trim();
+  const icon = document.getElementById("fKioskIcon").value.trim() || "🚀";
+  const sub = document.getElementById("fKioskSub").value.trim();
+  const color = document.getElementById("fKioskColor").value || "emerald";
+  const url = document.getElementById("fKioskUrl").value.trim();
+  const htmlCode = document.getElementById("fKioskUrl").dataset.importedHtml || "";
+
+  if (!title) return alert("Title is required.");
+
+  const payload = { title, icon, sub, color, url, htmlCode };
+
+  if (currentEditingKioskIndex > -1) {
+    store.kioskCards[currentEditingKioskIndex] = payload;
+  } else {
+    store.kioskCards.push(payload);
+  }
+
+  delete document.getElementById("fKioskUrl").dataset.importedHtml;
+  closeModal('modalKioskItem');
+  currentEditingKioskIndex = -1;
+  renderKioskDeck();
+  syncToGitHub();
+}
+
+function deleteKioskCard(idx) {
+  if (confirmAdminAction("presentation card")) {
+    store.kioskCards.splice(idx, 1);
+    renderKioskDeck();
+    syncToGitHub();
+  }
+}
+
+// 1. CENTRAL COMMAND FOLDERS
 function promptCreateFolder() {
   let name = prompt("Enter New Folder Name (letters & spaces only):");
   if (name) {
@@ -890,7 +1246,6 @@ function renameFolder(oldName) {
       const idx = store.folders.indexOf(oldName);
       if (idx !== -1) store.folders[idx] = next;
 
-      // Migrate all assets assigned to old folder name
       store.links.forEach(x => { if (x.folder === oldName) x.folder = next; });
       store.credentials.forEach(x => { if (x.folder === oldName) x.folder = next; });
       store.htmlDocs.forEach(x => { if (x.folder === oldName) x.folder = next; });
@@ -906,6 +1261,8 @@ function renderFolders() {
   const grid = document.getElementById("foldersGrid");
   grid.innerHTML = "";
 
+  const folderBtnLabel = store.folderBtnLabel || "Open Folder ➔";
+
   store.folders.forEach((folder, fIndex) => {
     const fLinks = store.links.filter(x => x.folder === folder);
     const fCreds = store.credentials.filter(x => x.folder === folder);
@@ -913,7 +1270,6 @@ function renderFolders() {
     const fMemos = store.memos.filter(x => x.folder === folder);
     const total = fLinks.length + fCreds.length + fDocs.length + fMemos.length;
 
-    // Build clean summary string hiding zeros
     let parts = [];
     if (fLinks.length > 0) parts.push(`${fLinks.length} Portals`);
     if (fCreds.length > 0) parts.push(`${fCreds.length} Credentials`);
@@ -938,7 +1294,7 @@ function renderFolders() {
         </div>
       </div>
       <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
-        <span style="font-size:12px; font-weight:700; color:var(--red-primary);">Open Folder ➔</span>
+        <span style="font-size:12px; font-weight:700; color:var(--red-primary);">${escapeHtml(folderBtnLabel)}</span>
         <button class="btn-ghost-danger" onclick="event.stopPropagation(); deleteFolderDirect(${fIndex})">🗑️</button>
       </div>
     `;
@@ -968,14 +1324,13 @@ function openFolderPopup(folder) {
 
   let html = `<div style="display:flex; flex-direction:column; gap:16px;">`;
 
-  // Only render sections that have items > 0
   if (fLinks.length > 0) {
     html += `<div>
       <h4 style="font-size:13px; font-weight:700; color:var(--red-primary); margin-bottom:8px;">🌐 MISSION PORTALS (${fLinks.length})</h4>`;
     fLinks.forEach(l => {
       const idx = store.links.indexOf(l);
       html += `
-        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
             <strong style="font-size:13.5px;">${escapeHtml(l.title)}</strong> ${l.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted); word-break:break-all;">${escapeHtml(l.url)}</div>
@@ -995,7 +1350,7 @@ function openFolderPopup(folder) {
     fCreds.forEach(c => {
       const idx = store.credentials.indexOf(c);
       html += `
-        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
             <strong style="font-size:13.5px;">${escapeHtml(c.title)}</strong> ${c.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted);">${escapeHtml(c.email)}</div>
@@ -1015,7 +1370,7 @@ function openFolderPopup(folder) {
     fDocs.forEach(d => {
       const idx = store.htmlDocs.indexOf(d);
       html += `
-        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
             <strong style="font-size:13.5px;">${escapeHtml(d.title)}</strong> ${d.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted);">${d.size || 'Script'}</div>
@@ -1035,7 +1390,7 @@ function openFolderPopup(folder) {
     fMemos.forEach(m => {
       const idx = store.memos.indexOf(m);
       html += `
-        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:10px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+        <div style="background:#f8fafc; border:1px solid var(--border); padding:10px 12px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
           <div>
             <strong style="font-size:13.5px;">${escapeHtml(m.title)}</strong> ${m.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted);">${m.date || 'Memo'}</div>
@@ -1160,7 +1515,7 @@ function deleteLink(idx) {
   }
 }
 
-// 3. SECURED CREDENTIALS
+// 3. SECURED CREDENTIALS (PASSWORDS STRICTLY MASKED IN FRONT ADMIN)
 function renderCredentials() {
   const grid = document.getElementById("credsGrid");
   grid.innerHTML = "";
@@ -1181,7 +1536,7 @@ function renderCredentials() {
           <span class="pill pill-magenta">${escapeHtml(c.folder)}</span>
         </div>
         <div style="font-size:12.5px; margin:4px 0;"><b>Email / User:</b> ${escapeHtml(c.email)}</div>
-        <div style="font-size:12.5px;"><b>Key:</b> <span id="passSpan-${idx}">••••••••</span></div>
+        <div style="font-size:12.5px;"><b>Key:</b> <span id="passSpan-${idx}" style="letter-spacing:1px;">••••••••••••</span></div>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
         <button class="btn btn-subtle" onclick="editCred(${idx})">✎ Inspect / Edit</button>
@@ -1219,8 +1574,11 @@ function revealCred(idx) {
     if (entered !== item.pin) return alert("Incorrect Security PIN.");
   }
   const el = document.getElementById(`passSpan-${idx}`);
-  if (el) el.textContent = (el.textContent === "••••••••") ? item.pass : "••••••••";
-  else alert(`Password: ${item.pass}`);
+  if (el) {
+    el.textContent = (el.textContent === "••••••••••••") ? item.pass : "••••••••••••";
+  } else {
+    alert(`Password: ${item.pass}`);
+  }
 }
 
 function saveCred() {
@@ -1261,6 +1619,40 @@ function deleteCred(idx) {
 }
 
 // 4. HTML RUNTIME
+function setupDragAndDrop() {
+  const dropArea = document.getElementById("dropArea");
+  if (!dropArea) return;
+
+  ['dragenter', 'dragover'].forEach(evt => {
+    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.add('dragover'); }, false);
+  });
+  ['dragleave', 'drop'].forEach(evt => {
+    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); }, false);
+  });
+  dropArea.addEventListener('drop', (e) => {
+    if (e.dataTransfer.files.length > 0) processHtmlFile(e.dataTransfer.files[0]);
+  });
+}
+
+function handleFileDrop(e) {
+  if (e.target.files.length > 0) processHtmlFile(e.target.files[0]);
+}
+
+function processHtmlFile(file) {
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    currentEditingHtmlIndex = -1;
+    document.getElementById("modalHtmlHeading").textContent = "Add HTML Runtime Application";
+    document.getElementById("fHtmlTitle").value = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z\s]/g, '') || "HTML Script";
+    document.getElementById("fHtmlCode").value = evt.target.result;
+    document.getElementById("fHtmlPin").value = "";
+    document.getElementById("fHtmlLocked").checked = false;
+    toggleLockField('fHtmlPinWrap', false);
+    openModal('modalHtml');
+  };
+  reader.readAsText(file);
+}
+
 function renderHtml() {
   const grid = document.getElementById("htmlGrid");
   grid.innerHTML = "";
@@ -1434,7 +1826,7 @@ function deleteMemo(idx) {
   }
 }
 
-// 6. MASTER CODE
+// 6. MASTER PASSCODE
 function updateMasterKey() {
   const oldKey = document.getElementById("oldMasterKey").value.trim();
   const newKey = document.getElementById("newMasterKey").value.trim();
@@ -1447,7 +1839,212 @@ function updateMasterKey() {
   syncToGitHub();
 }
 
+// CLOUD REST ENGINE
+async function syncToGitHub() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+  const badge = document.getElementById("syncStatus");
+
+  if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) {
+    badge.className = "sync-badge sync-pending";
+    badge.textContent = "● Saved Locally (No Cloud Keys)";
+    return;
+  }
+
+  badge.className = "sync-badge sync-pending";
+  badge.textContent = "● Pushing to GitHub...";
+
+  try {
+    if (!GH_CONFIG.sha) {
+      const getRes = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`, {
+        headers: {
+          "Authorization": `Bearer ${GH_CONFIG.token}`,
+          "Accept": "application/vnd.github.v3+json"
+        }
+      });
+      if (getRes.ok) {
+        const fileInfo = await getRes.json();
+        GH_CONFIG.sha = fileInfo.sha;
+      }
+    }
+
+    const payload = {
+      message: "Sync Central Command Hub",
+      content: btoa(unescape(encodeURIComponent(JSON.stringify(store, null, 2)))),
+      sha: GH_CONFIG.sha
+    };
+
+    const putRes = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}`, {
+      method: "PUT",
+      headers: {
+        "Authorization": `Bearer ${GH_CONFIG.token}`,
+        "Content-Type": "application/json",
+        "Accept": "application/vnd.github.v3+json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (putRes.ok) {
+      const putData = await putRes.json();
+      GH_CONFIG.sha = putData.content.sha;
+      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
+      badge.className = "sync-badge sync-ok";
+      badge.textContent = "● GitHub Synced";
+    } else {
+      badge.className = "sync-badge sync-pending";
+      badge.textContent = "● Cloud Sync Error";
+    }
+  } catch (err) {
+    badge.className = "sync-badge sync-pending";
+    badge.textContent = "● Offline Mode";
+  }
+}
+
+async function fetchGitHubData(showAlert = false) {
+  if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) return;
+  const badge = document.getElementById("syncStatus");
+  badge.textContent = "● Pulling...";
+
+  try {
+    const res = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}?t=${Date.now()}`, {
+      headers: {
+        "Authorization": `Bearer ${GH_CONFIG.token}`,
+        "Accept": "application/vnd.github.v3+json"
+      }
+    });
+
+    if (res.ok) {
+      const fileData = await res.json();
+      GH_CONFIG.sha = fileData.sha;
+      localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
+      const decoded = decodeURIComponent(escape(atob(fileData.content)));
+      const parsed = JSON.parse(decoded);
+      if (parsed.folders) {
+        store = { ...store, ...parsed };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+        updateHeadingsUI();
+        populateGlobalLabelsUI();
+        refreshAll();
+      }
+      badge.className = "sync-badge sync-ok";
+      badge.textContent = "● GitHub Synced";
+      if (showAlert) alert("Sync completed.");
+    }
+  } catch (e) {
+    badge.className = "sync-badge sync-pending";
+    badge.textContent = "● Fetch Failed";
+  }
+}
+
+function saveGitHubConfig() {
+  GH_CONFIG.owner = document.getElementById("ghOwner").value.trim();
+  GH_CONFIG.repo = document.getElementById("ghRepo").value.trim();
+  GH_CONFIG.token = document.getElementById("ghToken").value.trim();
+  GH_CONFIG.sha = "";
+  localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
+  alert("Settings saved. Connecting...");
+  fetchGitHubData(true);
+}
+
+function refreshAll() {
+  updateFolderSelects();
+  populateKioskImporterDropdown();
+  renderKioskDeck();
+  renderFolders();
+  renderLinks();
+  renderCredentials();
+  renderHtml();
+  renderMemos();
+}
+
+function updateFolderSelects() {
+  const selects = [
+    document.getElementById("fLinkFolder"),
+    document.getElementById("fCredFolder"),
+    document.getElementById("fHtmlFolder"),
+    document.getElementById("fMemoFolder")
+  ];
+  selects.forEach(s => {
+    if (!s) return;
+    s.innerHTML = "";
+    store.folders.forEach(f => {
+      const opt = document.createElement("option");
+      opt.value = f;
+      opt.textContent = f;
+      s.appendChild(opt);
+    });
+  });
+}
+
+function attachFormatValidators() {
+  document.querySelectorAll('.input-alpha').forEach(input => {
+    input.addEventListener('input', function() {
+      this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
+    });
+  });
+  document.querySelectorAll('.input-numeric').forEach(input => {
+    input.addEventListener('input', function() {
+      this.value = this.value.replace(/[^0-9]/g, '');
+    });
+  });
+}
+
+function toggleLockField(wrapperId, isChecked) {
+  const el = document.getElementById(wrapperId);
+  if (isChecked) el.classList.remove("hidden");
+  else el.classList.add("hidden");
+}
+
+function validateCredForm() {
+  const emailVal = document.getElementById("fCredEmail").value.trim();
+  const passVal = document.getElementById("fCredPass").value.trim();
+  const isValidEmail = EMAIL_REGEX.test(emailVal);
+  const errEl = document.getElementById("emailErr");
+  const btn = document.getElementById("btnSaveCred");
+
+  if (emailVal.length > 0 && !isValidEmail) errEl.style.display = "block";
+  else errEl.style.display = "none";
+
+  btn.disabled = !(isValidEmail && passVal.length > 0);
+}
+
+let backPressedOnce = false;
+function setupHistoryTrap() {
+  window.history.pushState({ page: 1 }, "", "");
+  window.addEventListener("popstate", function(event) {
+    const openModals = document.querySelectorAll(".modal-backdrop:not(.hidden)");
+    if (openModals.length > 0) {
+      openModals.forEach(m => m.classList.add("hidden"));
+      window.history.pushState({ page: 1 }, "", "");
+      return;
+    }
+    const sidebar = document.getElementById("mainSidebar");
+    if (sidebar.classList.contains("open")) {
+      sidebar.classList.remove("open");
+      window.history.pushState({ page: 1 }, "", "");
+      return;
+    }
+    if (!backPressedOnce) {
+      backPressedOnce = true;
+      const toast = document.getElementById("toastMsg");
+      toast.style.opacity = "1";
+      setTimeout(() => { toast.style.opacity = "0"; backPressedOnce = false; }, 2000);
+      window.history.pushState({ page: 1 }, "", "");
+    } else {
+      window.history.back();
+    }
+  });
+}
+
 function openModal(id) {
+  if (id === 'modalKioskItem' && currentEditingKioskIndex === -1) {
+    document.getElementById("modalKioskHeading").textContent = "Add Presentation Card";
+    document.getElementById("fKioskTitle").value = "";
+    document.getElementById("fKioskIcon").value = "🧇";
+    document.getElementById("fKioskSub").value = "";
+    document.getElementById("fKioskUrl").value = "";
+    document.getElementById("fKioskImportSelect").value = "";
+    selectCardColor('emerald', document.querySelector('.color-swatch[data-color="emerald"]'));
+  }
   if (id === 'modalLink' && currentEditingLinkIndex === -1) {
     document.getElementById("modalLinkHeading").textContent = "Add Mission Portal";
     document.getElementById("fLinkTitle").value = "";
@@ -1487,6 +2084,7 @@ function openModal(id) {
 
 function closeModal(id) {
   document.getElementById(id).classList.add('hidden');
+  if (id === 'modalKioskItem') currentEditingKioskIndex = -1;
   if (id === 'modalLink') currentEditingLinkIndex = -1;
   if (id === 'modalCred') currentEditingCredIndex = -1;
   if (id === 'modalHtml') currentEditingHtmlIndex = -1;
