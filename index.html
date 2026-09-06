@@ -19,7 +19,7 @@
       --indigo-light: #eef2ff;
       --magenta: #c026d3;
       --magenta-light: #fdf4ff;
-      --sidebar-w: 260px;
+      --sidebar-w: 265px;
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -32,7 +32,7 @@
     }
     .burger-btn { font-size: 22px; background: none; border: none; cursor: pointer; padding: 6px; color: var(--text-main); }
 
-    /* Layout Shell */
+    /* Layout */
     #appLayout { display: flex; width: 100vw; min-height: 100vh; }
     .sidebar {
       width: var(--sidebar-w); background: #ffffff; border-right: 1px solid var(--border);
@@ -51,7 +51,7 @@
     .nav-list { list-style: none; display: flex; flex-direction: column; gap: 6px; }
     .nav-btn {
       width: 100%; text-align: left; padding: 11px 14px; border-radius: 10px; font-size: 13.5px; font-weight: 600;
-      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.15s;
+      color: var(--text-muted); background: transparent; border: none; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: all 0.15s;
     }
     .nav-btn:hover { background: #f1f5f9; color: var(--text-main); }
     .nav-btn.active { background: var(--red-light); color: var(--red-primary); border-left: 3px solid var(--red-primary); }
@@ -62,17 +62,20 @@
     @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
 
     .view-header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 14px; flex-wrap: wrap; gap: 12px; }
+    .heading-wrapper { display: flex; align-items: center; gap: 8px; }
     .h1-title { font-size: 22px; font-weight: 800; color: var(--text-main); }
     .sub-lead { font-size: 12.5px; color: var(--text-muted); margin-top: 4px; }
+    .icon-pencil-heading { font-size: 14px; color: var(--text-muted); cursor: pointer; padding: 4px; border-radius: 4px; }
+    .icon-pencil-heading:hover { color: var(--red-primary); background: #f1f5f9; }
 
     /* Drag & Drop */
     .drop-target {
       border: 2px dashed #cbd5e1; border-radius: 14px; background: #ffffff;
-      padding: 32px 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s ease;
+      padding: 28px 20px; text-align: center; cursor: pointer; margin-bottom: 24px; transition: all 0.2s ease;
     }
     .drop-target:hover, .drop-target.dragover { border-color: var(--indigo-core); background: var(--indigo-light); }
 
-    /* Form Controls */
+    /* Controls */
     input, select, textarea {
       width: 100%; background: #ffffff; border: 1px solid var(--border); border-radius: 8px;
       padding: 10px 12px; font-size: 13.5px; color: var(--text-main); margin-top: 5px; margin-bottom: 12px;
@@ -93,16 +96,15 @@
     .btn-ghost-danger { background: transparent; color: var(--red-primary); border: none; padding: 4px 6px; font-size: 13px; cursor: pointer; }
 
     /* Grids & Cards */
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; margin-bottom: 24px; }
     .dash-card {
       background: var(--surface); border: 1px solid var(--border); border-radius: 12px;
-      padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 125px;
+      padding: 16px; display: flex; flex-direction: column; justify-content: space-between; min-height: 130px;
     }
 
-    /* Unique Royal Crimson / Indigo Folder Cards */
     .folder-card {
-      background: linear-gradient(145deg, #ffffff 60%, #fdf2f8 100%);
-      border: 1px solid #fed7aa;
+      background: linear-gradient(145deg, #ffffff 65%, #fff1f2 100%);
+      border: 1px solid #fecdd3;
       border-left: 5px solid #dc2626;
       border-radius: 14px;
       padding: 18px;
@@ -121,17 +123,7 @@
     .pill-indigo { background: var(--indigo-light); color: var(--indigo-core); }
     .pill-magenta { background: var(--magenta-light); color: var(--magenta); }
 
-    /* Gatekeeper Overlay */
-    #gatekeeper {
-      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(6px);
-      display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px;
-    }
-    .gate-box {
-      background: #ffffff; border-radius: 16px; padding: 32px 24px; width: 100%; max-width: 380px; text-align: center;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
-    }
-
-    /* Modal Backdrop */
+    /* Modals */
     .modal-backdrop {
       position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px);
       display: flex; justify-content: center; align-items: center; z-index: 1000; padding: 14px;
@@ -139,11 +131,18 @@
     .modal-window {
       background: #ffffff; border-radius: 14px; width: 100%; max-width: 540px; padding: 22px; max-height: 90vh; overflow-y: auto;
     }
-
-    /* Folder Pop-up Inspector Modal */
     .folder-popup-window {
-      background: #ffffff; border-radius: 16px; width: 100%; max-width: 680px; padding: 24px; max-height: 85vh; overflow-y: auto;
+      background: #ffffff; border-radius: 16px; width: 100%; max-width: 700px; padding: 24px; max-height: 85vh; overflow-y: auto;
       border: 1px solid var(--border); box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+    }
+
+    #gatekeeper {
+      position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(6px);
+      display: flex; justify-content: center; align-items: center; z-index: 9999; padding: 16px;
+    }
+    .gate-box {
+      background: #ffffff; border-radius: 16px; padding: 32px 24px; width: 100%; max-width: 380px; text-align: center;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
     }
 
     #toastMsg {
@@ -158,7 +157,7 @@
       .mobile-header { display: flex; }
       #appLayout { flex-direction: column; }
       .sidebar {
-        position: fixed; top: 56px; left: 0; bottom: 0; width: 260px;
+        position: fixed; top: 56px; left: 0; bottom: 0; width: 265px;
         transform: translateX(-100%); box-shadow: 10px 0 25px rgba(0,0,0,0.1);
       }
       .sidebar.open { transform: translateX(0); }
@@ -173,7 +172,7 @@
 
 <div id="toastMsg">Press back again to exit</div>
 
-<!-- Security Gatekeeper -->
+<!-- Gatekeeper -->
 <div id="gatekeeper">
   <div class="gate-box">
     <div style="font-size: 34px; margin-bottom: 8px;">🔐</div>
@@ -202,13 +201,15 @@
         <span id="syncStatus" class="sync-badge sync-pending">● Initializing Sync</span>
       </div>
       <ul class="nav-list">
-        <!-- 1ST & MOST IMPORTANT: Central Command Folders -->
-        <li><button class="nav-btn active" onclick="switchView('folders')">📁 Central Command Folders</button></li>
-        <li><button class="nav-btn" onclick="switchView('portals')">🌐 Mission Portals</button></li>
-        <li><button class="nav-btn" onclick="switchView('credentials')">🔐 Secured Credentials</button></li>
-        <li><button class="nav-btn" onclick="switchView('htmlEngine')">⚡ HTML App Runtime</button></li>
-        <li><button class="nav-btn" onclick="switchView('memos')">📋 Executive Memos</button></li>
-        <li><button class="nav-btn" onclick="switchView('system')">⚙️ Cloud Synchronization</button></li>
+        <li><button class="nav-btn active" onclick="switchView('folders')">📁 <span id="nav-folders">Central Command Folders</span></button></li>
+        <li><button class="nav-btn" onclick="switchView('portals')">🌐 <span id="nav-portals">Mission Portals</span></button></li>
+        <li><button class="nav-btn" onclick="switchView('credentials')">🔐 <span id="nav-credentials">Secured Credentials</span></button></li>
+        <li><button class="nav-btn" onclick="switchView('htmlEngine')">⚡ <span id="nav-htmlEngine">HTML App Runtime</span></button></li>
+        <li><button class="nav-btn" onclick="switchView('memos')">📋 <span id="nav-memos">Executive Memos</span></button></li>
+        <li style="margin-top: 10px; border-top: 1px solid var(--border); padding-top: 8px;">
+          <button class="nav-btn" onclick="switchView('cloud')">☁️ Cloud Synchronization</button>
+        </li>
+        <li><button class="nav-btn" onclick="switchView('security')">🛡️ Master Passcode</button></li>
       </ul>
     </div>
     <div style="margin-top: 20px;">
@@ -217,42 +218,49 @@
   </aside>
 
   <main class="content-area">
-    <!-- TAB 1: CENTRAL COMMAND FOLDERS (DEFAULT LANDING PAGE) -->
+    <!-- TAB 1: FOLDERS -->
     <section id="pane-folders" class="tab-pane active">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">Central Command Folders</h1>
-          <p class="sub-lead">Master directory of all business resources, vaults, links, and documents</p>
+          <div class="heading-wrapper">
+            <h1 class="h1-title" id="title-folders">Central Command Folders</h1>
+            <span class="icon-pencil-heading" onclick="renameModuleHeading('folders')" title="Rename Heading">✎</span>
+          </div>
+          <p class="sub-lead">Master repository categorized by functional operations</p>
         </div>
         <div style="display:flex; gap:8px; flex-wrap:wrap;">
           <button class="btn btn-red" onclick="promptCreateFolder()">+ New Folder</button>
           <button class="btn btn-indigo" onclick="openModal('modalFastCreate')">⚡ Quick Create</button>
         </div>
       </div>
-
       <div class="grid" id="foldersGrid"></div>
     </section>
 
-    <!-- TAB 2: MISSION PORTALS -->
+    <!-- TAB 2: PORTALS -->
     <section id="pane-portals" class="tab-pane">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">Mission Portals</h1>
-          <p class="sub-lead">Web admin consoles, gateways, and critical business links</p>
+          <div class="heading-wrapper">
+            <h1 class="h1-title" id="title-portals">Mission Portals</h1>
+            <span class="icon-pencil-heading" onclick="renameModuleHeading('portals')" title="Rename Heading">✎</span>
+          </div>
+          <p class="sub-lead">Web admin gateways and executive shortcuts</p>
         </div>
         <button class="btn btn-red" onclick="openModal('modalLink')">+ Add Portal</button>
       </div>
-
-      <input type="text" id="linkFilter" placeholder="Filter portals..." oninput="renderLinks()">
+      <input type="text" id="linkFilter" placeholder="Filter portals by title, folder or URL..." oninput="renderLinks()">
       <div class="grid" id="linksGrid"></div>
     </section>
 
-    <!-- TAB 3: SECURED CREDENTIALS -->
+    <!-- TAB 3: CREDENTIALS -->
     <section id="pane-credentials" class="tab-pane">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">Secured Credentials Vault</h1>
-          <p class="sub-lead">Master credentials, logins, and API access tokens</p>
+          <div class="heading-wrapper">
+            <h1 class="h1-title" id="title-credentials">Secured Credentials Vault</h1>
+            <span class="icon-pencil-heading" onclick="renameModuleHeading('credentials')" title="Rename Heading">✎</span>
+          </div>
+          <p class="sub-lead">Protected login tokens, passwords, and master keys</p>
         </div>
         <button class="btn btn-magenta" onclick="openModal('modalCred')">+ Save Credential</button>
       </div>
@@ -263,71 +271,89 @@
     <section id="pane-htmlEngine" class="tab-pane">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">HTML Application Runtime</h1>
+          <div class="heading-wrapper">
+            <h1 class="h1-title" id="title-htmlEngine">HTML Application Runtime</h1>
+            <span class="icon-pencil-heading" onclick="renameModuleHeading('htmlEngine')" title="Rename Heading">✎</span>
+          </div>
           <p class="sub-lead">Run single-page tools & snippets in sandbox</p>
         </div>
         <button class="btn btn-red" onclick="openModal('modalHtml')">+ Add HTML Snippet</button>
       </div>
 
       <div class="drop-target" id="dropArea" onclick="document.getElementById('filePicker').click()">
-        <div style="font-size: 32px; margin-bottom: 6px;">📄</div>
-        <strong style="font-size: 15px;">Drop HTML file here or click to browse</strong>
-        <p style="font-size: 12.5px; color: var(--text-muted); margin-top: 4px;">Upload standalone .html, .htm, or web script files</p>
+        <div style="font-size: 30px; margin-bottom: 6px;">📄</div>
+        <strong style="font-size: 14.5px;">Drop HTML file here or click to browse</strong>
+        <p style="font-size: 12px; color: var(--text-muted); margin-top: 4px;">Supports standalone .html, .htm, or web script files</p>
         <input type="file" id="filePicker" accept=".html,.htm,.txt" style="display: none;" onchange="handleFileDrop(event)">
       </div>
 
       <div class="grid" id="htmlGrid"></div>
     </section>
 
-    <!-- TAB 5: EXECUTIVE MEMOS -->
+    <!-- TAB 5: MEMOS -->
     <section id="pane-memos" class="tab-pane">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">Executive Memo Pad</h1>
-          <p class="sub-lead">Confidential protocols, notes, and documentation</p>
+          <div class="heading-wrapper">
+            <h1 class="h1-title" id="title-memos">Executive Memo Pad</h1>
+            <span class="icon-pencil-heading" onclick="renameModuleHeading('memos')" title="Rename Heading">✎</span>
+          </div>
+          <p class="sub-lead">Encrypted protocols, notes, and documentation</p>
         </div>
         <button class="btn btn-indigo" onclick="openModal('modalMemo')">+ Draft Memo</button>
       </div>
       <div class="grid" id="memosGrid"></div>
     </section>
 
-    <!-- TAB 6: GITHUB CLOUD SYNC -->
-    <section id="pane-system" class="tab-pane">
+    <!-- TAB 6: CLOUD SYNC (SEPARATED) -->
+    <section id="pane-cloud" class="tab-pane">
       <div class="view-header">
         <div>
-          <h1 class="h1-title">Cloud Synchronization Engine</h1>
-          <p class="sub-lead">Multi-device live synchronization via GitHub REST API</p>
+          <h1 class="h1-title">Cloud Synchronization</h1>
+          <p class="sub-lead">GitHub REST API multi-device synchronization engine</p>
         </div>
       </div>
-      <div style="max-width: 520px; display: flex; flex-direction: column; gap: 16px;">
+      <div style="max-width: 520px;">
         <div class="dash-card">
           <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">GITHUB USERNAME</label>
           <input type="text" id="ghOwner" placeholder="e.g. sreehp92">
 
-          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">STORAGE REPO</label>
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">STORAGE REPOSITORY</label>
           <input type="text" id="ghRepo" placeholder="workspace-data">
 
           <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">PERSONAL ACCESS TOKEN (PAT)</label>
           <input type="password" id="ghToken" placeholder="ghp_...">
 
-          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 6px;">
             <button class="btn btn-red" onclick="saveGitHubConfig()">Save & Connect</button>
-            <button class="btn btn-subtle" onclick="fetchGitHubData(true)">Sync Now</button>
+            <button class="btn btn-subtle" onclick="fetchGitHubData(true)">Force Pull Now</button>
           </div>
         </div>
+      </div>
+    </section>
 
+    <!-- TAB 7: MASTER PASSCODE (SEPARATED) -->
+    <section id="pane-security" class="tab-pane">
+      <div class="view-header">
+        <div>
+          <h1 class="h1-title">Master Passcode & Security</h1>
+          <p class="sub-lead">Manage session unlock and admin deletion authorizations</p>
+        </div>
+      </div>
+      <div style="max-width: 520px;">
         <div class="dash-card">
-          <h3 style="font-size: 15px; margin-bottom: 6px;">Update Master Admin Code</h3>
-          <input type="password" id="oldMasterKey" placeholder="Current passcode">
-          <input type="password" id="newMasterKey" placeholder="New passcode">
-          <button class="btn btn-magenta" onclick="updateMasterKey()">Update Passkey</button>
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">CURRENT PASSCODE</label>
+          <input type="password" id="oldMasterKey" placeholder="Enter current passcode">
+          <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">NEW PASSCODE</label>
+          <input type="password" id="newMasterKey" placeholder="Enter new passcode (min 3 chars)">
+          <button class="btn btn-magenta" onclick="updateMasterKey()">Update Master Passcode</button>
         </div>
       </div>
     </section>
   </main>
 </div>
 
-<!-- POP-UP MODAL: FOLDER VAULT INSPECTOR -->
+<!-- POP-UP MODAL: FOLDER VAULT INSPECTOR (CLEAN VIEW - NO EMPTY 0s) -->
 <div id="modalFolderPopup" class="modal-backdrop hidden">
   <div class="folder-popup-window">
     <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding-bottom:12px; margin-bottom:16px;">
@@ -337,16 +363,15 @@
       </div>
       <button class="btn btn-subtle" style="padding:4px 10px;" onclick="closeModal('modalFolderPopup')">✕ Close</button>
     </div>
-
     <div id="popupFolderBody"></div>
   </div>
 </div>
 
-<!-- MODAL: QUICK UNIVERSAL CREATE SELECTOR -->
+<!-- MODAL: UNIVERSAL FAST CREATE -->
 <div id="modalFastCreate" class="modal-backdrop hidden">
   <div class="modal-window">
-    <h3 style="font-size:17px; margin-bottom:12px;">Universal Creator</h3>
-    <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Select what you want to create or add:</p>
+    <h3 style="font-size:17px; margin-bottom:12px;">Universal Quick Create</h3>
+    <p style="font-size:13px; color:var(--text-muted); margin-bottom:18px;">Select an item type to create:</p>
     <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
       <button class="btn btn-red" onclick="closeModal('modalFastCreate'); openModal('modalLink');">🌐 Mission Portal</button>
       <button class="btn btn-magenta" onclick="closeModal('modalFastCreate'); openModal('modalCred');">🔐 Credential</button>
@@ -359,15 +384,15 @@
   </div>
 </div>
 
-<!-- MODAL: ADD PORTAL -->
+<!-- MODAL: ADD / EDIT PORTAL -->
 <div id="modalLink" class="modal-backdrop hidden">
   <div class="modal-window">
-    <h3 style="font-size: 17px; margin-bottom: 12px;">Add Mission Portal</h3>
+    <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalLinkHeading">Mission Portal</h3>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">PORTAL TITLE (LETTERS ONLY)</label>
-    <input type="text" id="fLinkTitle" class="input-alpha" placeholder="e.g. Master Control Center">
+    <input type="text" id="fLinkTitle" class="input-alpha" placeholder="Control Gateway">
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">WEB URL</label>
     <input type="url" id="fLinkUrl" placeholder="https://example.com">
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGNED FOLDER</label>
     <select id="fLinkFolder"></select>
     
     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
@@ -385,14 +410,14 @@
   </div>
 </div>
 
-<!-- MODAL: ADD CREDENTIAL -->
+<!-- MODAL: ADD / EDIT CREDENTIAL -->
 <div id="modalCred" class="modal-backdrop hidden">
   <div class="modal-window">
-    <h3 style="font-size: 17px; margin-bottom: 12px;">Save Secured Credential</h3>
+    <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalCredHeading">Secured Credential</h3>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">TITLE (LETTERS ONLY)</label>
-    <input type="text" id="fCredTitle" class="input-alpha" placeholder="Google Workspace Master">
+    <input type="text" id="fCredTitle" class="input-alpha" placeholder="Google Workspace Admin">
     
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">EMAIL ADDRESS (STRICT VALIDATION)</label>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ACCOUNT EMAIL (STRICT VALIDATION)</label>
     <input type="email" id="fCredEmail" placeholder="thegoogle123@gmail.com" oninput="validateCredForm()">
     <div id="emailErr" style="font-size: 11px; color: var(--red-primary); margin-top: -8px; margin-bottom: 8px; display: none;">
       Must be complete valid email format (e.g. name@domain.com)
@@ -401,7 +426,7 @@
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SECRET KEY / PASSWORD</label>
     <input type="password" id="fCredPass" placeholder="Secret Key" oninput="validateCredForm()">
 
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGNED FOLDER</label>
     <select id="fCredFolder"></select>
 
     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
@@ -419,15 +444,15 @@
   </div>
 </div>
 
-<!-- MODAL: ADD HTML -->
+<!-- MODAL: ADD / EDIT HTML -->
 <div id="modalHtml" class="modal-backdrop hidden">
   <div class="modal-window">
-    <h3 style="font-size: 17px; margin-bottom: 12px;">Store HTML Snippet</h3>
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">SNIPPET NAME</label>
-    <input type="text" id="fHtmlTitle" class="input-alpha" placeholder="Waffle Cost Calculator">
+    <h3 style="font-size: 17px; margin-bottom: 12px;" id="modalHtmlHeading">HTML Runtime Application</h3>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">APPLICATION NAME</label>
+    <input type="text" id="fHtmlTitle" class="input-alpha" placeholder="Cost Calculator">
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">RAW HTML CODE</label>
     <textarea id="fHtmlCode" rows="7" placeholder="<!DOCTYPE html>..."></textarea>
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGNED FOLDER</label>
     <select id="fHtmlFolder"></select>
 
     <label style="display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; margin: 10px 0 6px;">
@@ -450,8 +475,8 @@
   <div class="modal-window">
     <h3 id="memoModalTitle" style="font-size: 17px; margin-bottom: 12px;">Executive Memo</h3>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">TITLE (LETTERS ONLY)</label>
-    <input type="text" id="fMemoTitle" class="input-alpha" placeholder="Franchise Operations Protocol">
-    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGN TO FOLDER</label>
+    <input type="text" id="fMemoTitle" class="input-alpha" placeholder="Branch Operations Protocol">
+    <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">ASSIGNED FOLDER</label>
     <select id="fMemoFolder"></select>
     <label style="font-size: 12px; font-weight: 700; color: var(--text-muted);">DOCUMENT BODY</label>
     <textarea id="fMemoContent" rows="8" placeholder="Enter notes..."></textarea>
@@ -472,7 +497,7 @@
 </div>
 
 <script>
-// Master State Management
+// State Management Engine
 let GH_CONFIG = { owner: "", repo: "", token: "", path: "data.json", sha: "" };
 const STORAGE_KEY = "CORP_GH_DATA";
 const GH_CONFIG_KEY = "CORP_GH_CONFIG";
@@ -481,6 +506,13 @@ const SESSION_AUTH_KEY = "CORP_AUTH_STATE";
 
 let store = {
   masterKey: "admin",
+  moduleNames: {
+    folders: "Central Command Folders",
+    portals: "Mission Portals",
+    credentials: "Secured Credentials Vault",
+    htmlEngine: "HTML Application Runtime",
+    memos: "Executive Memo Pad"
+  },
   folders: ["Administration", "Operations", "Production", "Accounts"],
   links: [],
   credentials: [],
@@ -488,7 +520,11 @@ let store = {
   memos: []
 };
 
+let currentEditingLinkIndex = -1;
+let currentEditingCredIndex = -1;
+let currentEditingHtmlIndex = -1;
 let currentEditingMemoIndex = -1;
+
 const EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 function init() {
@@ -497,7 +533,19 @@ function init() {
 
   const local = localStorage.getItem(STORAGE_KEY);
   if (local) {
-    try { store = JSON.parse(local); } catch(e) {}
+    try { 
+      const parsed = JSON.parse(local);
+      store = { ...store, ...parsed };
+      if (!store.moduleNames) {
+        store.moduleNames = {
+          folders: "Central Command Folders",
+          portals: "Mission Portals",
+          credentials: "Secured Credentials Vault",
+          htmlEngine: "HTML Application Runtime",
+          memos: "Executive Memo Pad"
+        };
+      }
+    } catch(e) {}
   }
 
   document.getElementById("ghOwner").value = GH_CONFIG.owner || "";
@@ -507,8 +555,8 @@ function init() {
   attachFormatValidators();
   setupHistoryTrap();
   setupDragAndDrop();
+  updateHeadingsUI();
 
-  // Session state persistence
   if (sessionStorage.getItem(SESSION_AUTH_KEY) === "true") {
     document.getElementById("gatekeeper").classList.add("hidden");
     const activeTab = sessionStorage.getItem(CURRENT_TAB_KEY) || 'folders';
@@ -521,50 +569,61 @@ function init() {
   }
 }
 
-// Drag & Drop Runtime Listener
+// Editable Section Titles
+function renameModuleHeading(moduleKey) {
+  const current = store.moduleNames[moduleKey] || moduleKey;
+  let next = prompt("Enter new section title (letters & spaces only):", current);
+  if (next) {
+    next = next.replace(/[^a-zA-Z\s]/g, '').trim();
+    if (next) {
+      store.moduleNames[moduleKey] = next;
+      updateHeadingsUI();
+      syncToGitHub();
+    }
+  }
+}
+
+function updateHeadingsUI() {
+  const keys = ['folders', 'portals', 'credentials', 'htmlEngine', 'memos'];
+  keys.forEach(k => {
+    const val = store.moduleNames[k] || k;
+    const titleEl = document.getElementById(`title-${k}`);
+    const navEl = document.getElementById(`nav-${k}`);
+    if (titleEl) titleEl.textContent = val;
+    if (navEl) navEl.textContent = val;
+  });
+}
+
+// Drag & Drop
 function setupDragAndDrop() {
   const dropArea = document.getElementById("dropArea");
   if (!dropArea) return;
 
   ['dragenter', 'dragover'].forEach(evt => {
-    dropArea.addEventListener(evt, (e) => {
-      e.preventDefault();
-      dropArea.classList.add('dragover');
-    }, false);
+    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.add('dragover'); }, false);
   });
-
   ['dragleave', 'drop'].forEach(evt => {
-    dropArea.addEventListener(evt, (e) => {
-      e.preventDefault();
-      dropArea.classList.remove('dragover');
-    }, false);
+    dropArea.addEventListener(evt, (e) => { e.preventDefault(); dropArea.classList.remove('dragover'); }, false);
   });
-
   dropArea.addEventListener('drop', (e) => {
-    if (e.dataTransfer.files.length > 0) {
-      processHtmlFile(e.dataTransfer.files[0]);
-    }
+    if (e.dataTransfer.files.length > 0) processHtmlFile(e.dataTransfer.files[0]);
   });
 }
 
 function handleFileDrop(e) {
-  if (e.target.files.length > 0) {
-    processHtmlFile(e.target.files[0]);
-  }
+  if (e.target.files.length > 0) processHtmlFile(e.target.files[0]);
 }
 
 function processHtmlFile(file) {
   const reader = new FileReader();
   reader.onload = function(evt) {
-    const rawCode = evt.target.result;
-    const cleanTitle = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z\s]/g, '') || "HTML Script";
-    
-    document.getElementById("fHtmlTitle").value = cleanTitle;
-    document.getElementById("fHtmlCode").value = rawCode;
+    currentEditingHtmlIndex = -1;
+    document.getElementById("modalHtmlHeading").textContent = "Add HTML Runtime Application";
+    document.getElementById("fHtmlTitle").value = file.name.replace(/\.[^/.]+$/, "").replace(/[^a-zA-Z\s]/g, '') || "HTML Script";
+    document.getElementById("fHtmlCode").value = evt.target.result;
     document.getElementById("fHtmlPin").value = "";
     document.getElementById("fHtmlLocked").checked = false;
     toggleLockField('fHtmlPinWrap', false);
-    
     openModal('modalHtml');
   };
   reader.readAsText(file);
@@ -581,14 +640,12 @@ function setupHistoryTrap() {
       window.history.pushState({ page: 1 }, "", "");
       return;
     }
-
     const sidebar = document.getElementById("mainSidebar");
     if (sidebar.classList.contains("open")) {
       sidebar.classList.remove("open");
       window.history.pushState({ page: 1 }, "", "");
       return;
     }
-
     if (!backPressedOnce) {
       backPressedOnce = true;
       const toast = document.getElementById("toastMsg");
@@ -612,7 +669,7 @@ function switchView(tabKey) {
   const pane = document.getElementById(`pane-${tabKey}`);
   if (pane) pane.classList.add('active');
 
-  const tabs = ['folders', 'portals', 'credentials', 'htmlEngine', 'memos', 'system'];
+  const tabs = ['folders', 'portals', 'credentials', 'htmlEngine', 'memos', 'cloud', 'security'];
   const idx = tabs.indexOf(tabKey);
   if (idx !== -1) document.querySelectorAll('.nav-btn')[idx].classList.add('active');
 
@@ -620,7 +677,6 @@ function switchView(tabKey) {
   document.getElementById("mainSidebar").classList.remove("open");
 }
 
-// Security Gate & Locks
 function verifyGate() {
   const val = document.getElementById("gateKey").value.trim();
   if (val === store.masterKey || val === "admin") {
@@ -641,10 +697,10 @@ function lockApp() {
 }
 
 function confirmAdminAction(actionName) {
-  const code = prompt(`Admin Authorization Required: Enter Master Passcode to permanently delete this ${actionName}:`);
+  const code = prompt(`Admin Authorization: Enter Master Passcode to permanently delete this ${actionName}:`);
   if (!code) return false;
   if (code === store.masterKey || code === "admin") return true;
-  alert("Authorization failed. Incorrect passkey.");
+  alert("Authorization failed. Incorrect passcode.");
   return false;
 }
 
@@ -654,7 +710,6 @@ function attachFormatValidators() {
       this.value = this.value.replace(/[^a-zA-Z\s]/g, '');
     });
   });
-
   document.querySelectorAll('.input-numeric').forEach(input => {
     input.addEventListener('input', function() {
       this.value = this.value.replace(/[^0-9]/g, '');
@@ -681,7 +736,7 @@ function validateCredForm() {
   btn.disabled = !(isValidEmail && passVal.length > 0);
 }
 
-// Cloud REST API
+// GitHub REST Cloud Engine
 async function syncToGitHub() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
   const badge = document.getElementById("syncStatus");
@@ -744,7 +799,7 @@ async function syncToGitHub() {
 async function fetchGitHubData(showAlert = false) {
   if (!GH_CONFIG.owner || !GH_CONFIG.repo || !GH_CONFIG.token) return;
   const badge = document.getElementById("syncStatus");
-  badge.textContent = "● Pulling from GitHub...";
+  badge.textContent = "● Pulling...";
 
   try {
     const res = await fetch(`https://api.github.com/repos/${GH_CONFIG.owner}/${GH_CONFIG.repo}/contents/${GH_CONFIG.path}?t=${Date.now()}`, {
@@ -761,13 +816,14 @@ async function fetchGitHubData(showAlert = false) {
       const decoded = decodeURIComponent(escape(atob(fileData.content)));
       const parsed = JSON.parse(decoded);
       if (parsed.folders) {
-        store = parsed;
+        store = { ...store, ...parsed };
         localStorage.setItem(STORAGE_KEY, JSON.stringify(store));
+        updateHeadingsUI();
         refreshAll();
       }
       badge.className = "sync-badge sync-ok";
       badge.textContent = "● GitHub Synced";
-      if (showAlert) alert("Workspace successfully updated from GitHub!");
+      if (showAlert) alert("Sync completed.");
     }
   } catch (e) {
     badge.className = "sync-badge sync-pending";
@@ -781,7 +837,7 @@ function saveGitHubConfig() {
   GH_CONFIG.token = document.getElementById("ghToken").value.trim();
   GH_CONFIG.sha = "";
   localStorage.setItem(GH_CONFIG_KEY, JSON.stringify(GH_CONFIG));
-  alert("Cloud configuration saved! Connecting...");
+  alert("Settings saved. Connecting...");
   fetchGitHubData(true);
 }
 
@@ -813,13 +869,33 @@ function updateFolderSelects() {
   });
 }
 
-// 1. CENTRAL COMMAND FOLDERS (POPUP VAULT SYSTEM)
+// 1. FOLDERS ENGINE WITH PENCIL EDIT & CLEAN POPUPS
 function promptCreateFolder() {
-  let name = prompt("Enter Folder Name (Letters & spaces only):");
+  let name = prompt("Enter New Folder Name (letters & spaces only):");
   if (name) {
     name = name.replace(/[^a-zA-Z\s]/g, '').trim();
     if (name && !store.folders.includes(name)) {
       store.folders.push(name);
+      refreshAll();
+      syncToGitHub();
+    }
+  }
+}
+
+function renameFolder(oldName) {
+  let next = prompt("Edit Folder Name (letters & spaces only):", oldName);
+  if (next) {
+    next = next.replace(/[^a-zA-Z\s]/g, '').trim();
+    if (next && next !== oldName) {
+      const idx = store.folders.indexOf(oldName);
+      if (idx !== -1) store.folders[idx] = next;
+
+      // Migrate all assets assigned to old folder name
+      store.links.forEach(x => { if (x.folder === oldName) x.folder = next; });
+      store.credentials.forEach(x => { if (x.folder === oldName) x.folder = next; });
+      store.htmlDocs.forEach(x => { if (x.folder === oldName) x.folder = next; });
+      store.memos.forEach(x => { if (x.folder === oldName) x.folder = next; });
+
       refreshAll();
       syncToGitHub();
     }
@@ -837,22 +913,32 @@ function renderFolders() {
     const fMemos = store.memos.filter(x => x.folder === folder);
     const total = fLinks.length + fCreds.length + fDocs.length + fMemos.length;
 
+    // Build clean summary string hiding zeros
+    let parts = [];
+    if (fLinks.length > 0) parts.push(`${fLinks.length} Portals`);
+    if (fCreds.length > 0) parts.push(`${fCreds.length} Credentials`);
+    if (fDocs.length > 0) parts.push(`${fDocs.length} HTML Apps`);
+    if (fMemos.length > 0) parts.push(`${fMemos.length} Memos`);
+    const summaryText = parts.length > 0 ? parts.join(' • ') : 'Folder is currently empty';
+
     const card = document.createElement("div");
     card.className = "folder-card";
     card.onclick = () => openFolderPopup(folder);
     card.innerHTML = `
       <div>
         <div style="display:flex; justify-content:space-between; align-items:center;">
-          <strong style="font-size:16px; color:var(--text-main);">📁 ${escapeHtml(folder)}</strong>
-          <span class="pill pill-red">${total} Assets</span>
+          <div style="display:flex; align-items:center; gap:6px;">
+            <strong style="font-size:16px; color:var(--text-main);">📁 ${escapeHtml(folder)}</strong>
+            <span class="icon-pencil-heading" title="Rename Folder" onclick="event.stopPropagation(); renameFolder('${escapeHtml(folder)}')">✎</span>
+          </div>
+          <span class="pill pill-red">${total} Items</span>
         </div>
-        <div style="font-size:12px; color:var(--text-muted); margin-top:10px; line-height:1.5;">
-          ${fLinks.length} Portals • ${fCreds.length} Credentials<br>
-          ${fDocs.length} HTML Apps • ${fMemos.length} Memos
+        <div style="font-size:12px; color:var(--text-muted); margin-top:10px; line-height:1.4;">
+          ${summaryText}
         </div>
       </div>
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; pt:8px;">
-        <span style="font-size:12px; font-weight:700; color:var(--red-primary);">Tap to Open Vault ➔</span>
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px;">
+        <span style="font-size:12px; font-weight:700; color:var(--red-primary);">Open Folder ➔</span>
         <button class="btn-ghost-danger" onclick="event.stopPropagation(); deleteFolderDirect(${fIndex})">🗑️</button>
       </div>
     `;
@@ -861,24 +947,31 @@ function renderFolders() {
 }
 
 function openFolderPopup(folder) {
-  document.getElementById("popupFolderTitle").textContent = folder + " Vault";
+  document.getElementById("popupFolderTitle").textContent = folder;
   const body = document.getElementById("popupFolderBody");
   
   const fLinks = store.links.filter(x => x.folder === folder);
   const fCreds = store.credentials.filter(x => x.folder === folder);
   const fDocs = store.htmlDocs.filter(x => x.folder === folder);
   const fMemos = store.memos.filter(x => x.folder === folder);
+  const total = fLinks.length + fCreds.length + fDocs.length + fMemos.length;
 
-  let html = `<div style="display:flex; flex-direction:column; gap:18px;">`;
+  if (total === 0) {
+    body.innerHTML = `
+      <div style="text-align:center; padding:30px 10px; color:var(--text-muted);">
+        <p style="font-size:14px; margin-bottom:12px;">This folder has no files or links yet.</p>
+        <button class="btn btn-red" onclick="closeModal('modalFolderPopup'); openModal('modalFastCreate');">+ Add Item</button>
+      </div>`;
+    openModal('modalFolderPopup');
+    return;
+  }
 
-  // Portals Section
-  html += `<div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <h4 style="font-size:13px; font-weight:700; color:var(--red-primary);">🌐 MISSION PORTALS (${fLinks.length})</h4>
-    </div>`;
-  if (fLinks.length === 0) {
-    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No portals saved in this folder.</p>`;
-  } else {
+  let html = `<div style="display:flex; flex-direction:column; gap:16px;">`;
+
+  // Only render sections that have items > 0
+  if (fLinks.length > 0) {
+    html += `<div>
+      <h4 style="font-size:13px; font-weight:700; color:var(--red-primary); margin-bottom:8px;">🌐 MISSION PORTALS (${fLinks.length})</h4>`;
     fLinks.forEach(l => {
       const idx = store.links.indexOf(l);
       html += `
@@ -887,20 +980,18 @@ function openFolderPopup(folder) {
             <strong style="font-size:13.5px;">${escapeHtml(l.title)}</strong> ${l.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted); word-break:break-all;">${escapeHtml(l.url)}</div>
           </div>
-          <button class="btn btn-red" style="padding:5px 10px; font-size:12px;" onclick="launchPortal(${idx})">Open Page ↗</button>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-subtle" style="padding:4px 8px; font-size:12px;" onclick="closeModal('modalFolderPopup'); editPortal(${idx})">✎ Edit</button>
+            <button class="btn btn-red" style="padding:4px 10px; font-size:12px;" onclick="launchPortal(${idx})">Open ↗</button>
+          </div>
         </div>`;
     });
+    html += `</div>`;
   }
-  html += `</div>`;
 
-  // Credentials Section
-  html += `<div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <h4 style="font-size:13px; font-weight:700; color:var(--magenta);">🔐 SECURED CREDENTIALS (${fCreds.length})</h4>
-    </div>`;
-  if (fCreds.length === 0) {
-    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No credentials saved in this folder.</p>`;
-  } else {
+  if (fCreds.length > 0) {
+    html += `<div>
+      <h4 style="font-size:13px; font-weight:700; color:var(--magenta); margin-bottom:8px;">🔐 SECURED CREDENTIALS (${fCreds.length})</h4>`;
     fCreds.forEach(c => {
       const idx = store.credentials.indexOf(c);
       html += `
@@ -909,20 +1000,18 @@ function openFolderPopup(folder) {
             <strong style="font-size:13.5px;">${escapeHtml(c.title)}</strong> ${c.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted);">${escapeHtml(c.email)}</div>
           </div>
-          <button class="btn btn-magenta" style="padding:5px 10px; font-size:12px;" onclick="revealCred(${idx})">Unlock 👁️</button>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-subtle" style="padding:4px 8px; font-size:12px;" onclick="closeModal('modalFolderPopup'); editCred(${idx})">✎ Edit</button>
+            <button class="btn btn-magenta" style="padding:4px 10px; font-size:12px;" onclick="revealCred(${idx})">Unlock 👁️</button>
+          </div>
         </div>`;
     });
+    html += `</div>`;
   }
-  html += `</div>`;
 
-  // HTML Applications Section
-  html += `<div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <h4 style="font-size:13px; font-weight:700; color:var(--indigo-core);">⚡ HTML RUNTIME APPS (${fDocs.length})</h4>
-    </div>`;
-  if (fDocs.length === 0) {
-    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No HTML apps saved in this folder.</p>`;
-  } else {
+  if (fDocs.length > 0) {
+    html += `<div>
+      <h4 style="font-size:13px; font-weight:700; color:var(--indigo-core); margin-bottom:8px;">⚡ HTML APPS (${fDocs.length})</h4>`;
     fDocs.forEach(d => {
       const idx = store.htmlDocs.indexOf(d);
       html += `
@@ -931,20 +1020,18 @@ function openFolderPopup(folder) {
             <strong style="font-size:13.5px;">${escapeHtml(d.title)}</strong> ${d.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted);">${d.size || 'Script'}</div>
           </div>
-          <button class="btn btn-indigo" style="padding:5px 10px; font-size:12px;" onclick="runHtml(${idx})">Run App ⚡</button>
+          <div style="display:flex; gap:6px;">
+            <button class="btn btn-subtle" style="padding:4px 8px; font-size:12px;" onclick="closeModal('modalFolderPopup'); editHtml(${idx})">✎ Edit</button>
+            <button class="btn btn-indigo" style="padding:4px 10px; font-size:12px;" onclick="runHtml(${idx})">Run App ⚡</button>
+          </div>
         </div>`;
     });
+    html += `</div>`;
   }
-  html += `</div>`;
 
-  // Executive Memos Section
-  html += `<div>
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-      <h4 style="font-size:13px; font-weight:700; color:#334155;">📋 EXECUTIVE MEMOS (${fMemos.length})</h4>
-    </div>`;
-  if (fMemos.length === 0) {
-    html += `<p style="font-size:12px; color:#94a3b8; font-style:italic;">No memos saved in this folder.</p>`;
-  } else {
+  if (fMemos.length > 0) {
+    html += `<div>
+      <h4 style="font-size:13px; font-weight:700; color:#334155; margin-bottom:8px;">📋 EXECUTIVE MEMOS (${fMemos.length})</h4>`;
     fMemos.forEach(m => {
       const idx = store.memos.indexOf(m);
       html += `
@@ -953,12 +1040,13 @@ function openFolderPopup(folder) {
             <strong style="font-size:13.5px;">${escapeHtml(m.title)}</strong> ${m.pin ? '🔒' : ''}
             <div style="font-size:11.5px; color:var(--text-muted);">${m.date || 'Memo'}</div>
           </div>
-          <button class="btn btn-subtle" style="padding:5px 10px; font-size:12px;" onclick="closeModal('modalFolderPopup'); readMemo(${idx})">Read Memo ➔</button>
+          <button class="btn btn-subtle" style="padding:4px 10px; font-size:12px;" onclick="closeModal('modalFolderPopup'); readMemo(${idx})">Read / Edit ➔</button>
         </div>`;
     });
+    html += `</div>`;
   }
-  html += `</div></div>`;
 
+  html += `</div>`;
   body.innerHTML = html;
   openModal('modalFolderPopup');
 }
@@ -1002,6 +1090,7 @@ function renderLinks() {
         <p style="font-size:12px; color:var(--text-muted); word-break:break-all;">${isLocked ? '•••• Protected Destination' : escapeHtml(link.url)}</p>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
+        <button class="btn btn-subtle" onclick="editPortal(${idx})">✎ Inspect / Edit</button>
         <button class="btn btn-red" onclick="launchPortal(${idx})">Launch ↗</button>
         <button class="btn btn-ghost-danger" onclick="deleteLink(${idx})">🗑️</button>
       </div>
@@ -1010,10 +1099,27 @@ function renderLinks() {
   });
 }
 
+function editPortal(idx) {
+  const item = store.links[idx];
+  if (item.pin) {
+    const entered = prompt("Enter Security PIN to inspect / edit portal:");
+    if (entered !== item.pin) return alert("Incorrect Security PIN.");
+  }
+  currentEditingLinkIndex = idx;
+  document.getElementById("modalLinkHeading").textContent = "Inspect / Edit Portal";
+  document.getElementById("fLinkTitle").value = item.title;
+  document.getElementById("fLinkUrl").value = item.url;
+  document.getElementById("fLinkFolder").value = item.folder;
+  document.getElementById("fLinkLocked").checked = Boolean(item.pin);
+  document.getElementById("fLinkPin").value = item.pin || "";
+  toggleLockField('fLinkPinWrap', Boolean(item.pin));
+  openModal('modalLink');
+}
+
 function launchPortal(idx) {
   const item = store.links[idx];
   if (item.pin) {
-    const entered = prompt("Enter 4-Digit Security PIN to access URL:");
+    const entered = prompt("Enter Security PIN to open portal:");
     if (entered !== item.pin) return alert("Incorrect Security PIN.");
   }
   window.open(item.url, "_blank");
@@ -1027,8 +1133,16 @@ function saveLink() {
   const pin = isLocked ? document.getElementById("fLinkPin").value.trim() : "";
 
   if (!title || !url) return alert("Title and URL required.");
-  store.links.push({ title, url, folder, pin });
+  const payload = { title, url, folder, pin };
+
+  if (currentEditingLinkIndex > -1) {
+    store.links[currentEditingLinkIndex] = payload;
+  } else {
+    store.links.push(payload);
+  }
+
   closeModal('modalLink');
+  currentEditingLinkIndex = -1;
   document.getElementById("fLinkTitle").value = "";
   document.getElementById("fLinkUrl").value = "";
   document.getElementById("fLinkPin").value = "";
@@ -1070,12 +1184,32 @@ function renderCredentials() {
         <div style="font-size:12.5px;"><b>Key:</b> <span id="passSpan-${idx}">••••••••</span></div>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
+        <button class="btn btn-subtle" onclick="editCred(${idx})">✎ Inspect / Edit</button>
         <button class="btn btn-subtle" onclick="revealCred(${idx})">👁️ Reveal</button>
         <button class="btn btn-ghost-danger" onclick="deleteCred(${idx})">🗑️</button>
       </div>
     `;
     grid.appendChild(card);
   });
+}
+
+function editCred(idx) {
+  const item = store.credentials[idx];
+  if (item.pin) {
+    const entered = prompt("Enter Security PIN to inspect / edit credential:");
+    if (entered !== item.pin) return alert("Incorrect Security PIN.");
+  }
+  currentEditingCredIndex = idx;
+  document.getElementById("modalCredHeading").textContent = "Inspect / Edit Credential";
+  document.getElementById("fCredTitle").value = item.title;
+  document.getElementById("fCredEmail").value = item.email;
+  document.getElementById("fCredPass").value = item.pass;
+  document.getElementById("fCredFolder").value = item.folder;
+  document.getElementById("fCredLocked").checked = Boolean(item.pin);
+  document.getElementById("fCredPin").value = item.pin || "";
+  toggleLockField('fCredPinWrap', Boolean(item.pin));
+  validateCredForm();
+  openModal('modalCred');
 }
 
 function revealCred(idx) {
@@ -1086,7 +1220,7 @@ function revealCred(idx) {
   }
   const el = document.getElementById(`passSpan-${idx}`);
   if (el) el.textContent = (el.textContent === "••••••••") ? item.pass : "••••••••";
-  else alert(`Secret Key: ${item.pass}`);
+  else alert(`Password: ${item.pass}`);
 }
 
 function saveCred() {
@@ -1097,9 +1231,17 @@ function saveCred() {
   const isLocked = document.getElementById("fCredLocked").checked;
   const pin = isLocked ? document.getElementById("fCredPin").value.trim() : "";
 
-  if (!EMAIL_REGEX.test(email)) return alert("Valid complete email format required (e.g. name@gmail.com).");
-  store.credentials.push({ title, email, pass, folder, pin });
+  if (!EMAIL_REGEX.test(email)) return alert("Valid email format required (e.g. name@gmail.com).");
+  const payload = { title, email, pass, folder, pin };
+
+  if (currentEditingCredIndex > -1) {
+    store.credentials[currentEditingCredIndex] = payload;
+  } else {
+    store.credentials.push(payload);
+  }
+
   closeModal('modalCred');
+  currentEditingCredIndex = -1;
   document.getElementById("fCredTitle").value = "";
   document.getElementById("fCredEmail").value = "";
   document.getElementById("fCredPass").value = "";
@@ -1141,12 +1283,30 @@ function renderHtml() {
         <p style="font-size:12px; color:var(--text-muted);">Payload: ${doc.size || 'Script'}</p>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
+        <button class="btn btn-subtle" onclick="editHtml(${idx})">✎ Inspect / Edit</button>
         <button class="btn btn-indigo" onclick="runHtml(${idx})">Execute ↗</button>
         <button class="btn btn-ghost-danger" onclick="deleteHtml(${idx})">🗑️</button>
       </div>
     `;
     grid.appendChild(card);
   });
+}
+
+function editHtml(idx) {
+  const item = store.htmlDocs[idx];
+  if (item.pin) {
+    const entered = prompt("Enter Security PIN to inspect / edit HTML:");
+    if (entered !== item.pin) return alert("Incorrect Security PIN.");
+  }
+  currentEditingHtmlIndex = idx;
+  document.getElementById("modalHtmlHeading").textContent = "Inspect / Edit HTML Application";
+  document.getElementById("fHtmlTitle").value = item.title;
+  document.getElementById("fHtmlCode").value = item.code;
+  document.getElementById("fHtmlFolder").value = item.folder;
+  document.getElementById("fHtmlLocked").checked = Boolean(item.pin);
+  document.getElementById("fHtmlPin").value = item.pin || "";
+  toggleLockField('fHtmlPinWrap', Boolean(item.pin));
+  openModal('modalHtml');
 }
 
 function runHtml(idx) {
@@ -1167,11 +1327,19 @@ function saveHtmlDoc() {
   const pin = isLocked ? document.getElementById("fHtmlPin").value.trim() : "";
 
   if (!title || !code) return alert("Title and code required.");
-  store.htmlDocs.push({
+  const payload = {
     title, folder, code, pin,
     size: (new Blob([code]).size / 1024).toFixed(1) + " KB"
-  });
+  };
+
+  if (currentEditingHtmlIndex > -1) {
+    store.htmlDocs[currentEditingHtmlIndex] = payload;
+  } else {
+    store.htmlDocs.push(payload);
+  }
+
   closeModal('modalHtml');
+  currentEditingHtmlIndex = -1;
   document.getElementById("fHtmlTitle").value = "";
   document.getElementById("fHtmlCode").value = "";
   document.getElementById("fHtmlPin").value = "";
@@ -1210,11 +1378,11 @@ function renderMemos() {
           <span class="pill pill-subtle" style="background:#f1f5f9; font-weight:700;">${escapeHtml(memo.folder)}</span>
         </div>
         <p style="font-size:12px; color:var(--text-muted); line-height:1.4;">
-          ${isLocked ? '<i>Encrypted document. Click Open to authenticate.</i>' : escapeHtml(memo.content.substring(0, 90)) + '...'}
+          ${isLocked ? '<i>Encrypted document. Click Inspect to authenticate.</i>' : escapeHtml(memo.content.substring(0, 90)) + '...'}
         </p>
       </div>
       <div style="display:flex; gap:6px; justify-content:flex-end; margin-top: 14px;">
-        <button class="btn btn-subtle" onclick="readMemo(${idx})">Open Memo</button>
+        <button class="btn btn-subtle" onclick="readMemo(${idx})">✎ Inspect / Edit</button>
         <button class="btn btn-ghost-danger" onclick="deleteMemo(${idx})">🗑️</button>
       </div>
     `;
@@ -1229,7 +1397,7 @@ function readMemo(idx) {
     if (entered !== memo.pin) return alert("Incorrect Security PIN.");
   }
   currentEditingMemoIndex = idx;
-  document.getElementById("memoModalTitle").textContent = "Read / Edit Memo";
+  document.getElementById("memoModalTitle").textContent = "Inspect / Edit Memo";
   document.getElementById("fMemoTitle").value = memo.title;
   document.getElementById("fMemoFolder").value = memo.folder;
   document.getElementById("fMemoContent").value = memo.content;
@@ -1266,21 +1434,48 @@ function deleteMemo(idx) {
   }
 }
 
+// 6. MASTER CODE
 function updateMasterKey() {
   const oldKey = document.getElementById("oldMasterKey").value.trim();
   const newKey = document.getElementById("newMasterKey").value.trim();
-  if (oldKey !== store.masterKey && oldKey !== "admin") return alert("Current code incorrect.");
-  if (!newKey || newKey.length < 3) return alert("Code must be 3+ characters.");
+  if (oldKey !== store.masterKey && oldKey !== "admin") return alert("Current passcode incorrect.");
+  if (!newKey || newKey.length < 3) return alert("Passcode must be at least 3 characters.");
   store.masterKey = newKey;
   document.getElementById("oldMasterKey").value = "";
   document.getElementById("newMasterKey").value = "";
-  alert("Master code updated.");
+  alert("Master passcode successfully updated.");
   syncToGitHub();
 }
 
 function openModal(id) {
+  if (id === 'modalLink' && currentEditingLinkIndex === -1) {
+    document.getElementById("modalLinkHeading").textContent = "Add Mission Portal";
+    document.getElementById("fLinkTitle").value = "";
+    document.getElementById("fLinkUrl").value = "";
+    document.getElementById("fLinkPin").value = "";
+    document.getElementById("fLinkLocked").checked = false;
+    toggleLockField('fLinkPinWrap', false);
+  }
+  if (id === 'modalCred' && currentEditingCredIndex === -1) {
+    document.getElementById("modalCredHeading").textContent = "Save Secured Credential";
+    document.getElementById("fCredTitle").value = "";
+    document.getElementById("fCredEmail").value = "";
+    document.getElementById("fCredPass").value = "";
+    document.getElementById("fCredPin").value = "";
+    document.getElementById("fCredLocked").checked = false;
+    toggleLockField('fCredPinWrap', false);
+    validateCredForm();
+  }
+  if (id === 'modalHtml' && currentEditingHtmlIndex === -1) {
+    document.getElementById("modalHtmlHeading").textContent = "Store HTML Snippet";
+    document.getElementById("fHtmlTitle").value = "";
+    document.getElementById("fHtmlCode").value = "";
+    document.getElementById("fHtmlPin").value = "";
+    document.getElementById("fHtmlLocked").checked = false;
+    toggleLockField('fHtmlPinWrap', false);
+  }
   if (id === 'modalMemo' && currentEditingMemoIndex === -1) {
-    document.getElementById("memoModalTitle").textContent = "Executive Memo";
+    document.getElementById("memoModalTitle").textContent = "Draft Executive Memo";
     document.getElementById("fMemoTitle").value = "";
     document.getElementById("fMemoContent").value = "";
     document.getElementById("fMemoPin").value = "";
@@ -1292,6 +1487,9 @@ function openModal(id) {
 
 function closeModal(id) {
   document.getElementById(id).classList.add('hidden');
+  if (id === 'modalLink') currentEditingLinkIndex = -1;
+  if (id === 'modalCred') currentEditingCredIndex = -1;
+  if (id === 'modalHtml') currentEditingHtmlIndex = -1;
   if (id === 'modalMemo') currentEditingMemoIndex = -1;
 }
 
